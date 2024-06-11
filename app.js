@@ -1,14 +1,13 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const app = express();
 
 // Define a engine de visualização como EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'app', 'views')); 
+app.set('views', path.join(__dirname, 'app', 'views'));
 
 // Servir arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'app', 'public')));
 
 // Rota para a página principal
 app.get('/', (req, res) => {
