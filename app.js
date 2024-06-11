@@ -1,7 +1,11 @@
+require('dotenv').config(); // Carrega variáveis de ambiente do arquivo .env
 
 const express = require('express');
+const mysql = require('mysql');
 const app = express();
 const path = require('path');
+// Use a porta fornecida pelo ambiente ou 3000 como padrão
+const port = process.env.APP_PORT || 3000;
 
 // Define a engine de visualização como EJS
 app.set('view engine', 'ejs');
