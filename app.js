@@ -19,7 +19,7 @@ const pagesDir = path.join(viewsDir, 'pages');
 console.log('Pages directory contents:', fs.readdirSync(pagesDir));
 
 // Servir arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'app', 'public')));
 
 // Rota para a página principal
 app.get('/', (req, res) => {
