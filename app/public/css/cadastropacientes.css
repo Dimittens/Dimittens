@@ -1,0 +1,176 @@
+body {
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.logotipo img {
+    width: 80px;
+    height: 80px;
+}
+
+.logotipo {
+    text-align: center;
+    height: 70px;
+}
+
+h1 {
+    text-align: center;
+    margin: 0;
+}
+
+.title {
+    font-size: 28px;
+    font-family: "Antialiased ", sans-serif;
+    font-weight: 600;
+    color: #333333;
+}
+
+.input-field {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    width: 268px;
+
+}
+
+.input {
+    height: 49px;
+    width: 268px;
+    border-radius: 17px;
+    border: 1px solid rgba(121, 121, 121, 0.7);
+    background-color: #f7f7f7;
+    box-sizing: border-box;
+    padding-left: 14px;
+    box-sizing: border-box;
+}
+
+label {
+    font-family: "Antialiased ", sans-serif;
+    color: #333333;
+    font-size: 14px;
+    align-self: flex-start;
+    margin-bottom: 5px;
+}
+
+.lbl {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.container {
+    width: 484px;
+    height: 820px;
+    background-color: #f7f7f7;
+    border-radius: 35px;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.continue {
+    text-align: center;
+    margin-top: 25px;
+}
+
+#continuar {
+    background-color: #ec8d26;
+    height: 45px;
+    width: 268px;
+    border-radius: 35px;
+    font-family: "Antialiased", sans-serif;
+    font-weight: 500;
+    color: #ffffff;
+    border: 1px solid;
+}
+
+.signup-conditions {
+    text-align: center;
+    margin-top: 18px;
+}
+
+.sign {
+    font-family: "Antialiased ", sans-serif;
+    font-weight: 500;
+    color: #333333;
+    font-size: 12px;
+}
+
+input::placeholder {
+    left: 1px;
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+hr {
+    width: 150px;
+    height: 1px;
+}
+
+@media (min-width: 320px) and (max-width: 360px) {
+    .container{
+        width: 100vw;
+        border-radius: 0px;
+        margin-top: 305px;
+        height: 790px;
+    }
+
+    body {
+        position: absolute;
+        background-color: #f7f7f7;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        font-size: 1.875rem;
+
+    }
+
+    #logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .logotipo {
+        height: 60px;
+        margin-top: 15px;
+    }
+
+    #continuar {
+        width: 230px;
+        height: 38px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .input {
+        width: 230px;
+        height: 40px;
+    }
+
+    label {
+        font-size: 14px;
+        margin-left: 25px;
+    }
+
+    .signup-conditions {
+        text-align: center;
+        margin-top: 18px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+    .container{
+        width: 100vw;
+        border-radius: 0px;
+        margin-top: 375px;
+        height: 860px;
+    }
+}
