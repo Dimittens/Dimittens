@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+<<<<<<< HEAD
+=======
+// Use a porta fornecida pelo ambiente ou 3000 como padrão
+>>>>>>> 0d7b96436c05c201f30659bf884cab68d68ad810
 const port = process.env.APP_PORT || 3000;
 
 // Define a engine de visualização como EJS
