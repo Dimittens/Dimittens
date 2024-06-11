@@ -1,7 +1,6 @@
 const express = require('express');
-const app = express();
 const path = require('path');
-const port = process.env.APP_PORT || 3000;
+const app = express();
 
 // Define a engine de visualização como EJS
 app.set('view engine', 'ejs');
@@ -16,6 +15,7 @@ app.get('/', (req, res) => {
 });
 
 // Inicia o servidor
+const port = process.env.APP_PORT || 3000;
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
