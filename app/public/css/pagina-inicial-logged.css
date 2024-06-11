@@ -9,27 +9,6 @@ body {
     overflow-x: hidden;
 }
 
-.passo-a-passo {
-    width: 100vw;
-    margin-top: -100px;
-}
-
-.passo-a-passo h1 {
-    text-align: center;
-    padding-top: 120px;
-    box-sizing: border-box;
-    font-family: "Arial", sans-serif;
-    font-weight: normal;
-    color: #422040;
-    line-height: normal;
-    font-size: 36px;
-}
-
-.iframe-pap {
-    width: 100%;
-    height: 900px;
-    border: none;
-}
 
 main {
     padding: 0;
@@ -149,23 +128,6 @@ main {
     transform: translateY(-232px);
 }
 
-.iframe-container iframe {
-    margin-left: 100px;
-    width: 100%;
-    height: 800px;
-    border: none; /* Remove as bordas do iframe */
-    margin: 0;
-    padding: 0;
-}
-
-.iframe-container iframe, .passo-a-passo iframe, .testemunhas iframe {
-    display: block; /* Adiciona um bloco para evitar linhas invisíveis */
-    margin: 0; /* Remove qualquer margem padrão */
-    padding: 0; /* Remove qualquer padding padrão */
-    width: 100%;
-    border: none;
-}
-
 .tipo-terapia > section {
     display: flex;
     flex-direction: column;
@@ -217,21 +179,6 @@ main {
     color: white;
     font-size: 54px;
     font-family: "Arial Bold", "Arial Normal", "Arial", sans-serif;
-}
-
-.testemunhas iframe {
-    border: 1px solid #2f354200;
-    width: 100vw;
-    height: 600px;
-    margin: 0;
-    padding: 0;
-    position: relative;
-}
-
-.testemunhas {
-    display: flex;
-    align-items: center;
-    width: 100vw;
 }
 
 .p-slogan {
@@ -430,23 +377,6 @@ main {
         font-size: 13px;
         margin: 20px 60px 70px 60px;
     }
-
-    .iframe-container iframe {
-            margin-left: 50px;
-    }
-
-    .passo-a-passo iframe {
-        height: 650px;
-    }
-
-    .passo-a-passo {
-        margin-top: -350px;
-    }
-
-    .testemunhas iframe {
-        height: 700px;
-    }
-
 }
 
 @media (min-width: 400px) and (max-width: 480px) {
@@ -556,14 +486,6 @@ main {
         font-size: 16px;
         margin: 20px 80px 70px 80px;
     }
-
-    .iframe-container iframe {
-        margin-left: 60px;
-    }
-    .passo-a-passo iframe {
-        height: 850px;
-    }
-
     .passo-a-passo {
         margin-top: -350px;
     }
@@ -648,14 +570,6 @@ main {
     .info-titulo p {
         font-size: 20px;
         margin: 20px 80px 94px 80px;
-    }
-
-    .passo-a-passo iframe {
-        height: 800px;
-    }
-
-    .passo-a-passo {
-        margin-top: -300px;
     }
 }
 
@@ -763,14 +677,6 @@ main {
         font-size: 16px;
         margin: 20px 80px 70px 80px;
     }
-
-    .passo-a-passo iframe {
-        height: 1000px;
-    }
-
-    .passo-a-passo {
-        margin-top: -350px;
-    }
 }
 
 @media (min-width: 550px) and (max-width: 700px) {
@@ -875,14 +781,6 @@ main {
     .info-titulo p {
         font-size: 18px;
         margin: 20px 80px 70px 80px;
-    }
-
-    .passo-a-passo iframe {
-        height: 1000px;
-    }
-
-    .passo-a-passo {
-        margin-top: -350px;
     }
 }
 
@@ -991,14 +889,6 @@ main {
         font-size: 18px;
         margin: 20px 80px 94px 80px;
     }
-
-        .passo-a-passo iframe {
-        height: 1000px;
-    }
-
-    .passo-a-passo {
-        margin-top: -350px;
-    }
 }
 
 
@@ -1075,9 +965,7 @@ main {
     .info-titulo p {
         font-size: 20px;
     }
-    .passo-a-passo iframe {
-        height: 1100px;
-    }
+
 }
 
 @media (min-width: 1000px) and (max-width: 1100px) {
@@ -1131,10 +1019,6 @@ main {
     .tipo-terapia {
         transform: translateY(-185px);
     }
-
-    .passo-a-passo iframe {
-        height: 1170px;
-    }
 }
 
 
@@ -1186,10 +1070,6 @@ main {
     .tipo-terapia {
         transform: translateY(-195px);
     }
-
-    .passo-a-passo iframe {
-        height: 920px;
-    }
 }
 
 @media (min-width: 1350px) and (max-width: 1550px) {
@@ -1236,10 +1116,6 @@ main {
 
         .tipo-terapia p {
             font-size: 20px;
-        }
-
-        .passo-a-passo iframe {
-            height: 900px;
         }
 }
 
