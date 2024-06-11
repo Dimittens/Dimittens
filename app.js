@@ -4,14 +4,14 @@ const app = express();
 
 // Define a engine de visualização como EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'app', 'views'));
+app.set('views', path.join(__dirname, 'app', 'views')); // Configuração do diretório de views
 
 // Servir arquivos estáticos da pasta 'public'
 app.use(express.static(path.join(__dirname, 'app', 'public')));
 
 // Rota para a página principal
 app.get('/', (req, res) => {
-    res.render('pages/index');
+    res.render('pages/index'); // Renderizando o arquivo index.ejs dentro de /views/pages
 });
 
 // Inicia o servidor
