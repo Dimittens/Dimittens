@@ -5,13 +5,13 @@ const app = express();
 
 // Define a engine de visualização como EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app', 'views')); // Caminho atualizado
 
 // Log para verificar o caminho das views
-console.log('Views directory:', path.join(__dirname, 'views'));
+console.log('Views directory:', path.join(__dirname, 'app', 'views'));
 
 // Verifique o conteúdo do diretório 'views'
-const viewsDir = path.join(__dirname, 'views');
+const viewsDir = path.join(__dirname, 'app', 'views');
 console.log('Views directory contents:', fs.readdirSync(viewsDir));
 
 // Verifique o conteúdo do diretório 'views/pages'
