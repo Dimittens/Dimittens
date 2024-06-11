@@ -1,17 +1,19 @@
+require('dotenv').config(); // Carrega variáveis de ambiente do arquivo .env
+
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
 const path = require('path');
 
 // Use a porta fornecida pelo ambiente ou 3000 como padrão
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 3000;
 
 // Configurar a conexão com o banco de dados
 const db = mysql.createConnection({
-    host: process.env.Key_1,
-    user: process.env.Key_2,
-    password: process.env.Key_3,
-    // Adicione outras variáveis de acordo com a sua configuração
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 db.connect((err) => {
