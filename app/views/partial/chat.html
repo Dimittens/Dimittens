@@ -71,10 +71,12 @@
             <h1>Chats</h1>
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </section>
-        <section class="input-container">
-            <input type="text" placeholder="Buscar...">
-            <i class="fa-solid fa-magnifying-glass" id="icon-left"></i>
-            <i class="fa-solid fa-sliders" id="icon-right"></i>
+        <section class="input-container-box">
+            <section class="input-container">
+                <input type="text" placeholder="Buscar...">
+                <i class="fa-solid fa-magnifying-glass" id="icon-left"></i>
+                <i class="fa-solid fa-sliders" id="icon-right"></i>
+            </section>
         </section>
         <section class="contato">
             <section class="contato-img">
@@ -136,10 +138,40 @@
             </section>
         </section>
     </article>
-    <script>
-        document.getElementById('open_btn').addEventListener('click', function () {
-    document.getElementById('sidebar').classList.toggle('open-sidebar');
-});
-    </script>
+
+    <article class="area-coluna">
+        <article class="chat-menu">
+            <section class="menu-perfil-conversa">
+                <img src="../../public/imagens/profile3-psico.jpg" alt="" class="menu-perfil-img">
+            </section>
+            <section class="ligacao-chamada">
+                <i class="fa-solid fa-phone"></i>
+                <i class="fa-solid fa-video"></i>
+            </section>
+        </article>
+        <article class="area-mensagens">
+            <section class="mensagem-psicologo-box">
+                <section class="mensagem-psicologo-content">
+                    <p>Olá! Eu sou a Dra. Ana, psicóloga. É um prazer conhecê-lo(a). Gostaria de saber um pouco mais sobre você e o que te trouxe aqui hoje. Pode se sentir à vontade para compartilhar o que quiser, no seu próprio tempo.</p>
+                </section>
+            </section>
+
+            <section class="mensagem-usuario-box">
+                <section class="mensagem-usuario-content">
+                    <p></p>
+                </section>
+            </section>
+        </article>
+
+        <article class="input-mensagem-box">
+            <input type="text" id="input-mensagem" placeholder="Digite uma mensagem...">
+            <section class="itens-input-mensagem">
+                <i class="fa-regular fa-face-smile"></i>
+                <i class="fa-regular fa-file-lines"></i>
+                <i class="fa-regular fa-image"></i>
+            </section>
+        </article>
+    </article>
 </body>
+<script src="../../public/js/chat.js"></script>
 </html>

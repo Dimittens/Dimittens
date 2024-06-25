@@ -187,7 +187,7 @@
   .enquete-post-box input {
     width: 926px;
     height: 60px;
-    border-radius: 30px;
+    border-radius: 0 30px 30px 0;
     border: 1px solid #f2f2f2;
     background-color: rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
@@ -431,4 +431,120 @@
     height: 85px;
     border-radius: 100%;
     box-sizing: border-box;
+  }
+
+
+
+
+
+
+
+  /* Codigo CSS do Slider da Comunidade */
+
+  .comunidades-recomendadas {
+    display: flex;
+    gap: 40px;
+    overflow: hidden;
+    margin-top: 50px;
+    animation: slide 10s linear infinite;
+    position: relative;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-33.33%);
+    }
+  }
+
+  .comunidades-recomendadas img {
+    width: 110px; 
+    height: 110px;
+    border-radius: 100%;
+  }
+
+  .span-box-comunidades {
+    width: 120px;
+    height: max-content;
+    display: flex;
+    white-space: nowrap;
+    justify-content: flex-end;
+    margin-top: 50px;
+  }
+
+  .span-box-comunidades span {
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+    font-weight: bold;
+    color: #ffd700;
+    line-height: normal;
+    font-size: 22px;
+  }
+
+  .span-acessar-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .acessar-box {
+    margin-top: 74px;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    background-color: #ffd700;
+    box-sizing: border-box;
+    border-radius: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .acessar-box i {
+    color: #422040;
+    font-weight: 900;
+    font-size: 24px;
+  }
+
+  .comunidades-unidade {
+    padding-left: 30px;
+    display: flex;
+    width: 701px;
+    height: 230px;
+    border-radius: 30px;
+    border: 1px solid #422040;
+    background-color: #422040;
+    box-sizing: border-box;
+  }
+
+  .slider-text-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .text-comunidades h2 {
+    box-sizing: border-box;
+    font-family: "Raleway SemiBold", "Raleway", sans-serif;
+    font-weight: 600;
+    color: #dfa5d9;
+    opacity: 0.7;
+    line-height: normal;
+    font-size: 32px;
+  }
+
+  .text-comunidades {
+    margin-left: 15px;
+  }
+
+  .text-comunidades p {
+    opacity: 0.7;
+    box-sizing: border-box;
+    font-family: "Raleway SemiBold", "Raleway", sans-serif;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: normal;
+    font-size: 20px;
+    white-space: nowrap;
   }
