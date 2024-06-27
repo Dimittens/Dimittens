@@ -15,6 +15,7 @@ router.get('/cadastromenor', (req, res) => {
   res.render('pages/index', { pagina: "cadastromenor", autenticado: null });
 });
 
+
 // COMENTARIOS
 router.get('/comentarios', (req, res) => {
   res.render('pages/index', { pagina: "comentarios", autenticado: null });

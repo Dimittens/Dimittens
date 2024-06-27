@@ -1,152 +1,152 @@
 
-    <link rel="stylesheet" href="css/chat.css">
-    <title>Chat</title>
+<link rel="stylesheet" href="css/chat.css">
+<title>Chat</title>
 </head>
 <body>
-    <nav id="sidebar">
-        <div id="sidebar_content">
-            <div id="user">
-                <img src="imagens/profile2.jpg" id="user_avatar" alt="Avatar">
-                <p id="user_infos">
-                    <span class="item-description">Larissa Fernandes</span>
-                    <span class="item-description">Paciente</span>
-                </p>
-            </div>
-            <ul id="side_items">
-                <li class="side-item active">
-                    <a href="#">
-                        <i class="fa-solid fa-calendar-days"></i>
-                        <span class="item-description">Agenda</span>
-                    </a>
-                </li>
-                <li class="side-item">
-                    <a href="#">
-                        <i class="fa-solid fa-phone"></i>
-                        <span class="item-description">Ligações</span>
-                    </a>
-                </li>
-                <li class="side-item">
-                    <a href="#">
-                        <i class="fa-solid fa-folder"></i>
-                        <span class="item-description">Mídias</span>
-                    </a>
-                </li>
-            </ul>
-            <button id="open_btn">
-                <i id="open_btn_icon" class="fa-solid fa-chevron-right"></i>
-            </button>
+<nav id="sidebar">
+    <div id="sidebar_content">
+        <div id="user">
+            <img src="imagens/profile2.jpg" id="user_avatar" alt="Avatar">
+            <p id="user_infos">
+                <span class="item-description">Larissa Fernandes</span>
+                <span class="item-description">Paciente</span>
+            </p>
         </div>
-        <div id="logout">
-            <button id="logout_btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="item-description">Sair do Chat</span>
-            </button>
-        </div>
-    </nav>
+        <ul id="side_items">
+            <li class="side-item active">
+                <a href="#">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span class="item-description">Agenda</span>
+                </a>
+            </li>
+            <li class="side-item">
+                <a href="#">
+                    <i class="fa-solid fa-phone"></i>
+                    <span class="item-description">Ligações</span>
+                </a>
+            </li>
+            <li class="side-item">
+                <a href="#">
+                    <i class="fa-solid fa-folder"></i>
+                    <span class="item-description">Mídias</span>
+                </a>
+            </li>
+        </ul>
+        <button id="open_btn">
+            <i id="open_btn_icon" class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+    <div id="logout">
+        <button id="logout_btn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="item-description">Sair do Chat</span>
+        </button>
+    </div>
+</nav>
 
-   <article class="box-contatos">
-        <section class="topo-titulo">
-            <h1>Chats</h1>
-            <i class="fa-solid fa-ellipsis-vertical"></i>
+<article class="box-contatos">
+    <section class="topo-titulo">
+        <h1>Chats</h1>
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </section>
+    <section class="input-container-box">
+        <section class="input-container">
+            <input type="text" placeholder="Buscar...">
+            <i class="fa-solid fa-magnifying-glass" id="icon-left"></i>
+            <i class="fa-solid fa-sliders" id="icon-right"></i>
         </section>
-        <section class="input-container-box">
-            <section class="input-container">
-                <input type="text" placeholder="Buscar...">
-                <i class="fa-solid fa-magnifying-glass" id="icon-left"></i>
-                <i class="fa-solid fa-sliders" id="icon-right"></i>
-            </section>
+    </section>
+    <section class="contato" data-contact-id="1">
+        <section class="contato-img">
+            <img src="imagens/profile3-psico.jpg" alt="" class="profiles-img">
         </section>
-        <section class="contato" data-contact-id="1">
-            <section class="contato-img">
-                <img src="imagens/profile3-psico.jpg" alt="" class="profiles-img">
-            </section>
-            <section class="contato-text">
-                <section class="h1-span-alinhados">
-                    <h2>Wanessa Pedroso</h2>
-                    <section class="span-right">
-                        <span>10:40</span>
-                    </section>
+        <section class="contato-text">
+            <section class="h1-span-alinhados">
+                <h2>Wanessa Pedroso</h2>
+                <section class="span-right">
+                    <span>10:40</span>
                 </section>
-                <p>Sem mensagens...</p>
             </section>
+            <p>Sem mensagens...</p>
         </section>
-        <section class="contato" data-contact-id="2">
-            <section class="contato-img">
-                <img src="imagens/profile-psico.jpg" alt="" class="profiles-img">
-            </section>
-            <section class="contato-text">
-                <section class="h1-span-alinhados">
-                    <h2>Pedro Lardal</h2>
-                    <section class="span-right">
-                        <span>10:40</span>
-                    </section>
-                </section>
-                <p>Sem mensagens...</p>
-            </section>
+    </section>
+    <section class="contato" data-contact-id="2">
+        <section class="contato-img">
+            <img src="imagens/profile-psico.jpg" alt="" class="profiles-img">
         </section>
-        <section class="contato" data-contact-id="3">
-            <section class="contato-img">
-                <img src="imagens/profile2-psico.jpg" alt="" class="profiles-img">
-            </section>
-            <section class="contato-text">
-                <section class="h1-span-alinhados">
-                    <h2>Bruno Ferreira</h2>
-                    <section class="span-right">
-                        <span>10:40</span>
-                    </section>
+        <section class="contato-text">
+            <section class="h1-span-alinhados">
+                <h2>Pedro Lardal</h2>
+                <section class="span-right">
+                    <span>10:40</span>
                 </section>
-                <p>Sem mensagens...</p>
             </section>
+            <p>Sem mensagens...</p>
         </section>
-        <section class="contato" data-contact-id="4">
-            <section class="contato-img">
-                <img src="imagens/profile7.jpg" alt="" class="profiles-img">
-            </section>
-            <section class="contato-text">
-                <section class="h1-span-alinhados">
-                    <h2>Douglas Dias</h2>
-                    <section class="span-right">
-                        <span>10:40</span>
-                    </section>
+    </section>
+    <section class="contato" data-contact-id="3">
+        <section class="contato-img">
+            <img src="imagens/profile2-psico.jpg" alt="" class="profiles-img">
+        </section>
+        <section class="contato-text">
+            <section class="h1-span-alinhados">
+                <h2>Bruno Ferreira</h2>
+                <section class="span-right">
+                    <span>10:40</span>
                 </section>
-                <p>Sem mensagens...</p>
+            </section>
+            <p>Sem mensagens...</p>
+        </section>
+    </section>
+    <section class="contato" data-contact-id="4">
+        <section class="contato-img">
+            <img src="imagens/profile7.jpg" alt="" class="profiles-img">
+        </section>
+        <section class="contato-text">
+            <section class="h1-span-alinhados">
+                <h2>Douglas Dias</h2>
+                <section class="span-right">
+                    <span>10:40</span>
+                </section>
+            </section>
+            <p>Sem mensagens...</p>
+        </section>
+    </section>
+</article>
+
+<article class="area-coluna">
+    <article class="chat-menu">
+        <section class="menu-perfil-conversa">
+            <img src="imagens/profile3-psico.jpg" alt="" class="menu-perfil-img" id="current-profile-img">
+        </section>
+        <section class="ligacao-chamada">
+            <i class="fa-solid fa-phone"></i>
+            <i class="fa-solid fa-video"></i>
+        </section>
+    </article>
+
+ 
+
+    <article class="area-mensagens" id="main-chat">
+        <section class="mensagem-psicologo-box">
+            <section class="mensagem-psicologo-content">
+                <p>Olá! Eu sou a Dra. Ana, psicóloga. É um prazer conhecê-lo(a). Gostaria de saber um pouco mais sobre você e o que te trouxe aqui hoje. Pode se sentir à vontade para compartilhar o que quiser, no seu próprio tempo.</p>
             </section>
         </section>
     </article>
 
-    <article class="area-coluna">
-        <article class="chat-menu">
-            <section class="menu-perfil-conversa">
-                <img src="imagens/profile3-psico.jpg" alt="" class="menu-perfil-img" id="current-profile-img">
-            </section>
-            <section class="ligacao-chamada">
-                <i class="fa-solid fa-phone"></i>
-                <i class="fa-solid fa-video"></i>
-            </section>
-        </article>
-
-     
-
-        <article class="area-mensagens" id="main-chat">
-            <section class="mensagem-psicologo-box">
-                <section class="mensagem-psicologo-content">
-                    <p>Olá! Eu sou a Dra. Ana, psicóloga. É um prazer conhecê-lo(a). Gostaria de saber um pouco mais sobre você e o que te trouxe aqui hoje. Pode se sentir à vontade para compartilhar o que quiser, no seu próprio tempo.</p>
-                </section>
-            </section>
-        </article>
-
-        <article class="input-mensagem-box">
-            <input type="text" id="message-input" placeholder="Digite uma mensagem...">
-            <section class="itens-input-mensagem">
-                <i class="fa-regular fa-face-smile"></i>
-                <i class="fa-regular fa-file-lines"></i>
-                <i class="fa-regular fa-image"></i>
-                <button id="submitBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
-            </section>
-            
-        </article>
-
+    <article class="input-mensagem-box">
+        <input type="text" id="message-input" placeholder="Digite uma mensagem...">
+        <section class="itens-input-mensagem">
+            <i class="fa-regular fa-face-smile"></i>
+            <i class="fa-regular fa-file-lines"></i>
+            <i class="fa-regular fa-image"></i>
+            <button id="submitBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </section>
+        
     </article>
 
-    <script src="javascript/chat.js"></script>
+</article>
+
+<script src="javascript/chat.js"></script>
 

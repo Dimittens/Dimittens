@@ -144,6 +144,10 @@ main {
     padding: 10px 20px 20px 20px;
 }
 
+#submitBtn {
+    border: none;
+}
+
 .contato::before {
     content: "";
     position: absolute;
@@ -362,11 +366,11 @@ main {
 /* Caixa de mensagens */
 
 .area-mensagens {
-    background-color: #e3e9f7;
+    background-color: #f2f5fe;
     width: 76.31vw;
     height: 830px;
     overflow: hidden;
-    border-bottom: 1px solid #e3e9f7;
+    border-bottom: 1px solid #f2f5fe;
 }
 
 .input-mensagem-box {
@@ -374,8 +378,8 @@ main {
     flex-direction: column;
     width: 76.31vw;
     height: 170px;
-    background-color: #e3e9f7;
-    border-top: 1px solid #e3e9f7;
+    background-color: #f2f5fe;
+    border-top: 1px solid #f2f5fe;
     justify-content: center;
     align-items: center;
 }
@@ -404,11 +408,7 @@ main {
 
 
 
-<<<<<<< HEAD
 #message-input{
-=======
-#input-mensagem {
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
     width: 70.31vw;
     height: 50px;
     border-radius: 45px;
