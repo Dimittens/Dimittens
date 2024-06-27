@@ -1,0 +1,453 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    overflow: hidden;
+}
+
+main {
+    padding: 20px;
+    position: fixed;
+    z-index: 1;
+    padding-left: calc(82px + 20px);
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #422040;
+    height: 100vh;
+    position: absolute;
+    transition: all .5s;
+    min-width: 82px;
+    z-index: 2;
+}
+
+#sidebar_content {
+    padding: 12px;
+}
+
+#user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+#user_avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+#user_infos {
+    display: flex;
+    flex-direction: column;
+}
+
+#user_infos span:last-child {
+    color: #ffff;
+    font-size: 12px;
+}
+
+#side_items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+}
+
+.side-item {
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+}
+
+.box-contatos {
+    width: 480px;
+    height: 100vh;
+    margin-left: 85px;
+    background-color: #ffff;
+    border-right: 1px solid #dfa5d9;
+}
+
+.topo-titulo {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+}
+
+.topo-titulo h1 {
+    display: block;
+}
+
+.topo-titulo i {
+    margin-top: 7px;
+}
+
+.box-contatos input {
+    width: 320px;
+    height: 41px;
+    border-radius: 10px;
+    border: 1px solid rgba(223, 165, 217, 0.4);
+    background-color: #ffffff;
+    box-sizing: border-box;
+    box-shadow: -5px 5px 5px 0px rgba(66, 32, 64, 0.2);
+}
+
+.input-container {
+    display: flex;
+    position: relative;
+    padding-bottom: 30px;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-container-box {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.input-container input {
+    box-sizing: border-box;
+    text-indent: 20px; /* Desloca o texto para a direita */
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+.input-container input::placeholder {
+    box-sizing: border-box;
+    font-family: "Raleway", sans-serif;
+    color: rgba(66, 32, 64, 0.2);
+}
+
+.profiles-img {
+    width: 49px;
+    height: 49px;
+    border-radius: 100%;
+}
+
+.contato {
+    position: relative;
+    display: flex;
+    padding: 10px 20px 20px 20px;
+}
+
+.contato::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%; /* Posiciona o início da borda no meio do elemento */
+    width: 70%; /* Largura da borda */
+    height: 1px; /* Altura da borda */
+    background-color: rgba(223, 165, 217, 0.4); /* Cor da borda */
+    transform: translateX(-50%);
+}
+
+.contato-text {
+    width: 100%;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente os textos */
+    margin-left: 17px;
+}
+
+.contato-info {
+    flex-direction: column;
+}
+
+.h1-span-alinhados {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.contato-text h2 {
+    margin: 0;
+    font-size: 18px;
+    box-sizing: border-box;
+    font-family: "Raleway Medium", "Raleway", sans-serif;
+    font-weight: 500;
+    color: rgba(66, 32, 64, 0.99);
+    justify-content: flex-end;
+}
+
+.contato-text p {
+    margin: 5px 0; /* Margem entre os textos */
+    box-sizing: border-box;
+    font-family: "Raleway Medium", "Raleway", sans-serif;
+    font-weight: 500;
+    color: rgba(66, 32, 64, 0.45);
+}
+
+.span-right {
+    display: flex;
+    margin-right: 50px;
+}
+
+.contato-text span {
+    margin-top: 6px;
+    margin-right: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    color: rgba(66, 32, 64, 0.45);
+}
+
+
+.input-container #icon-left {
+    font-size: 14px;
+    color: #dfa5d9;
+    position: absolute;
+    left: 15px;
+    top: 30%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Ícone não interfere na interação com o input */
+}
+
+.input-container #icon-right {
+    font-size: 14px;
+    color: #dfa5d9;
+    position: absolute;
+    right: 85px;
+    top: 30%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Ícone não interfere na interação com o input */
+}
+
+.side-item:hover,
+#logout_btn:hover {
+    background-color: #e3e9f7;
+}
+
+.side-item:hover span,
+#logout_btn span:hover {
+    color: #dfa5d9;
+}
+
+.side-item a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #dfa5d9;
+}
+
+.side-item.active a {
+    color: #e3e9f7;
+}
+
+.side-item a i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #dfa5d9;
+}
+
+#logout {
+    border-top: 1px solid #e3e9f7;
+    padding: 12px;
+}
+
+#logout_btn {
+    color: #dfa5d9;
+    border: none;
+    padding: 12px;
+    font-size: 14px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    border-radius: 8px;
+    text-align: start;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+#open_btn {
+    position: absolute;
+    top: 30px;
+    right: -10px;
+    background-color: #e3e9f7;
+    color: #dfa5d9;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+#open_btn_icon {
+    transition: transform .3s ease;
+}
+
+.open-sidebar #open_btn_icon {
+    transform: rotate(180deg);
+}
+
+.item-description {
+    width: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    transition: width .6s;
+    height: 0px;
+    color: #e3e9f7;
+}
+
+#sidebar.open-sidebar {
+    min-width: 15%;
+}
+
+#sidebar.open-sidebar .item-description {
+    width: 150px;
+    height: auto;
+}
+
+#sidebar.open-sidebar .side-item a {
+    justify-content: flex-start;
+    gap: 14px;
+}
+
+
+.chat-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px 0 60px;
+    border-bottom: 1px solid #dfa5d9;
+    background-color: white;
+    width: 76.31vw;
+    max-width: 76.31vw;
+    height: 80px;
+}
+
+.ligacao-chamada {
+    padding-left: 10px;
+}
+
+.ligacao-chamada i {
+    color: #422040;
+    font-size: 22px;
+    margin-left: 15px;
+}
+
+
+.menu-perfil-img {
+    width: 41px;
+    height: 41px;
+    border-radius: 100%;
+}
+
+.area-coluna {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+
+/* Caixa de mensagens */
+
+.area-mensagens {
+    background-color: #e3e9f7;
+    width: 76.31vw;
+    height: 830px;
+    overflow: hidden;
+    border-bottom: 1px solid #e3e9f7;
+}
+
+.input-mensagem-box {
+    display: flex;
+    flex-direction: column;
+    width: 76.31vw;
+    height: 170px;
+    background-color: #e3e9f7;
+    border-top: 1px solid #e3e9f7;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-mensagem-box input {
+    padding-left: 30px;
+}
+
+.input-mensagem-box input:focus {
+    outline: none;
+}
+
+.itens-input-mensagem {
+    margin-top: 10px;
+    width: 90%;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.itens-input-mensagem i {
+    opacity: 0.8;
+    color: #422040;
+    font-size: 20px;
+}
+
+
+
+#message-input{
+    width: 70.31vw;
+    height: 50px;
+    border-radius: 45px;
+    border: 1px solid #42204067;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.mensagem-psicologo-box {
+    margin: 80px 0 0 80px;
+    display: flex;
+}
+
+.mensagem-psicologo-content {
+    padding: 20px;
+    border-radius: 0px 35px 35px 35px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    display: inline-block;
+    max-width: 40%;
+    word-wrap: break-word;
+}
+
+.mensagem-psicologo p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgba(66, 32, 64, 0.258);
+    width: 550px;
+}
+
+.mensagem-usuario-box {
+    margin: 80px 80px 0 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mensagem-usuario-content {
+    padding: 20px;
+    border-radius: 35px 0px 35px 35px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    display: inline-block;
+    max-width: 40%;
+    word-wrap: break-word;
+}
+
+

@@ -1,21 +1,35 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+var session = require("express-session");
 const app = express();
+const router = express.Router();
+const port = 3000;
+const env = require('dotenv').config();
 
-// Define a engine de visualização como EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'app', 'views')); // Configuração do diretório de views
-
-// Servir arquivos estáticos da pasta 'public'
-app.use(express.static(path.join(__dirname, 'app', 'public')));
-
-// Rota para a página principal
-app.get('/', (req, res) => {
-    res.render('pages/index'); // Renderizando o arquivo index.ejs dentro de /views/pages
+router.get("/", (req, res) => {
+  res.send("Rota raiz");
 });
 
-// Inicia o servidor
-const port = process.env.APP_PORT || 3000;
+app.use(express.static("app/public"));
+
+app.set("view engine", "ejs");
+app.set("views", "./app/views");
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+var rotas = require("./app/routes/router");
+
+app.use("/", rotas);
+
+app.use(session({ 
+    secret: "leleo",
+    resave: false,
+    saveUninitialized: false, 
+    cookie: { secure: false } 
+  }));
+
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+  console.log(`Servidor aberto na: ${port}\nhttp://localhost:${port}`);
 });
+
+module.exports = router;

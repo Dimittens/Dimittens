@@ -8,7 +8,6 @@ body {
 }
 
 .container {
-    display: flexbox;
     width: 484px;
     height: 768px;
     border-radius: 35px;
@@ -163,12 +162,12 @@ h1 {
 }
 
 #logo {
-    width: 80px;    
-    height: 80px;
+    width: 50px;    
+    height: 50px;
     display: flexbox;
 }
 
-footer img {
+div img {
     width: 25px;
     height: 25px;
 }
@@ -194,7 +193,6 @@ p {
 
 @media (min-width: 320px) and (max-width: 360px) {
     body {
-        position: absolute;
         overflow-x: hidden;
     }
     .container {
@@ -221,8 +219,8 @@ p {
     }
 
     #logo {
-        width: 70px;
-        height: 70px;
+        width: 40px;
+        height: 40px;
     }
 
     .logotipo {
@@ -257,7 +255,7 @@ p {
         font-size: 14px;
     }
 
-    footer img {
+    div img {
         width: 20px;
         height: 20px;
     }
@@ -279,7 +277,7 @@ p {
     }
 }
 
-@media (min-width: 361px) and (max-width: 480px)
+@media (min-width: 360px) and (max-width: 480px)
 {
     .logotipo {
         margin-top: 60px;

@@ -8,13 +8,14 @@ body {
 }
 
 .logotipo img {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
 }
 
 .logotipo {
     text-align: center;
-    height: 70px;
+    height: 60px;
+    margin-top: 15px;
 }
 
 h1 {
@@ -24,7 +25,7 @@ h1 {
 
 .title {
     font-size: 28px;
-    font-family: "Antialiased ", sans-serif;
+    font-family: "Antialiased", sans-serif;
     font-weight: 600;
     color: #333333;
 }
@@ -35,7 +36,6 @@ h1 {
     flex-direction: column;
     margin: 20px auto;
     width: 268px;
-
 }
 
 .input {
@@ -46,11 +46,19 @@ h1 {
     background-color: #f7f7f7;
     box-sizing: border-box;
     padding-left: 14px;
-    box-sizing: border-box;
 }
 
+
+.warning {
+    color: red;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+
+
 label {
-    font-family: "Antialiased ", sans-serif;
+    font-family: "Antialiased", sans-serif;
     color: #333333;
     font-size: 14px;
     align-self: flex-start;
@@ -68,7 +76,6 @@ label {
     background-color: #f7f7f7;
     border-radius: 35px;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.25);
-
 }
 
 .continue {
@@ -93,7 +100,7 @@ label {
 }
 
 .sign {
-    font-family: "Antialiased ", sans-serif;
+    font-family: "Antialiased", sans-serif;
     font-weight: 500;
     color: #333333;
     font-size: 12px;
@@ -115,7 +122,7 @@ hr {
 }
 
 @media (min-width: 320px) and (max-width: 360px) {
-    .container{
+    .container {
         width: 100vw;
         border-radius: 0px;
         margin-top: 305px;
@@ -130,7 +137,6 @@ hr {
 
     h1 {
         font-size: 1.875rem;
-
     }
 
     #logo {
@@ -157,20 +163,6 @@ hr {
 
     label {
         font-size: 14px;
-        margin-left: 25px;
-    }
-
-    .signup-conditions {
-        text-align: center;
-        margin-top: 18px;
-    }
-}
-
-@media (min-width: 361px) and (max-width: 480px) {
-    .container{
-        width: 100vw;
-        border-radius: 0px;
-        margin-top: 375px;
-        height: 860px;
+        margin-left: 25px
     }
 }

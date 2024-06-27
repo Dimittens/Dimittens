@@ -5,16 +5,19 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
+    padding: 0;
 }
 
 .logotipo img {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
 }
 
+
 .logotipo {
+    margin-top: 20px;
     text-align: center;
-    height: 70px;
+    height: 60px;
 }
 
 h1 {
@@ -30,11 +33,8 @@ h1 {
 }
 
 .input-field {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    margin: 15px auto;
     width: 268px;
+    margin-top: 10px;
 }
 
 .input {
@@ -44,6 +44,8 @@ h1 {
     border: 1px solid rgba(121, 121, 121, 0.7);
     background-color: #f7f7f7;
     box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 12px;
 }
 
 label {
@@ -53,13 +55,11 @@ label {
     align-self: flex-start;
 }
 
-.lbl {
-    margin-top: 10px;
-}
-
-
-
 .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     width: 484px;
     height: 845px;
     background-color: #f7f7f7;
@@ -70,7 +70,6 @@ label {
 
 .continue {
     text-align: center;
-    margin-top: 25px;
 }
 
 #continuar {
@@ -86,7 +85,6 @@ label {
 
 .signup-conditions {
     text-align: center;
-    margin-top: 18px;
 }
 
 .sign {
