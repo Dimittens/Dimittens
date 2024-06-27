@@ -404,7 +404,11 @@ main {
 
 
 
+<<<<<<< HEAD
 #message-input{
+=======
+#input-mensagem {
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
     width: 70.31vw;
     height: 50px;
     border-radius: 45px;

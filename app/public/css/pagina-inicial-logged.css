@@ -10,6 +10,7 @@ body {
 }
 
 
+<<<<<<< HEAD
 
 .passo-a-passo {
     width: 100vw;
@@ -27,6 +28,8 @@ body {
     font-size: 36px;
 }
 
+=======
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 main {
     padding: 0;
     margin: 0;
@@ -146,7 +149,10 @@ main {
     transform: translateY(-232px);
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 .tipo-terapia > section {
     display: flex;
     flex-direction: column;
@@ -201,7 +207,10 @@ main {
     font-family: "Arial Bold", "Arial Normal", "Arial", sans-serif;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 .p-slogan {
     text-align: left;
     color: white;
@@ -300,7 +309,10 @@ main {
         font-size: 13px;
         margin: 20px 60px 70px 60px;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 @media (min-width: 400px) and (max-width: 480px) {
@@ -368,7 +380,13 @@ main {
         font-size: 16px;
         margin: 20px 80px 70px 80px;
     }
+<<<<<<< HEAD
 
+=======
+    .passo-a-passo {
+        margin-top: -350px;
+    }
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 @media (min-width: 768px) and (max-width: 900px) {
@@ -622,7 +640,10 @@ main {
         font-size: 18px;
         margin: 20px 80px 94px 80px;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 
@@ -740,7 +761,10 @@ main {
     .tipo-terapia {
         transform: translateY(-195px);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 @media (min-width: 1350px) and (max-width: 1550px) {
@@ -804,4 +828,3 @@ main {
         font-size: 30px;
     }
 }
-
