@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="css/home.css">
 </head>
 
-<%- include("../partial/header") %>
+<%- include("../partial/header-unlogged") %>
 
 <main>
     <article class="primeiro-quadrante">
@@ -53,6 +53,10 @@
             <p>Os transtornos são uma combinação de pensamentos, percepções, emoções <br> e comportamentos anormais, que podem afetar sua relação <br>com outras pessoas</p>
         </section>
     </article>
+
+    <div id="loginModal" class="modal">
+        <% include partials/loginpacientes.ejs %>
+    </div>
 
     <%- include("../partial/carrosel-transtornos") %>
 
