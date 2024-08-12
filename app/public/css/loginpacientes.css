@@ -7,6 +7,19 @@ body {
     margin: 0;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
 .container {
     width: 484px;
     height: 760px;
@@ -15,7 +28,7 @@ body {
     background-color: #f7f7f7;
     box-sizing: border-box;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.25);
-}
+}   
 
 .logotipo {
     margin-top: 40px;
