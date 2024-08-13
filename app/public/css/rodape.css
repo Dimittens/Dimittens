@@ -87,3 +87,59 @@ footer {
 h2.direitos-rodape {
     margin: 0;
 }
+
+@media (min-width: 1600px) and (max-width: 1750px) {
+    .logo-rodape img {
+        width: 175px;
+        height: 175px;
+    }
+
+    .logo-rodape {
+        display: flex;
+        margin-right: 50px;
+    }
+
+    .rodape-contatos {
+        margin-left: 60px;
+    }
+}
+
+@media (min-width: 1400px) and (max-width: 1600px) {
+    .logo-rodape img {
+        width: 175px;
+        height: 175px;
+    }
+
+    .logo-rodape {
+        display: flex;
+        margin-right: 50px;
+    }
+
+    .rodape-contatos {
+        margin-left: 50px;
+    }
+
+    .rodape-infos {
+        gap: 25px;
+        margin: 0px 30px 0 30px;
+        padding-right: 70px;
+    }
+
+    .rodape-infos h1 {
+        font-size: 20px;
+    }
+    
+    .rodape-infos h2 {
+        font-family: "Raleway Medium", "Raleway", sans-serif;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: normal;
+        font-size: 16px;
+    }
+    
+    .rodape-contatos h2 {
+        font-size: 16px;
+        margin-left: 10px;
+    }
+}
+

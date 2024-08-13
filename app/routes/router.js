@@ -21,6 +21,11 @@ router.get('/comentarios', (req, res) => {
   res.render('pages/index', { pagina: "comentarios", autenticado: null });
 });
 
+// RODAPE
+router.get('/rodape', (req, res) => {
+  res.render('pages/index', { pagina: "rodape", autenticado: null });
+});
+
 // CARROSEL TRANSTORNOS
 router.get('/carroseltranstornos', (req, res) => {
   res.render('pages/index', { pagina: "carrosel-transtornos", autenticado: null });
