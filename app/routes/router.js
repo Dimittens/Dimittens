@@ -42,7 +42,7 @@ router.get('/calendario', (req, res) => {
 });
 
 // Pop-Up Psicologos
-router.get('/popuppsicologos', (req, res) => {
+router.get('/c', (req, res) => {
   res.render('pages/index', { pagina: "popuppsicologos", autenticado: null });
 });
 
@@ -50,6 +50,11 @@ router.get('/popuppsicologos', (req, res) => {
 // CADASTRO PSICOLOGOS
 router.get('/cadastropsicologos', (req, res) => {
   res.render('pages/index', { pagina: "cadastropsicologos", autenticado: null });
+});
+
+// CADASTRO PSICOLOGOS
+router.get('/planos', (req, res) => {
+  res.render('pages/index', { pagina: "planos", autenticado: null });
 });
 
 // CADASTRO PACIENTES
