@@ -168,3 +168,27 @@
     color: var(--cor-dark);
     line-height: normal;
 }
+
+
+@media (min-width: 1200px) and (max-width: 1600px) {
+    .box-planos {
+        gap: 50px;
+    }
+
+
+    .planos {
+        width: 350px;
+        height: 550px;
+    }
+
+    .input-comprar {
+        width: 200px;
+        height: 40px;
+        margin: 0;
+    }
+
+    .items-lista {
+        margin-bottom: 40px;
+    }
+
+}
