@@ -36,6 +36,11 @@ router.get('/passoapasso', (req, res) => {
   res.render('pages/index', { pagina: "passoapasso", autenticado: null });
 });
 
+// Edite seu Perfil
+router.get('/editeseuperfil', (req, res) => {
+  res.render('pages/index', { pagina: "editeseuperfil", autenticado: null });
+});
+
 // Calendario
 router.get('/calendario', (req, res) => {
   res.render('pages/index', { pagina: "calendario", autenticado: null });

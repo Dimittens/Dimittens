@@ -1,0 +1,27 @@
+article {
+    width: 1550px;
+    height: 865px;
+    border-radius: 25px;
+    border: 1px solid #ec8d26;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+ul {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    width: 1376px;
+    height: 65px;
+    background-color: #ec8d26;
+}
+
+h1 {
+  font-family: "Raleway SemiBold", "Raleway", sans-serif;
+  color: rgba(66, 32, 64, 0.65);
+  font-size: 42px;
+}
