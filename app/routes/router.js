@@ -41,6 +41,16 @@ router.get('/editeseuperfil', (req, res) => {
   res.render('pages/index', { pagina: "editeseuperfil", autenticado: null });
 });
 
+// Perfil
+router.get('/perfil', (req, res) => {
+  res.render('pages/index', { pagina: "perfil", autenticado: null });
+});
+
+// Consultas
+router.get('/consultas', (req, res) => {
+  res.render('pages/index', { pagina: "consultas", autenticado: null });
+});
+
 // Calendario
 router.get('/calendario', (req, res) => {
   res.render('pages/index', { pagina: "calendario", autenticado: null });
