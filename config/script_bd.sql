@@ -1,5 +1,5 @@
 
-USE b94votm47hggreb5kvpz;
+USE b94vom47hggreb5kvpz;
 
 -- Table: Usuarios
 CREATE TABLE IF NOT EXISTS `b94votm47hggreb5kvpz`.`USUARIO` (
