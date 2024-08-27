@@ -1,6 +1,13 @@
+body {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+
 article {
     width: 1550px;
-    height: 865px;
+    height: 1014px;
     border-radius: 25px;
     border: 1px solid #ec8d26;
     background-color: #ffffff;
@@ -12,14 +19,14 @@ article {
 }
 
 ul {
-    display: flex;
-    justify-content: space-between;
     list-style-type: none;
     width: 1376px;
     height: 45px;
     background-color: #ec8d26;
     margin: 0;
     border-radius: 17px 17px 0 0;
+    text-align: left;
+    padding: 0;
 }
 
 h1 {
@@ -31,15 +38,46 @@ h1 {
 .box1 {
   width: 1376px;
   height: 330px;
-  border-radius: 17px 17px 0 0;
+  border-radius: 17px 17px 17px 17px;
   border: #ec8d26 solid 1px;
  
   
 }
 
-.box2 {
+.box3 , .box2 {
   align-items: center;
   justify-content: center;
   display: flex;
   gap: 169px;
+}
+
+.box4 {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+h2 {
+  font-family: "Antialiased ", sans-serif ;
+  color: rgba(66, 32, 64, 0.65);
+  font-size: 18px;
+  
+}
+
+li {
+  font-family: "Antialiased ", sans-serif;
+  color: #ffffff;
+  display: flex;
+  align-items: flex-end;
+}
+
+.box2 i {
+  margin-left: 60px;
+  align-items: center;
+}
+
+
+.fa-solid fa-arrow-down {
+  display: flex;
+  align-items: center;
 }
