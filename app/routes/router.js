@@ -10,6 +10,11 @@ router.get('/', (req, res) => {
   res.render('pages/index', { pagina: "home", autenticado: null });
 });
 
+// ROTA PARA PRECISA DE AJUDA
+router.get('precisadeajuda', (req, res) => {
+  res.render('pages/index', { pagina: "precisadeajuda", autenticado: null });
+});
+
 // CADASTRO MENOR
 router.get('/cadastromenor', (req, res) => {
   res.render('pages/index', { pagina: "cadastromenor", autenticado: null });
