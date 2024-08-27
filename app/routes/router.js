@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 });
 
 // ROTA PARA PRECISA DE AJUDA
-router.get('precisadeajuda', (req, res) => {
+router.get('/precisadeajuda', (req, res) => {
   res.render('pages/index', { pagina: "precisadeajuda", autenticado: null });
 });
 
@@ -62,7 +62,7 @@ router.get('/calendario', (req, res) => {
 });
 
 // Pop-Up Psicologos
-router.get('/c', (req, res) => {
+router.get('/popuppsicologos', (req, res) => {
   res.render('pages/index', { pagina: "popuppsicologos", autenticado: null });
 });
 
