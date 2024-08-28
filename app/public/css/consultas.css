@@ -18,6 +18,24 @@ article {
     flex-direction: column;
 }
 
+.box {
+  border: #ec8d26 1px solid;
+  height: 200px;
+}
+
+table {
+  width: 1376px;
+  height: 45px;
+}
+
+th {
+  text-align: left;
+}
+
+tr.head {
+  background-color: #ec8d26;
+}
+
 ul {
     list-style-type: none;
     width: 1376px;
@@ -31,7 +49,8 @@ ul {
 
 h1 {
   font-family: "Raleway SemiBold", "Raleway", sans-serif;
-  color: rgba(66, 32, 64, 0.65);
+  font-weight: 600;
+  color: rgba(66, 32, 64, 0.99);
   font-size: 42px;
 }
 
