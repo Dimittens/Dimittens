@@ -6,97 +6,85 @@ body {
 
 
 article {
-    width: 1550px;
-    height: 1014px;
-    border-radius: 25px;
-    border: 1px solid #ec8d26;
-    background-color: #ffffff;
-    box-sizing: border-box;
-    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+  width: 1550px;
+  height: 1014px;
+  border-radius: 25px;
+  border: 1px solid #ec8d26;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
-.box {
-  border: #ec8d26 1px solid;
-  height: 200px;
-}
+
 
 table {
   width: 1376px;
-  height: 45px;
+  height: 330px;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 17px 17px 17px 17px;
+  overflow: hidden;
+  border: #ec8d26 1px solid;
+
+
 }
 
 th {
   text-align: left;
+  font-family: "Antialiased ", sans-serif;
+  color: #ffffff;
+  font-weight: normal;
+  padding-left: 45px;
 }
 
 tr.head {
   background-color: #ec8d26;
+  height: 45px;
 }
 
-ul {
-    list-style-type: none;
-    width: 1376px;
-    height: 45px;
-    background-color: #ec8d26;
-    margin: 0;
-    border-radius: 17px 17px 0 0;
-    text-align: left;
-    padding: 0;
+
+
+tbody td {
+  border: none;
+  
+}
+
+td {
+  text-align: center;
+  font-family: "Antialiased ", sans-serif;
+  color: rgba(66, 32, 64, 0.65);
+  font-size: 18px;
+}
+
+.inf {
+  text-align: center;
+  vertical-align: middle;
+  height: 100%;
 }
 
 h1 {
   font-family: "Raleway SemiBold", "Raleway", sans-serif;
-  font-weight: 600;
+  font-weight: normal;
   color: rgba(66, 32, 64, 0.99);
   font-size: 42px;
 }
 
-.box1 {
-  width: 1376px;
-  height: 330px;
-  border-radius: 17px 17px 17px 17px;
-  border: #ec8d26 solid 1px;
- 
-  
-}
-
-.box3 , .box2 {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  gap: 169px;
-}
-
-.box4 {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-}
-
-h2 {
-  font-family: "Antialiased ", sans-serif ;
-  color: rgba(66, 32, 64, 0.65);
-  font-size: 18px;
-  
-}
-
-li {
-  font-family: "Antialiased ", sans-serif;
-  color: #ffffff;
-  display: flex;
-  align-items: flex-end;
-}
-
-.box2 i {
-  margin-left: 60px;
-  align-items: center;
-}
-
-
 .fa-solid fa-arrow-down {
   display: flex;
   align-items: center;
+}
+
+#t1 i {
+  margin-left: 137px;
+}
+
+#t2 i{
+  margin-left: 95px;
+}
+
+i {
+  font-weight: normal;
 }
