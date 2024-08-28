@@ -1,0 +1,18 @@
+body {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+
+article {
+    width: 1550px;
+    height: 1014px;
+    border-radius: 25px;
+    border: 1px solid #ec8d26;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}

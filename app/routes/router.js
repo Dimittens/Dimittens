@@ -56,6 +56,11 @@ router.get('/consultas', (req, res) => {
   res.render('pages/index', { pagina: "consultas", autenticado: null });
 });
 
+// ATIVIDADE MENSAL
+router.get('/atividademensal', (req, res) => {
+  res.render('pages/index', { pagina: "atividademensal", autenticado: null });
+});
+
 // Calendario
 router.get('/calendario', (req, res) => {
   res.render('pages/index', { pagina: "calendario", autenticado: null });
