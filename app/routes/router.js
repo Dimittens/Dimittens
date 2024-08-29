@@ -4,6 +4,17 @@ const pool = require("../../config/pool_de_conexao");
 const userPacientesController = require("../controllers/userPacientesController");
 const {  recordAuthenticatedUser } = require("../models/autenticador_middleware");
 
+// ROTA PARA HEADER
+router.get('/header', (req, res) => {
+  res.render('pages/index', { pagina: "header", autenticado: null });
+});
+
+
+
+// ROTA PARA HOME LOGGED
+router.get('/homelogged', (req, res) => {
+  res.render('pages/index', { pagina: "homelogged", autenticado: null });
+});
 
 // ROTA PARA HOME
 router.get('/', (req, res) => {
