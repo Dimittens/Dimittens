@@ -74,7 +74,6 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    position: absolute;
     width: 100px;
     height: 100px;
 }
@@ -155,8 +154,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
     margin-bottom: 10px;
-    position: relative;
     width: 168px;
     height: 50px;
     border-radius: 10px;
@@ -173,13 +172,14 @@
 
 
 @media (min-width: 1200px) and (max-width: 1600px) {
+
     .box-planos {
-        gap: 50px;
+        gap: 80px;
+        padding: 80px 0 80px 0;
     }
 
-
     .planos {
-        width: 350px;
+        width: 330px;
     }
 
     .input-comprar {
@@ -194,9 +194,67 @@
 
 }
 
+@media (min-width: 1600px) and (max-width: 1800px) {
+    .box-planos {
+        gap: 90px;
+    }
+
+}
+
+
 @media (min-width: 1000px) and (max-width: 1200px) {
     .box-planos {
         gap: 50px;
+    }
+
+    .box-planos h1 {
+        font-size: 24px;
+    }
+
+    .box-planos h2 {
+        font-size: 75px;
+    }
+
+
+    .planos {
+        width: 280px;
+        height: 600px;
+    }
+
+    .promo {
+        width: 135px;
+        height: 45px;
+    }
+
+    .promo p {
+        font-size: 14px;
+    }
+
+    .input-comprar {
+        width: 130px;
+        height: 35px;
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .items-lista {
+        margin-bottom: 10px;
+    }
+
+    .items-lista li {
+        font-size: 12px;
+    }
+
+    .input-comprar {
+        width: 150px;
+    }
+
+}
+
+@media (min-width: 800px) and (max-width: 1000px) {
+    .box-planos {
+        gap: 50px;
+        flex-direction: column;
     }
 
     .box-planos h1 {
@@ -232,7 +290,85 @@
 
 }
 
-@media (min-width: 800px) and (max-width: 1000px) {
+@media (min-width: 600px) and (max-width: 800px) {
+    .box-planos {
+        gap: 50px;
+        flex-direction: column;
+    }
+
+    .box-planos h1 {
+        font-size: 26px;
+    }
+
+    .box-planos h2 {
+        font-size: 80px;
+    }
+
+
+    .planos {
+        width: 350px;
+    }
+
+    .input-comprar {
+        width: 200px;
+        height: 40px;
+        margin: 0;
+    }
+
+    .items-lista {
+        margin-bottom: 40px;
+    }
+
+    .items-lista li {
+        font-size: 13px;
+    }
+
+    .input-comprar {
+        width: 150px;
+    }
+
+}
+
+@media (min-width: 480px) and (max-width: 600px) {
+    .box-planos {
+        gap: 50px;
+        flex-direction: column;
+    }
+
+    .box-planos h1 {
+        font-size: 26px;
+    }
+
+    .box-planos h2 {
+        font-size: 80px;
+    }
+
+
+    .planos {
+        width: 350px;
+    }
+
+    .input-comprar {
+        width: 200px;
+        height: 40px;
+        margin: 0;
+    }
+
+    .items-lista {
+        margin-bottom: 40px;
+    }
+
+    .items-lista li {
+        font-size: 13px;
+    }
+
+    .input-comprar {
+        width: 150px;
+    }
+
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
     .box-planos {
         gap: 50px;
         flex-direction: column;
