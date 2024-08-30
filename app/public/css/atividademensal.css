@@ -16,3 +16,50 @@ article {
     display: flex;
     flex-direction: column;
 }
+
+section h1{
+  display: flex;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 33px;
+  font-family: "Raleway SemiBold", "Raleway", sans-serif;
+  font-weight: 600;
+  color: rgba(66, 32, 64, 0.99);
+}
+
+input {
+  display: inline;
+  justify-content: center;
+  width: 140px;
+  height: 40px;
+  border-radius: 15px;
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  box-shadow: -2px 2px 5px 0px rgba(66, 32, 64, 0.35);
+  font-family: "Raleway Bold", "Raleway", sans-serif;
+  font-weight: 700;
+  color: #ec8d26;
+  font-size: 18px;
+
+}
+
+.meses {
+  width: 500px;
+  height: 40px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 138px;
+}
+
+hr {
+  margin-top: 27px;
+  width: 400px;
+  height: 1px;
+  border: 1px solid #422040;
+  background-color: rgba(255, 255, 255, 0);
+}
