@@ -481,6 +481,10 @@ main {
         margin-top: 10px;
     }
 
+    .mulher-320px {
+        display: none;
+    }
+
     .text {
         margin-top: 5px;
         margin-left: 50px;

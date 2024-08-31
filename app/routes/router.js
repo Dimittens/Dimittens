@@ -9,6 +9,11 @@ router.get('/header', (req, res) => {
   res.render('pages/index', { pagina: "header", autenticado: null });
 });
 
+// ROTA PARA HOME LOGGED
+router.get('/headerunlogged', (req, res) => {
+  res.render('pages/index', { pagina: "headerunlogged", autenticado: null });
+});
+
 // ROTA PARA INTERESSES
 router.get('/interesses', (req, res) => {
   res.render('pages/index', { pagina: "interesses", autenticado: null });
