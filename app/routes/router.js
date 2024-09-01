@@ -19,6 +19,11 @@ router.get('/interesses', (req, res) => {
   res.render('pages/index', { pagina: "interesses", autenticado: null });
 });
 
+// ROTA PARA CARROSEL DE TRANSTORNOS
+router.get('/carroseltranstornos', (req, res) => {
+  res.render('pages/index', { pagina: "carroseltranstornos", autenticado: null });
+});
+
 // ROTA PARA HOME LOGGED
 router.get('/homelogged', (req, res) => {
   res.render('pages/index', { pagina: "homelogged", autenticado: null });

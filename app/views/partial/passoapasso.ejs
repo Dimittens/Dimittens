@@ -9,8 +9,6 @@
             width: 100vw;
         }
 
-
-
         .blocos-pap {
             display: flex;
             flex-wrap: wrap;
@@ -120,6 +118,7 @@
             color: #422040;
             line-height: normal;
             font-size: 36px;
+            width: 90%;
         }
 
 
@@ -150,7 +149,7 @@
 
             .h1-pap {
                 font-size: 28px;
-                width: 100%;
+                width: 90%;
                 overflow-wrap: break-word;
             }
 
@@ -212,8 +211,17 @@
 
         @media (min-width:400px) and (max-width: 480px) {
             .bloco-do-icon {
-                width: 80px;
-                height: 80px;
+                width: 90px;
+                height: 90px;
+            }
+
+            .blocos-pap {
+                gap: 30px;
+                margin-top: 70px;
+            }
+
+            .bloco {
+                width: 50px;
             }
 
             .logo-icon {
@@ -226,19 +234,19 @@
             }
 
             .h1-pap {
-                font-size: 22px;
+                font-size: 18px;
                 width: 100%;
                 overflow-wrap: break-word;
             }
 
             .button {
-                width: 320px;
-                height: 50px;
-                font-size: 16px;
+                width: 280px;
+                height: 40px;
+                font-size: 14px;
             }
 
             .aviso {
-                font-size: 12px;
+                font-size: 10px;
                 margin-top: 50px;
             }
 
@@ -251,7 +259,7 @@
             }
 
             .bloco p {
-                font-size: 12px;
+                font-size: 10px;
                 width: 90px;
             }
         }
@@ -272,8 +280,11 @@
             }
 
             .bloco {
-                width: 100px;
-                margin-top: -30px;
+                width: 50px;
+            }
+
+            .blocos-pap {
+                padding: 0 50px 0 50px;
             }
 
             .h1-pap {
@@ -311,7 +322,7 @@
 <body>
     <main>
         <div class="pap-main">
-            <h1 class="h1-pap">COMECE SUA CONSULTA EM APENAS 3 PASSOS NA DIMITTENS!</h1>
+            <h1 class="h1-pap">COMECE SUA CONSULTA EM APENAS <br>3 PASSOS NA DIMITTENS!</h1>
             <article class="blocos-pap">
                 <section class="bloco">
                     <div class="circulo">1</div>
