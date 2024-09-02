@@ -159,3 +159,169 @@ p {
     justify-content: center;
     align-items: baseline;
 }
+
+
+@media (min-width: 1000px) and (max-width: 1500px) {
+    .grupo-icones {
+        margin-left: 200px;
+        margin-top: 65px;
+    }
+
+    .circulo-transparente {
+        width: 55px;
+        height: 55px;
+    }
+
+    #heart-icon, #ban-icon {
+        font-size: 24px;
+    }
+
+    .icone-2 {
+        margin-left: 70px;
+    }
+
+    h1 {
+        font-size: 2.3rem;
+        white-space: nowrap;
+    }
+
+    .titulo-de-aviso {
+        white-space: nowrap;
+    }
+
+    .p-descricao {
+        font-size: 1.5rem;
+    }
+
+    .paragrafo-aviso {
+        font-size: 1.3rem;
+        width: 700px;
+    }
+
+    .linha-separacao {
+        width: 700px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1000px) {
+    .grupo-icones {
+        margin-left: 150px;
+        margin-top: 80px;
+    }
+
+    .circulo-transparente {
+        width: 50px;
+        height: 50px;
+    }
+
+    #heart-icon, #ban-icon {
+        font-size: 20px;
+    }
+
+    .icone-2 {
+        margin-left: 60px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .p-descricao {
+        font-size: 1.3rem;
+    }
+
+    .paragrafo-aviso {
+        font-size: 1.1rem;
+        width: 600px;
+    }
+
+    .linha-separacao {
+        width: 600px;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+    .grupo-icones {
+        margin-left: 100px;
+        margin-top: 50px;
+    }
+
+    .circulo-transparente {
+        width: 45px;
+        height: 45px;
+    }
+
+    #heart-icon, #ban-icon {
+        font-size: 18px;
+    }
+
+    .icone-2 {
+        margin-left: 50px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .p-descricao {
+        font-size: 1.3rem;
+    }
+
+    .paragrafo-aviso {
+        font-size: 1.1rem;
+        width: 400px;
+    }
+
+    .linha-separacao {
+        width: 300px;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .grupo-icones {
+        margin-left: 80px;
+        margin-top: 60px;
+    }
+
+    .titulo-de-aviso {
+        font-size: 1.2rem;
+    }
+
+    #aviso-icon {
+        font-size: 26px;
+    }
+
+    .circulo-transparente {
+        width: 35px;
+        height: 35px;
+    }
+
+    #heart-icon, #ban-icon {
+        font-size: 18px;
+    }
+
+    .icone-2 {
+        margin-left: 40px;
+    }
+
+    .titulo {
+        gap: 5px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .p-descricao {
+        font-size: 1rem;
+    }
+
+    .paragrafo-aviso {
+        font-size: 0.9rem;
+        width: 70vw;
+    }
+
+    .linha-separacao {
+        width: 180px;
+    }
+}

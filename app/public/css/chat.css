@@ -10,6 +10,7 @@
 body {
     display: flex;
     overflow: hidden;
+    background-color: #f2f5fe;
 }
 
 main {
@@ -27,7 +28,7 @@ main {
     height: 100vh;
     position: absolute;
     transition: all .5s;
-    min-width: 82px;
+    min-width: 4.27vw;
     z-index: 2;
 }
 
@@ -73,7 +74,7 @@ main {
 }
 
 .box-contatos {
-    width: 480px;
+    width: 25vw;
     height: 100vh;
     margin-left: 85px;
     background-color: #ffff;
@@ -108,7 +109,7 @@ main {
     display: flex;
     position: relative;
     padding-bottom: 30px;
-    width: fit-content;
+    width: 20vw;
     align-items: center;
     justify-content: center;
 }
@@ -333,13 +334,8 @@ main {
     padding: 0 60px 0 60px;
     border-bottom: 1px solid #dfa5d9;
     background-color: white;
-    width: 76.31vw;
-    max-width: 76.31vw;
+    width: 70.73vw;
     height: 80px;
-}
-
-.ligacao-chamada {
-    padding-left: 10px;
 }
 
 .ligacao-chamada i {
@@ -358,7 +354,7 @@ main {
 .area-coluna {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 70.73vw;
     height: 100vh;
 }
 
@@ -367,16 +363,16 @@ main {
 
 .area-mensagens {
     background-color: #f2f5fe;
-    width: 76.31vw;
+    width: 70.73vw;
     height: 830px;
-    overflow: hidden;
+    overflow-y: scroll;
     border-bottom: 1px solid #f2f5fe;
 }
 
 .input-mensagem-box {
     display: flex;
     flex-direction: column;
-    width: 76.31vw;
+    width: 70.73vw;
     height: 170px;
     background-color: #f2f5fe;
     border-top: 1px solid #f2f5fe;
@@ -408,8 +404,10 @@ main {
 
 
 
+
+
 #message-input{
-    width: 70.31vw;
+    width: 65vw;
     height: 50px;
     border-radius: 45px;
     border: 1px solid #42204067;
