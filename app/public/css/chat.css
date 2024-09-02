@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    font-size: 16px;
 }
 
 body {
@@ -109,7 +110,7 @@ main {
     display: flex;
     position: relative;
     padding-bottom: 30px;
-    width: 20vw;
+    width: 100%;
     align-items: center;
     justify-content: center;
 }
@@ -125,6 +126,7 @@ main {
     text-indent: 20px; /* Desloca o texto para a direita */
     padding-left: 30px;
     padding-right: 10px;
+    width: 20vw;
 }
 
 .input-container input::placeholder {
@@ -140,24 +142,12 @@ main {
 }
 
 .contato {
-    position: relative;
     display: flex;
     padding: 10px 20px 20px 20px;
 }
 
 #submitBtn {
     border: none;
-}
-
-.contato::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%; /* Posiciona o início da borda no meio do elemento */
-    width: 70%; /* Largura da borda */
-    height: 1px; /* Altura da borda */
-    background-color: rgba(223, 165, 217, 0.4); /* Cor da borda */
-    transform: translateX(-50%);
 }
 
 .contato-text {
@@ -403,9 +393,6 @@ main {
 }
 
 
-
-
-
 #message-input{
     width: 65vw;
     height: 50px;
@@ -416,7 +403,7 @@ main {
 }
 
 .mensagem-psicologo-box {
-    margin: 80px 0 0 80px;
+    margin: 4.5vw 0 0 4.5vw;
     display: flex;
 }
 
@@ -434,10 +421,11 @@ main {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: rgba(66, 32, 64, 0.258);
     width: 550px;
+    font-size: 1rem;
 }
 
 .mensagem-usuario-box {
-    margin: 80px 80px 0 0;
+    margin: 4.5vw 4.5vw 0 0;
     display: flex;
     justify-content: flex-end;
 }
@@ -450,6 +438,291 @@ main {
     display: inline-block;
     max-width: 40%;
     word-wrap: break-word;
+    font-size: 1rem;
 }
+
+@media (min-width: 900px) and (max-width: 1250px) {
+    .profiles-img {
+        width: 4vw;
+        height: 4vw;
+    }
+
+    .contato-text h2 {
+        font-size: 1rem;
+        width: 70px;
+    }
+
+    .contato-text p {
+        font-size: 1rem;
+    }
+
+    .contato-text span {
+        font-size: 0.8rem;
+    }
+
+    .span-right {
+        margin: 0;
+    }
+
+    .mensagem-psicologo-content p {
+        font-size: 0.8rem;
+    }
+
+    .mensagem-usuario-content p {
+        font-size: 0.8rem;
+    }
+
+    .area-mensagens {
+        width: 65.73vw;
+    }
+
+    .chat-menu {
+        width: 65.73vw;
+    }
+
+    .area-coluna {
+        width: 65.73vw;
+    }
+
+    .input-mensagem-box {
+        width: 65.73vw;
+    }
+
+    #message-input {
+        width: 60vw;
+    }
+
+    .box-contatos {
+        width: 30vw;
+    }
+
+    .topo-titulo h1 {
+        font-size: 1.5rem;
+    }
+
+    .topo-titulo i {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+    .profiles-img {
+        width: 4vw;
+        height: 4vw;
+    }
+
+    .contato-text h2 {
+        font-size: 0.8rem;
+        width: 70px;
+    }
+
+    .contato-text p {
+        font-size: 0.8rem;
+    }
+
+    .contato-text span {
+        font-size: 0.7rem;
+    }
+
+    .span-right {
+        margin: 0;
+    }
+
+    .mensagem-psicologo-content p {
+        font-size: 0.7rem;
+    }
+
+    .mensagem-usuario-content p {
+        font-size: 0.7rem;
+    }
+
+    .area-mensagens {
+        width: 60.73vw;
+    }
+
+    .chat-menu {
+        width: 60.73vw;
+    }
+
+    .area-coluna {
+        width: 60.73vw;
+    }
+
+    .input-mensagem-box {
+        width: 60.73vw;
+    }
+
+    #message-input {
+        width: 55vw;
+    }
+
+    .box-contatos {
+        width: 35vw;
+    }
+
+    .topo-titulo h1 {
+        font-size: 1.2rem;
+    }
+
+    .topo-titulo i {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+    .profiles-img {
+        width: 12vw;
+        height: 12vw;
+    }
+
+    .contato-text h2 {
+        font-size:1.5em;
+        width: 70px;
+    }
+
+    .contato-text p {
+        font-size: 1.5rem;
+    }
+
+    .contato-text span {
+        font-size: 1.3rem;
+    }
+
+    .span-right {
+        margin-right: 20px;
+    }
+
+    .topo-titulo h1 {
+        font-size: 2rem;
+    }
+
+    .mensagem-psicologo-content p {
+        font-size: 0.7rem;
+    }
+
+    .mensagem-usuario-content p {
+        font-size: 0.7rem;
+    }
+
+    .area-mensagens {
+        width: 60.73vw;
+    }
+
+    .chat-menu {
+        width: 60.73vw;
+    }
+
+    .area-coluna {
+        width: 60.73vw;
+        display: none;
+    }
+
+    .input-mensagem-box {
+        width: 60.73vw;
+    }
+
+    #message-input {
+        width: 55vw;
+    }
+
+    .box-contatos {
+        width: 95.73vw;
+        overflow-y: hidden;
+    }
+
+    .input-container input {
+        width: 75vw;
+    }
+
+    .topo-titulo i {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .profiles-img {
+        width: 12vw;
+        height: 12vw;
+    }
+
+    #user img {
+        width: 15vw;
+        height: 15vw;
+    }
+
+    .contato-text h2 {
+        font-size:1rem;
+        width: 70px;
+    }
+
+    .contato-text p {
+        font-size: 1rem;
+    }
+
+    .contato-text span {
+        font-size: 1rem;
+    }
+
+    .span-right {
+        margin-right: 10px;
+    }
+
+    .topo-titulo h1 {
+        font-size: 1.3rem;
+    }
+
+    .mensagem-psicologo-content p {
+        font-size: 0.5rem;
+    }
+
+    .mensagem-usuario-content p {
+        font-size: 0.5rem;
+    }
+
+    .area-mensagens {
+        width: 60.73vw;
+    }
+
+    .chat-menu {
+        width: 60.73vw;
+    }
+
+    .area-coluna {
+        width: 60.73vw;
+        display: none;
+    }
+
+    .input-mensagem-box {
+        width: 60.73vw;
+    }
+
+    #message-input {
+        width: 55vw;
+    }
+
+    .box-contatos {
+        width: 95.73vw;
+        overflow-y: hidden;
+    }
+
+    .input-container input {
+        width: 65vw;
+    }
+
+    .topo-titulo i {
+        font-size: 1.3rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
