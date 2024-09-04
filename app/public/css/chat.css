@@ -98,7 +98,7 @@ main {
 }
 
 .box-contatos input {
-    width: 320px;
+    width: 16.67vw;
     height: 41px;
     border-radius: 10px;
     border: 1px solid rgba(223, 165, 217, 0.4);
@@ -205,21 +205,12 @@ main {
     font-size: 14px;
     color: #dfa5d9;
     position: absolute;
-    left: 15px;
+    left: 13%;
     top: 30%;
     transform: translateY(-50%);
     pointer-events: none; /* Ícone não interfere na interação com o input */
 }
 
-.input-container #icon-right {
-    font-size: 14px;
-    color: #dfa5d9;
-    position: absolute;
-    right: 85px;
-    top: 30%;
-    transform: translateY(-50%);
-    pointer-events: none; /* Ícone não interfere na interação com o input */
-}
 
 .side-item:hover,
 #logout_btn:hover {
@@ -315,6 +306,17 @@ main {
 #sidebar.open-sidebar .side-item a {
     justify-content: flex-start;
     gap: 14px;
+}
+
+.menu-perfil-conversa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-perfil-conversa h3 {
+    color: #422040;
+    font-size: 14px;
 }
 
 
@@ -461,10 +463,6 @@ main {
         font-size: 0.8rem;
     }
 
-    .span-right {
-        margin: 0;
-    }
-
     .mensagem-psicologo-content p {
         font-size: 0.8rem;
     }
@@ -504,12 +502,16 @@ main {
     .topo-titulo i {
         font-size: 1.5rem;
     }
+
+    .box-contatos input {
+        width: 23vw;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 900px) {
     .profiles-img {
-        width: 4vw;
-        height: 4vw;
+        width: 5vw;
+        height: 5vw;
     }
 
     .contato-text h2 {
@@ -567,6 +569,10 @@ main {
 
     .topo-titulo i {
         font-size: 1.2rem;
+    }
+
+    .box-contatos input {
+        width: 25vw;
     }
 }
 
@@ -637,6 +643,15 @@ main {
 
     .topo-titulo i {
         font-size: 2rem;
+    }
+
+    .box-contatos input {
+        width: 75vw;
+    }
+
+    .input-container #icon-left {
+        left: 11%;
+        top: 30%;
     }
 }
 
@@ -712,6 +727,15 @@ main {
 
     .topo-titulo i {
         font-size: 1.3rem;
+    }
+
+    .box-contatos input {
+        width: 65vw;
+    }
+
+    .input-container #icon-left {
+        left: 15%;
+        top: 30%;
     }
 }
 
