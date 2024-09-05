@@ -1,30 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const menuButton = document.getElementById('menu-smart');
-    const menu = document.querySelector('.menu');
-    const menuDevice = document.querySelector('.menu-device');
+const botao = document.getElementById('menu-smart');
+        const item = document.getElementById('menubox');
 
-    menuButton.addEventListener('click', function() {
-        menu.classList.toggle('show');
-        menuDevice.classList.toggle('active');
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const menuButton = document.getElementById('menu-smart');
-    const menu = document.querySelector('.menu');
-    const menuDevice = document.querySelector('.menu-device');
-    
-    // Toggle menu visibility on button click
-    menuButton.addEventListener('click', function() {
-        menu.classList.toggle('show');
-        menuDevice.classList.toggle('active');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!menu.contains(event.target) && !menuButton.contains(event.target)) {
-            menu.classList.remove('show');
-            menuDevice.classList.remove('active');
-        }
-    });
-});
+        // adiciona um evento de clique ao botão
+        botao.addEventListener('click', () => {
+            // alterna a visibilidade do item
+            if (item.style.display === 'none') {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
