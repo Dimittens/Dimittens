@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: "Raleway Bold", "Raleway", sans-serif;
+    font-weight: 700;
+    color: #ec8d26;
+    text-align: center;
+    font-size: 47px;
+}
+
+hr {
+    width: 596px;
+    border: 2px solid #ec8d26;
+}
+
+.linha {
+    display: flex;
+    justify-content: center;
+}
