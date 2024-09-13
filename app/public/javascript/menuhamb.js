@@ -1,12 +1,9 @@
-const botao = document.getElementById('menu-smart');
-        const item = document.getElementById('menubox');
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menu-smart');
+    const navBar = document.getElementById('menuhamb');
 
-        // adiciona um evento de clique ao botão
-        botao.addEventListener('click', () => {
-            // alterna a visibilidade do item
-            if (item.style.display === 'none') {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
+    menuToggle.addEventListener('click', function() {
+        navBar.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+    });
+});
