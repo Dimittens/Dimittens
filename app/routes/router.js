@@ -24,6 +24,11 @@ router.get('/sobrenos', (req, res) => {
   res.render('pages/index', { pagina: "sobrenos", autenticado: null });
 });
 
+// ROTA PARA SOBRE NÓS
+router.get('/criarpostagem', (req, res) => {
+  res.render('pages/index', { pagina: "criarpostagem", autenticado: null });
+});
+
 // ROTA PARA CARROSEL DE TRANSTORNOS
 router.get('/carroseltranstornos', (req, res) => {
   res.render('pages/index', { pagina: "carroseltranstornos", autenticado: null });
