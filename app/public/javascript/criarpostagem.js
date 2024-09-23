@@ -1,4 +1,3 @@
-// Input para o Banner
 const inputFile = document.querySelector("#picture__input");
 const pictureImage = document.querySelector(".picture__image");
 const pictureImageTxt = "Escolha um arquivo ou arraste e solte aqui!";
@@ -28,7 +27,6 @@ inputFile.addEventListener("change", function (e) {
   }
 });
 
-// Input para a Foto de Perfil
 const inputProfile = document.querySelector("#profile__input");
 const profileImage = document.querySelector(".profile__image");
 
