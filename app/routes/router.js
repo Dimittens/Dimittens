@@ -24,9 +24,14 @@ router.get('/sobrenos', (req, res) => {
   res.render('pages/index', { pagina: "sobrenos", autenticado: null });
 });
 
-// ROTA PARA SOBRE NÓS
+// ROTA PARA CRIAR POSTAGEM
 router.get('/criarpostagem', (req, res) => {
   res.render('pages/index', { pagina: "criarpostagem", autenticado: null });
+});
+
+// ROTA PARA CRIAR COMUNIDADE
+router.get('/criarcomunidade', (req, res) => {
+  res.render('pages/index', { pagina: "criarcomunidade", autenticado: null });
 });
 
 // ROTA PARA CARROSEL DE TRANSTORNOS
