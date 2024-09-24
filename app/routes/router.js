@@ -24,6 +24,11 @@ router.get('/sobrenos', (req, res) => {
   res.render('pages/index', { pagina: "sobrenos", autenticado: null });
 });
 
+// ROTA PARA REDIRECIONAMENTO DO SUPORTE
+router.get('/redirecionamentosuporte', (req, res) => {
+  res.render('pages/index', { pagina: "redirecionamentosuporte", autenticado: null });
+});
+
 // ROTA PARA CRIAR POSTAGEM
 router.get('/criarpostagem', (req, res) => {
   res.render('pages/index', { pagina: "criarpostagem", autenticado: null });

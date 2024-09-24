@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+body {
+    background-color: white;
+}
+
+.main-redire {
+    padding: 0 230px 0 230px;
+}
+
+.titulo {
+    font-family: "Raleway Bold", "Raleway", sans-serif;
+    font-weight: 700;
+    color: #ec8d26;
+    text-align: center;
+    line-height: normal;
+    font-size: 35px;
+}
+
+.titulo-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo-box hr {
+    width: 628px;
+    border: 1px solid #ec8d26;
+}
+
+.sumario {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
