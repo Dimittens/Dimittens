@@ -24,6 +24,21 @@ router.get('/sobrenos', (req, res) => {
   res.render('pages/index', { pagina: "sobrenos", autenticado: null });
 });
 
+// ROTA PARA REDIRECIONAMENTO DO SUPORTE
+router.get('/redirecionamentosuporte', (req, res) => {
+  res.render('pages/index', { pagina: "redirecionamentosuporte", autenticado: null });
+});
+
+// ROTA PARA CRIAR POSTAGEM
+router.get('/criarpostagem', (req, res) => {
+  res.render('pages/index', { pagina: "criarpostagem", autenticado: null });
+});
+
+// ROTA PARA CRIAR COMUNIDADE
+router.get('/criarcomunidade', (req, res) => {
+  res.render('pages/index', { pagina: "criarcomunidade", autenticado: null });
+});
+
 // ROTA PARA CARROSEL DE TRANSTORNOS
 router.get('/carroseltranstornos', (req, res) => {
   res.render('pages/index', { pagina: "carroseltranstornos", autenticado: null });

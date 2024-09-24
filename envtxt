@@ -1,0 +1,8 @@
+DB_HOST = b94votm47hggreb5kvpz-mysql.services.clever-cloud.com
+DB_USER = ubeinqxvw6gz7f5h
+DB_PASSWORD = LQhkrt4xpzpoxjVbLt8r
+DB_PASSWORDITB = @ITB123456
+DB_NAME = b94votm47hggreb5kvpz
+DB_PORT = 3306
+APP_PORT = 3000
+ 
