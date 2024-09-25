@@ -11,7 +11,6 @@ const pacienteModel = {
                 "EMAIL_USUARIO,   SENHA_USUARIO " +
                 "DT_NASC_USUARIO, " +
                 "DT_CRIACAO_CONTA_USUARIO, " +
-                "RG_USUARIO, " +
                 "CPF_USUARIO, " +
                 "DIFERENCIACAO_USUARIO, " +
                 "PSICOLOGO_ID_PSICOLOGO, " +

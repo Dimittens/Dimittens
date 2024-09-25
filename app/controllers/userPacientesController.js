@@ -16,7 +16,6 @@ const userPacientesController = {
             SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
             DT_NASC_USUARIO: req.body.userdate,
             EMAIL_USUARIO: req.body.useremail,
-            RG_USUARIO : req.body.userdocuments,
             CPF_USUARIO: req.body.userdocuments,
             DT_CRIACAO_CONTA_USUARIO: new Date()
         };
