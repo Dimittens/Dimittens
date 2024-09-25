@@ -85,6 +85,11 @@ router.get('/passoapasso', (req, res) => {
   res.render('pages/index', { pagina: "passoapasso", autenticado: null });
 });
 
+// PASSO A PASSO PSICOLOGOS
+router.get('/passoapassopsico', (req, res) => {
+  res.render('pages/index', { pagina: "passoapassopsico", autenticado: null });
+});
+
 // Edite seu Perfil
 router.get('/editeseuperfil', (req, res) => {
   res.render('pages/index', { pagina: "editeseuperfil", autenticado: null });
