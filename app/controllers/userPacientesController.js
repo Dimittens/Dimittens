@@ -9,8 +9,7 @@ const userPacientesController = {
     cadastrar: async (req, res) => {
         const errors = validationResult(req);
         console.log(errors);
-
-
+    
         const dadosForm = {
             NOME_USUARIO: req.body.username,
             SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
@@ -19,30 +18,36 @@ const userPacientesController = {
             CPF_USUARIO: req.body.userdocuments,
             DT_CRIACAO_CONTA_USUARIO: new Date()
         };
-
-
-
-        // Se algo der errado em todo o cadastro ele reseta
+    
+        // Se houver erros de validação, retorna ao formulário
         if (!errors.isEmpty()) {
             console.log(errors);
             return res.render("pages/index", { pagina: "home", autenticado: null, errorsList: errors, valores: req.body });
         }
-
+    
         try {
+            // Verifica se o email já está cadastrado
+            const existingEmails = await paciente.findAllEmails();
+            if (existingEmails.includes(req.body.useremail)) {
+                return res.render("pages/index", {
+                    pagina: "home",
+                    errorsList: [{ msg: "Email já cadastrado" }],
+                    valores: req.body
+                });
+            }
+    
+            // Cria o novo usuário
             let create = await paciente.create(dadosForm);
-            // req.session.autenticado = req.body.username;
-
             res.redirect("/");
-
         } catch (error) {
             console.log("Erro ao cadastrar:", error);
             res.render("pages/index", {
                 pagina: "home",
-                errorsList: errors,
+                errorsList: [{ msg: "Erro ao cadastrar usuário." }],
                 valores: req.body
             });
         }
-    },
+    },    
 
     logar: async (req, res) => {
         try {
