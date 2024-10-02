@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+html, header {
+    background-color: #422040;
+}
+
+.box-cmfterapia {
+    display: flex;
+    justify-content: center;
+    background-color: #422040;
+    gap: 100px;
+}
+
+.box-circulo-quadrado {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.circulo {
+    background-color: #ec8d26;
+    border-radius: 50%;
+    width: 57px;
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Arial Bold", "Arial Normal", "Arial", sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.quadrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 216px;
+    height: 216px;
+    border-radius: 15px;
+    border: 3px solid #ec8d26;
+}
+
+.quadrado p {
+    box-sizing: border-box;
+    font-family: "Raleway", sans-serif;
+    color: rgba(255, 255, 255, 0.99);
+    text-align: center;
+    line-height: normal;
+    font-size: 1.1rem;
+}
+

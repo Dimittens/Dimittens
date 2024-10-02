@@ -26,6 +26,18 @@ const pacienteModel = {
     }
 },
 
+findAllEmails: async () => {
+    try {
+        const [results] = await pool.query(
+            "SELECT * FROM USUARIO WHERE EMAIL_USUARIO"
+        );
+        return results.map(user => user.EMAIL_USUARIO);
+    } catch (error) {
+        console.log("Erro ao encontrar os emails dos usuários", error);
+        return [];
+    }
+}, 
+
 findUserCPF: async (camposForm) => {
     try {
         const [results] = await pool.query(

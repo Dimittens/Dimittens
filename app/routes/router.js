@@ -19,6 +19,11 @@ router.get('/interesses', (req, res) => {
   res.render('pages/index', { pagina: "interesses", autenticado: null });
 });
 
+// ROTA PARA TRANSTORNOS
+router.get('/transtornos', (req, res) => {
+  res.render('pages/index', { pagina: "transtornos", autenticado: null });
+});
+
 // ROTA PARA SOBRE NÓS
 router.get('/sobrenos', (req, res) => {
   res.render('pages/index', { pagina: "sobrenos", autenticado: null });
