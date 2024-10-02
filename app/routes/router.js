@@ -46,7 +46,11 @@ router.get('/carroseltranstornos', (req, res) => {
 
 // ROTA PARA HOME LOGGED
 router.get('/homelogged', (req, res) => {
-  res.render('pages/index', { pagina: "homelogged", autenticado: null });
+  if (req.session.autenticado) {
+      res.render('pages/index', { pagina: "homelogged", autenticado: req.session.autenticado });
+  } else {
+      res.redirect('/loginpacientes');
+  }
 });
 
 // ROTA PARA HOME

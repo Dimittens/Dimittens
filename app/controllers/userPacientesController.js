@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(10);
 
 const userPacientesController = {
-    // REGRAS DE CADASTRO + MENSAGENS
 
     cadastrar: async (req, res) => {
         const errors = validationResult(req);
@@ -21,8 +20,6 @@ const userPacientesController = {
         };
 
 
-
-        // Se algo der errado em todo o cadastro ele reseta
         if (!errors.isEmpty()) {
             console.log(errors);
             return res.render("pages/index", { pagina: "home", autenticado: null, errorsList: errors, valores: req.body });
@@ -30,9 +27,6 @@ const userPacientesController = {
 
         try {
             let create = await paciente.create(dadosForm);
-            // req.session.autenticado = req.body.username;
-
-            res.redirect("/");
 
         } catch (error) {
             console.log("Erro ao cadastrar:", error);
@@ -47,35 +41,35 @@ const userPacientesController = {
     logar: async (req, res) => {
         try {
             const errors = validationResult(req);
+            
+            console.log("Dados recebidos:", req.body);
+    
             if (!errors.isEmpty()) {
                 return res.render("pages/index", { pagina: "loginpacientes", errorsList: errors, autenticado: null });
             }
-
-            // ATUALIZAR
+    
             const dadosForm = {
                 CPF_USUARIO: req.body.userdocuments,
                 SENHA_USUARIO: req.body.userpassword
             };
-
-            // ATUALIZAR
+    
+            console.log("Dados do formulário:", dadosForm);
+    
             let findUserCPF = await paciente.findUserCPF(dadosForm);
             if (findUserCPF.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUserCPF[0].SENHA_USUARIO)) {
-               console.log("Logou!")
-                return res.redirect("/");
+               console.log("Logou!");
+               req.session.autenticado = true;
+               return res.redirect("/homelogged");
             } else {
-                console.log("deu erro no login!!")
-                res.render("pages/index", { pagina: "loginpacientes", errorsList: [{ msg: "Credenciais inválidas" }], autenticado: null });
+                console.log("Credenciais inválidas");
+                return res.render("pages/index", { pagina: "loginpacientes", errorsList: [{ msg: "Credenciais inválidas" }], autenticado: null });
             }
         } catch (e) {
-            console.log("Deu erro no logar!!", e);
-            res.render("pages/index", { pagina: "loginpacientes", errorsList: [{ msg: "Erro no servidor" }], autenticado: null });
+            console.log("Erro no login:", e);
+            return res.render("pages/index", { pagina: "loginpacientes", errorsList: [{ msg: "Erro no servidor" }], autenticado: null });
         }
     }
-
-
-
-
-
+        
 }
 
 module.exports = userPacientesController
