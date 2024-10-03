@@ -1,23 +1,23 @@
 body {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
-
-article {
-    width: 1550px;
-    height: 1014px;
-    border-radius: 25px;
-    border: 1px solid #ec8d26;
-    background-color: #ffffff;
-    box-sizing: border-box;
-    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
-section h1{
+article {
+  width: 1550px;
+  height: 1014px;
+  border-radius: 25px;
+  border: 1px solid #ec8d26;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+section h1 {
   display: flex;
   justify-content: center;
 }
@@ -30,7 +30,7 @@ h1 {
 }
 
 input {
-  display: inline;
+  display: inline-block;
   justify-content: center;
   width: 140px;
   height: 40px;
@@ -43,17 +43,37 @@ input {
   font-weight: 700;
   color: #ec8d26;
   font-size: 18px;
-
+  margin: 0 10px; /* Espaco entre os botões */
 }
 
 .meses {
   width: 500px;
   height: 40px;
-  display: inline-flex;
+  display: flex;
   gap: 10px;
   align-items: center;
+  justify-content: flex-start;
+  overflow: hidden; /* Esconde os meses fora da área visível */
+  transition: transform 0.5s ease-in-out; /* Animação suave */
+}
+
+.nav-button {
+  background-color: #ec8d26;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 138px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-button:hover {
+  background-color: #422040;
 }
 
 hr {
