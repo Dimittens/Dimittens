@@ -4,9 +4,13 @@
 <link rel="stylesheet" href="css/home.css">
 </head>
 
-<%- include("../partial/headerunlogged") %>
+<% if (autenticado) { %>
+        <%- include("../partial/header") %>
+<% } else { %>
+        <%- include("../partial/headerunlogged") %>
+<% } %>
 
-<main>
+<main style="background-color: #422040;">
     <article class="primeiro-quadrante">
         <section class="text">
             <h1 class="titulo">Dimittens<br>Cuidando da sua Mente</h1>
@@ -46,6 +50,8 @@
             fortificar o laço com seus<br>parceiros na Dimittens.</p>
         </section>
     </article>
+
+    <% if (autenticado) { %>
     <article class="transtornos-carrosel">
         <section class="info-titulo">
             <h1>COMO PODEMOS TE AJUDAR?</h1>
@@ -53,8 +59,11 @@
             <p>Os transtornos são uma combinação de pensamentos, percepções, emoções <br> e comportamentos anormais, que podem afetar sua relação <br>com outras pessoas</p>
         </section>
     </article>
+    <% } %>
 
-    <%- include("../partial/carroseltranstornos") %>
+    <% if (autenticado) { %>
+        <%- include("../partial/carroseltranstornos") %>
+    <% } %>
 
     <%- include("../partial/passoapasso") %>
 
