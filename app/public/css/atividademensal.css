@@ -13,8 +13,7 @@ body {
   margin: 0 0 0 -250px;
   position: absolute;
   width: 500px;
-  background: red;
-  height: 20px;
+  background: white;
 }
 
 .calendario {
@@ -31,6 +30,11 @@ h2{
   text-transform: uppercase;
 }
 
+.mes {
+  border: 1px solid #ec8d26;
+}
+
+
 .btn-ant,.btn-pro {
   position: absolute;
   top: 50%;
@@ -45,6 +49,14 @@ h2{
   font-weight: bold;
 }
 
+#a1 {
+  transform: rotate(-90deg);
+}
+
+#a2 {
+  transform: rotate(90deg);
+}
+
 .btn-ant {
   left: 80px;
 }
@@ -53,8 +65,28 @@ h2{
   right: 80px;
 }
 
-.btn-ant:hover,.btn-ant:hover{
+.btn-ant:hover,.btn-pro:hover{
   background: #ec8d26;
   color: #f9f9f9;
 
 }
+
+.calendario table {
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.calendario thead{
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.calendario td {
+  border: 1px solid #ec8d26;
+  height: 71.4px;
+  text-align: center;
+  width: 71.4px;
+  border-radius: 15px 15px 15px 15px;
+
+}
+
