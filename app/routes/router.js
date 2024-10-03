@@ -121,7 +121,11 @@ router.get('/atividademensal', (req, res) => {
 
 // Calendario
 router.get('/calendario', (req, res) => {
-  res.render('pages/index', { pagina: "calendario", autenticado: null });
+if (req.session.autenticado) {
+  res.render('pages/index', { pagina: "calendario", autenticado: req.session.autenticado });
+} else {
+  res.redirect('/loginpacientes')
+}
 });
 
 // Pop-Up Psicologos
