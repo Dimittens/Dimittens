@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded',function() {
-    const monthsBr = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
-    const tableDays = document.getElementsById('')
+    const monthsBr = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+    const tableDays = document.getElementById('dias');
     function GetDaysCalendar(mes,ano){
         document.getElementById('mes').innerHtml = monthsBR[mes];
         document.getElementById('ano').innerHTML = ano;
 
-        let firstDayOfWeek = new Date(ano,mes, 1).getDay()-1
-        let getLastDayThisMonth = new Date(ano,mes+1,0).getDate()
+        let firstDayOfWeek = new Date(ano,mes, 1).getDay()-1;
+        let getLastDayThisMonth = new Date(ano,mes+1,0).getDate();
 
-        for(var i = -firstDayOfWeek,index = 0; i < (42-firstDayOfWeek); i++,index++) {
+        for(var i = -firstDayOfWeek,index = 0; i < (42-firstDayOfWeek); i++,index++){
             let dt = new Date(ano,mes,i);
             let dtNow = newDate();
             let dayTable = tableDays.getElementsByTagName('td')[index];
             dayTable.classList.remove('mes-anterior')
-            dayTable.classList.remove('proimo-mes')
+            dayTable.classList.remove('proximo-mes')
             dayTable.classList.remove('dia-atual')
             dayTable.innerHTML = dt.getDate();
 
