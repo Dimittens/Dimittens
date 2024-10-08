@@ -8,17 +8,16 @@
             <img src="imagens/logo-roxo.png" alt="" id="logo">
         </section>
         <h1>Bem Vindo(a) a Dimittens</h1>
-        <form action="">
+        <form action="/loginpsicologos" method="post" id="loginForm">
             <section class="input-field">
-                       
-                            <label for="usercpf" id="lbcpf">CPF</label>
-                                <input type="text" name="usercpf"
-                                class="inputsbox" placeholder="Digite seu CPF">
-                                <label for="usercpf" id="lbcrp">CRP</label>
-                                <input type="text" name="usercpf" class="inputsbox" placeholder="Digite seu CRP">
+                            <label for="userdocuments" id="lbcpf">CPF</label>
+                                <input type="text" name="userdocuments" id="userdocuments"
+                                class="inputsbox" placeholder="Digite seu CPF" required>
+                                <label for="usercrp" id="lbcrp">CRP</label>
+                                <input type="text" name="usercrp" class="inputsbox" id="usercrp" placeholder="Digite seu CRP" required>
                                 
                                 <label for="userpassword" id="lbpass">Senha</label>
-                                <input type="password" name="userpassword" id="userpassword" class="inputsbox" placeholder="Digite sua senha">
+                                <input type="password" name="userpassword" id="userpassword" class="inputsbox" placeholder="Digite sua senha" required>
                             <p id="avisodesenha"><a href=".">Esqueceu sua senha?</a></p>
                         
                 </section>
@@ -47,5 +46,6 @@
                 <p id="aviso-cadastro">Ainda não está cadastrado? <a href="#"><strong>Crie uma conta</strong></a></p>
             </section>
         </div>
+        <script src="javascript/validacao.js"></script>
     </main>
 </body>

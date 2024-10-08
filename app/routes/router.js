@@ -1,13 +1,35 @@
 var express = require("express");
 var router = express.Router();
-const pool = require("../../config/pool_de_conexao");
 const userPacientesController = require("../controllers/userPacientesController");
-const {  recordAuthenticatedUser } = require("../models/autenticador_middleware");
+const userPsicologosController = require("../controllers/userPsicologosController");
+const userMenorController = require("../controllers/userMenorController");
+const { recordAuthenticatedUser } = require("../models/autenticador_middleware");
 
 // ROTA PARA HEADER
 router.get('/header', (req, res) => {
   res.render('pages/index', { pagina: "header", autenticado: null });
 });
+
+// CADASTRO PACIENTES
+router.get('/cadastropacientes', (req, res) => {
+  res.render('pages/index', {
+    pagina: "cadastropacientes",
+    autenticado: null,
+    errorsList: null,
+    valores: {
+      username: "",
+      userdate: "",
+      userpassword: "",
+      useremail: "",
+      userdocuments: ""
+    }
+  });
+});
+
+router.post('/cadastropacientes', async (req, res) => {
+  await userPacientesController.cadastrar(req, res);
+});
+
 
 // ROTA PARA HEADER UNLOGGED
 router.get('/headerunlogged', (req, res) => {
@@ -70,9 +92,24 @@ router.get('/precisadeajuda', (req, res) => {
 
 // CADASTRO MENOR
 router.get('/cadastromenor', (req, res) => {
-  res.render('pages/index', { pagina: "cadastromenor", autenticado: null });
+  res.render('pages/index', {
+    pagina: "cadastromenor",
+    autenticado: null,
+    errorsList: null,
+    valores: {
+      username: "", // Nome do menor
+      useremail: "",
+      userpassword: "",
+      userdocuments: "", // CPF do menor
+      cpfResponsavel: "", // CPF do responsável
+      nomeResponsavel: "", // Nome do responsável
+    }
+  });
 });
 
+router.post('/cadastromenor', async (req, res) => {
+  await userMenorController.cadastrar(req, res);
+});
 
 // COMENTARIOS
 router.get('/comentarios', (req, res) => {
@@ -121,11 +158,11 @@ router.get('/atividademensal', (req, res) => {
 
 // Calendario
 router.get('/calendario', (req, res) => {
-if (req.session.autenticado) {
-  res.render('pages/index', { pagina: "calendario", autenticado: req.session.autenticado });
-} else {
-  res.redirect('/loginpacientes')
-}
+  if (req.session.autenticado) {
+    res.render('pages/index', { pagina: "calendario", autenticado: req.session.autenticado });
+  } else {
+    res.redirect('/loginpacientes');
+  }
 });
 
 // Pop-Up Psicologos
@@ -133,35 +170,25 @@ router.get('/popuppsicologos', (req, res) => {
   res.render('pages/index', { pagina: "popuppsicologos", autenticado: null });
 });
 
-
 // CADASTRO PSICOLOGOS
 router.get('/cadastropsicologos', (req, res) => {
-  res.render('pages/index', { pagina: "cadastropsicologos", autenticado: null });
-});
-
-// CADASTRO PSICOLOGOS
-router.get('/planos', (req, res) => {
-  res.render('pages/index', { pagina: "planos", autenticado: null });
-});
-
-// CADASTRO PACIENTES
-router.get('/cadastropacientes', (req, res) => {
   res.render('pages/index', {
-    pagina: "cadastropacientes",
+    pagina: "cadastropsicologos",
     autenticado: null,
     errorsList: null,
     valores: {
-      username: "",
-      userdate: "",
-      userpassword: "",
+      username: "", // Campo para o nome do psicólogo
       useremail: "",
-      userdocuments: ""
+      userpassword: "",
+      userdocuments: "", // CPF ou documento do psicólogo
+      crp: "", // Campo para o CRP
     }
   });
 });
 
-router.post('/cadastropacientes', async (req, res) => {
-  await userPacientesController.cadastrar(req, res);
+router.post('/cadastropsicologos', async (req, res) => {
+      console.log("Rota de cadastro chamada");
+  await userPsicologosController.cadastrar(req, res);
 });
 
 // LOGIN PSICOLOGOS
@@ -169,19 +196,23 @@ router.get('/loginpsicologos', (req, res) => {
   res.render('pages/index', { pagina: "loginpsicologos", autenticado: null });
 });
 
+router.post('/loginpsicologos', userPsicologosController.logar);
+
+
 // LOGIN PACIENTES
 router.get('/loginpacientes', (req, res) => {
   res.render('pages/index', { pagina: "loginpacientes", autenticado: null });
 });
 
- router.post('/loginpacientes', recordAuthenticatedUser, async (req, res) => {
-   await userPacientesController.logar(req, res);
- });
+router.post('/loginpacientes', userPacientesController.logar);
+
 
 // LOGIN DEPENDENTES
 router.get('/logindependentes', (req, res) => {
   res.render('pages/index', { pagina: "logindependentes", autenticado: null });
 });
+
+router.post('/logindependentes', userMenorController.logar);
 
 // CHAT
 router.get('/chat', (req, res) => {
@@ -194,7 +225,6 @@ router.get('/comunidade', (req, res) => {
 });
 
 // Psicologos
-
 router.get('/psicologos', (req, res) => {
   res.render('pages/index', { pagina: "psicologos", autenticado: null });
 });

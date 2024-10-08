@@ -1,15 +1,15 @@
-const express = require("express");
-var session = require("express-session");
+const express = require('express');
+var session = require('express-session');
 const app = express();
-const router = express.Router();
 const port = 3000;
 const env = require('dotenv').config();
 
+// Configuração da sessão
 app.use(session({ 
-    secret: "leleo",
+    secret: "pudimcombolodecenoura",
     resave: false,
     saveUninitialized: false, 
-    cookie: { secure: false } 
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 horas em milissegundos
 }));
 
 app.use(express.static("app/public"));
@@ -20,11 +20,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 var rotas = require("./app/routes/router");
-
 app.use("/", rotas);
 
-app.listen(port, () => {
-  console.log(`Servidor aberto na: ${port}\nhttp://localhost:${port}`);
+// Middleware para proteger rotas
+function verificarAutenticacao(req, res, next) {
+    if (req.session.autenticado) {
+        return next(); // O usuário está autenticado, prossiga
+    } else {
+        res.redirect('/loginpacientes'); // Redirecionar para a página de login
+    }
+}
+
+// Exemplo de uso da verificação em uma rota protegida
+app.get('/homelogged', verificarAutenticacao, (req, res) => {
+    res.send('Bem-vindo à rota protegida! Você está logado.');
 });
 
-module.exports = router;
+app.listen(port, () => {
+    console.log(`Servidor aberto na: ${port}\nhttp://localhost:${port}`);
+});

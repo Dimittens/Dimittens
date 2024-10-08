@@ -1,6 +1,6 @@
 var pool = require("../../config/pool_de_conexao");
 
-const pacienteModel = {
+const menorModel = {
   
     findAll: async () => {
         try {
@@ -12,15 +12,14 @@ const pacienteModel = {
                 "DT_CRIACAO_CONTA_USUARIO, " +
                 "CPF_USUARIO, " +
                 "DIFERENCIACAO_USUARIO, " +
-                "PSICOLOGO_ID_PSICOLOGO, " +
-                "PUBLICACAO_COMUNIDADE_ID_PUBLICACOMU, " +
-                "CALENDARIO_ID_CALENDARIO " +
-                "FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Comum'"
+                "CPF_RESPONSAVEL, " +
+                "NOME_RESPONSAVEL " +
+                "FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Menor de Idade'"
             );
 
             return results;
         } catch (error) {
-            console.log("Erro ao encontrar os usuários", error);
+            console.log("Erro ao encontrar os menores", error);
             return error;
         }
     },
@@ -28,14 +27,14 @@ const pacienteModel = {
     findAllEmails: async () => {
         try {
             const [results] = await pool.query(
-                "SELECT EMAIL_USUARIO FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Comum'"
+                "SELECT EMAIL_USUARIO FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Menor de Idade'"
             );
             return results.map(user => user.EMAIL_USUARIO);
         } catch (error) {
-            console.log("Erro ao encontrar os emails dos usuários", error);
+            console.log("Erro ao encontrar os emails dos menores", error);
             return [];
         }
-    }, 
+    },
 
     findUserCPF: async (camposForm) => {
         try {
@@ -45,7 +44,20 @@ const pacienteModel = {
             );
             return results;
         } catch (error) {
-            console.log("Erro ao comparar o CPF", error);
+            console.log("Erro ao comparar o CPF do menor", error);
+            return error;
+        }
+    },
+
+    findUser: async (camposForm) => {
+        try {
+            const [results] = await pool.query(
+                "SELECT * FROM USUARIO WHERE CPF_USUARIO = ? AND DT_NASC_USUARIO = ?",  
+                [camposForm.CPF_USUARIO, camposForm.DT_NASC_USUARIO] 
+            );
+            return results;
+        } catch (error) {
+            console.log("Erro ao buscar usuário:", error);
             return error;
         }
     },
@@ -57,10 +69,10 @@ const pacienteModel = {
             );
             return results;
         } catch (error) {
-            console.log("Erro ao criar a conta", error);
+            console.log("Erro ao criar a conta do menor", error);
             return null;
         }
     },
 };
 
-module.exports = pacienteModel;
+module.exports = menorModel;

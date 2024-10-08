@@ -1,6 +1,6 @@
 var pool = require("../../config/pool_de_conexao");
 
-const pacienteModel = {
+const psicologoModel = {
   
     findAll: async () => {
         try {
@@ -8,19 +8,16 @@ const pacienteModel = {
                 "SELECT " +
                 "ID_USUARIO, NOME_USUARIO, " +
                 "EMAIL_USUARIO, SENHA_USUARIO, " +
-                "DT_NASC_USUARIO, " +
                 "DT_CRIACAO_CONTA_USUARIO, " +
-                "CPF_USUARIO, " +
-                "DIFERENCIACAO_USUARIO, " +
-                "PSICOLOGO_ID_PSICOLOGO, " +
-                "PUBLICACAO_COMUNIDADE_ID_PUBLICACOMU, " +
-                "CALENDARIO_ID_CALENDARIO " +
-                "FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Comum'"
+                "CPF_USUARIO, "  +
+                "CRP_USUARIO, "  +
+                "DIFERENCIACAO_USUARIO " +
+                "FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Psicologo'"
             );
 
             return results;
         } catch (error) {
-            console.log("Erro ao encontrar os usuários", error);
+            console.log("Erro ao encontrar os psicólogos", error);
             return error;
         }
     },
@@ -28,14 +25,27 @@ const pacienteModel = {
     findAllEmails: async () => {
         try {
             const [results] = await pool.query(
-                "SELECT EMAIL_USUARIO FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Comum'"
+                "SELECT EMAIL_USUARIO FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Psicologo'"
             );
             return results.map(user => user.EMAIL_USUARIO);
         } catch (error) {
-            console.log("Erro ao encontrar os emails dos usuários", error);
+            console.log("Erro ao encontrar os emails dos psicólogos", error);
             return [];
         }
-    }, 
+    },
+
+    // Nova função para buscar todos os CRPs
+    findUserCRP: async () => {
+        try {
+            const [results] = await pool.query(
+                "SELECT CRP_USUARIO FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Psicologo'"
+            );
+            return results.map(user => user.CRP_USUARIO);
+        } catch (error) {
+            console.log("Erro ao encontrar os CRPs dos psicólogos", error);
+            return [];
+        }
+    },
 
     findUserCPF: async (camposForm) => {
         try {
@@ -45,7 +55,7 @@ const pacienteModel = {
             );
             return results;
         } catch (error) {
-            console.log("Erro ao comparar o CPF", error);
+            console.log("Erro ao comparar o CPF do psicólogo", error);
             return error;
         }
     },
@@ -57,10 +67,10 @@ const pacienteModel = {
             );
             return results;
         } catch (error) {
-            console.log("Erro ao criar a conta", error);
+            console.log("Erro ao criar a conta do psicólogo", error);
             return null;
         }
     },
 };
 
-module.exports = pacienteModel;
+module.exports = psicologoModel;
