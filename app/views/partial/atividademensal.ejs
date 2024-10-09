@@ -9,8 +9,8 @@
             <div class="calendario">
                 <header>
                     <h2 id="mês"><a class="mes">Junho</a></h2>
-                    <a class="btn-ant" id="btn_ant"><i id="a1" class="fa-solid fa-angle-up"></i></a>
-                    <a class="btn-pro" id="btn_prev"><i id="a2" class="fa-solid fa-angle-up"></i></a>
+                    <a class="btn-ant" id="btn_ant"><!-- <i id="a1" class="fa-solid fa-angle-up"></i>--></a>
+                    <a class="btn-pro" id="btn_prev"><!--<i id="a2" class="fa-solid fa-angle-up"></i>--></a>
                 </header>
                 <table>
                     <thead>
@@ -26,7 +26,7 @@
                     </thead>
                     <tbody id="dias">
                         <tr>
-                            <td>1</td>
+                            <td class="mes-anterior">1</td>
                             <td>2</td>
                             <td>3</td>
                             <td>4</td>
@@ -37,7 +37,7 @@
 
                         <tr>
                             <td>8</td>
-                            <td>9</td>
+                            <td class="dia-atual">9</td>
                             <td>10</td>
                             <td>11</td>
                             <td>12</td>
@@ -67,7 +67,7 @@
 
                         <tr>
                             <td>29</td>
-                            <td>30</td>
+                            <td class="proximo-mes">30</td>
                             
                         </tr>
 
@@ -82,5 +82,5 @@
         </section>
     </article>
 
-    <script src="javascript\atividademensal.js"></script>
+    <script type="text/javascript" src="javascript\atividademensal.js"></script>
 </body>
