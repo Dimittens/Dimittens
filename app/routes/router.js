@@ -134,21 +134,6 @@ router.post('/cadastromenor', async (req, res) => {
   }
 });
 
-router.post('/cadastropacientes', async (req, res) => {
-  const resultadoCadastro = await userPacientesController.cadastrar(req, res);
-  if (resultadoCadastro.success) {
-    await recordAuthenticatedUser(req, res);
-  } else {
-    res.render('pages/index', {
-      pagina: "cadastropacientes",
-      autenticado: null,
-      errorsList: resultadoCadastro.errors,
-      valores: req.body
-    });
-  }
-});
-
-
 // COMENTÁRIOS
 router.get('/comentarios', (req, res) => {
   res.render('pages/index', { pagina: "comentarios", autenticado: null });
