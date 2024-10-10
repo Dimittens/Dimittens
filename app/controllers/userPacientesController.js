@@ -24,7 +24,8 @@ const userPacientesController = {
             DT_NASC_USUARIO: req.body.userdate,
             EMAIL_USUARIO: req.body.useremail,
             CPF_USUARIO: req.body.userdocuments,
-            DT_CRIACAO_CONTA_USUARIO: new Date()
+            DT_CRIACAO_CONTA_USUARIO: new Date(),
+            DIFERENCIACAO_USUARIO: 'Comum'
         };
 
         console.log('Dados recebidos:', dadosForm);

@@ -134,6 +134,21 @@ router.post('/cadastromenor', async (req, res) => {
   }
 });
 
+router.post('/cadastropacientes', async (req, res) => {
+  const resultadoCadastro = await userPacientesController.cadastrar(req, res);
+  if (resultadoCadastro.success) {
+    await recordAuthenticatedUser(req, res);
+  } else {
+    res.render('pages/index', {
+      pagina: "cadastropacientes",
+      autenticado: null,
+      errorsList: resultadoCadastro.errors,
+      valores: req.body
+    });
+  }
+});
+
+
 // COMENTÁRIOS
 router.get('/comentarios', (req, res) => {
   res.render('pages/index', { pagina: "comentarios", autenticado: null });
@@ -277,11 +292,11 @@ router.post('/loginpacientes', async (req, res) => {
 });
 
 // LOGIN MENOR
-router.get('/loginmenor', (req, res) => {
+router.get('/logindependentes', (req, res) => {
   res.render('pages/index', { pagina: "loginmenor", autenticado: null });
 });
 
-router.post('/loginmenor', async (req, res) => {
+router.post('/logindependentes', async (req, res) => {
   const resultadoLogin = await userMenorController.logar(req, res);
 
   if (resultadoLogin.success) {
@@ -293,7 +308,7 @@ router.post('/loginmenor', async (req, res) => {
     res.redirect('/homelogged');
   } else {
     res.render('pages/index', {
-      pagina: "loginmenor",
+      pagina: "logindependentes",
       autenticado: null,
       errorsList: resultadoLogin.errors || [],
     });

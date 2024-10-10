@@ -51,10 +51,13 @@ const userMenorController = {
             console.log("Usuário Menor de Idade cadastrado com sucesso!!");
             req.session.autenticado = true;
             req.session.user = {
-                nome: req.body.username,
+                usuarioNome: req.body.username,
                 tipo: 'Menor de Idade'
             };
-            return { success: true }; // Retorne um objeto de sucesso
+            return {
+                success: true,
+                dados: findUserCPF[0],
+            }; // Retorne um objeto de sucesso
         
         } catch (error) {
             console.log("Erro ao cadastrar menor:", error);
@@ -97,7 +100,7 @@ const userMenorController = {
                     req.session.autenticado = true;
                     req.session.user = {
                         id: findUser[0].id,
-                        nome: findUser[0].NOME_USUARIO,
+                        usuarioNome: findUser[0].NOME_USUARIO,
                         tipo: 'Menor de Idade'
                     };
                     return {

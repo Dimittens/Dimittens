@@ -1,7 +1,7 @@
 const psicologo = require("../models/psicologoModel");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-const salt = bcrypt.genSaltSync(10);
+var salt = bcrypt.genSaltSync(10);
 
 const userPsicologosController = {
     cadastrar: async (req, res) => {
@@ -13,7 +13,8 @@ const userPsicologosController = {
         // Verifica se há erros de validação
         if (!errors.isEmpty()) {
             return res.render("pages/index", { 
-                pagina: "cadastropsicologos", 
+                pagina: "cadastropsicologos",
+                autenticado: null,
                 errorsList: errors.array(), 
                 valores: req.body // Passa valores para a view
             });
@@ -71,11 +72,15 @@ const userPsicologosController = {
             req.session.autenticado = true;
 
             // Redirecionar após o cadastro
-            return { success: true }; // Retorne um objeto de sucesso
+            return {
+                 success: true,
+                 dados: findUserCPF[0],
+            }; // Retorne um objeto de sucesso
         } catch (error) {
             console.log("Erro ao cadastrar psicólogo:", error);
             return res.render("pages/index", {
                 pagina: "cadastropsicologos",
+                autenticado: null,
                 errorsList: [{ msg: "Erro ao cadastrar psicólogo." }],
                 valores: req.body
             });
@@ -118,12 +123,15 @@ const userPsicologosController = {
                     req.session.autenticado = true;
                     req.session.user = {
                         id: psicologoData.id,
-                        nome: psicologoData.NOME_USUARIO,
+                        userNome: psicologoData.NOME_USUARIO,
                         tipo: 'Psicologo' // Tipo de usuário
                     };
 
                     console.log("Psicólogo logado com sucesso:", psicologoData);
-                    return { success: true }; // Retorne um objeto de sucesso
+                    return { 
+                        success: true,
+                        dados: findUserCPF[0],
+                     }; // Retorne um objeto de sucesso
                 }
             }
 
