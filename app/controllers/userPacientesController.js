@@ -6,13 +6,13 @@ var salt = bcrypt.genSaltSync(10);
 const userPacientesController = {
     cadastrar: async (req, res) => {
         const errors = validationResult(req);
-        console.log(errors);
+        console.log("Erros de validação:", errors.array());
 
         // Verifica se há erros de validação
         if (!errors.isEmpty()) {
             return res.render("pages/index", {
                 pagina: "cadastropacientes",
-                autenticado: null, // Alterado para passar o estado de autenticação
+                autenticado: null,
                 errorsList: errors.array(),
                 valores: req.body
             });
@@ -27,13 +27,19 @@ const userPacientesController = {
             DT_CRIACAO_CONTA_USUARIO: new Date()
         };
 
+        console.log('Dados recebidos:', dadosForm);
+
         try {
             // Verifica se o email já está cadastrado
             const existingEmails = await paciente.findAllEmails();
-            if (existingEmails.includes(req.body.useremail)) {
+            const emailDuplicado = existingEmails.find(email => email === req.body.useremail);
+
+            // Emitindo log apenas se um email duplicado for encontrado
+            if (emailDuplicado) {
+                console.log('Email duplicado encontrado:', emailDuplicado);
                 return res.render("pages/index", {
                     pagina: "cadastropacientes",
-                    autenticado: null, // Alterado para passar o estado de autenticação
+                    autenticado: null,
                     errorsList: [{ msg: "Email já cadastrado" }],
                     valores: req.body
                 });
@@ -47,13 +53,13 @@ const userPacientesController = {
             req.session.autenticado = true;
 
             // Redireciona após o cadastro
-            res.redirect("/homelogged"); // Mude para a rota desejada após o cadastro
+            return { success: true }; // Retorna um objeto indicando sucesso
 
         } catch (error) {
             console.log("Erro ao cadastrar:", error);
             return res.render("pages/index", {
                 pagina: "cadastropacientes",
-                autenticado: null, // Alterado para passar o estado de autenticação
+                autenticado: null,
                 errorsList: [{ msg: "Erro ao cadastrar usuário." }],
                 valores: req.body
             });
@@ -63,48 +69,46 @@ const userPacientesController = {
     logar: async (req, res) => {
         try {
             const errors = validationResult(req);
-
             console.log("Dados recebidos:", req.body);
-
+    
             // Verifica se há erros de validação
             if (!errors.isEmpty()) {
-                return res.render("pages/index", {
-                    pagina: "loginpacientes",
-                    errorsList: errors.array(),
-                    autenticado: null // Alterado para passar o estado de autenticação
-                });
+                return {
+                    success: false,
+                    errors: errors.array(), // Retorna os erros encontrados
+                };
             }
-
+    
             const dadosForm = {
                 CPF_USUARIO: req.body.userdocuments,
                 SENHA_USUARIO: req.body.userpassword
             };
-
+    
             console.log("Dados do formulário:", dadosForm);
-
+    
             let findUserCPF = await paciente.findUserCPF(dadosForm);
             if (findUserCPF.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUserCPF[0].SENHA_USUARIO)) {
                 console.log("Logou como Paciente!!");
-                req.session.autenticado = true; // Define autenticação ao logar
-                return res.redirect("/homelogged");
+    
+                return {
+                    success: true,
+                    dados: findUserCPF[0], // Retorna os dados do usuário
+                };
             } else {
                 console.log("Credenciais inválidas");
-                return res.render("pages/index", {
-                    pagina: "loginpacientes",
-                    errorsList: [{ msg: "Credenciais inválidas" }],
-                    autenticado: null // Alterado para passar o estado de autenticação
-                });
+                return {
+                    success: false,
+                    errors: [{ msg: "Credenciais inválidas" }], // Erro de credenciais
+                };
             }
         } catch (e) {
             console.log("Erro no login:", e);
-            return res.render("pages/index", {
-                pagina: "loginpacientes",
-                errorsList: [{ msg: "Erro no servidor" }],
-                autenticado: null // Alterado para passar o estado de autenticação
-            });
+            return {
+                success: false,
+                errors: [{ msg: "Erro no servidor" }],
+            };
         }
     }
 };
 
 module.exports = userPacientesController;
-

@@ -12,6 +12,12 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 horas em milissegundos
 }));
 
+app.use((req, res, next) => {
+    res.locals.usuarioNome = req.session.autenticado ? req.session.autenticado.usuarioNome : null;
+    next();
+});
+
+
 app.use(express.static("app/public"));
 app.set("view engine", "ejs");
 app.set("views", "./app/views");

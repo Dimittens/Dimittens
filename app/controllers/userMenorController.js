@@ -1,10 +1,11 @@
 const menor = require("../models/menorModel");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-var salt = bcrypt.genSaltSync(10);
+const salt = bcrypt.genSaltSync(10);
 
 const userMenorController = {
     cadastrar: async (req, res) => {
+        console.log("Função de cadastro chamada");
         const errors = validationResult(req);
         
         // Verifica se há erros de validação
@@ -12,7 +13,7 @@ const userMenorController = {
             return res.render("pages/index", { 
                 pagina: "cadastromenor",
                 autenticado: null,
-                errorsList: errors, 
+                errorsList: errors.array(), 
                 valores: req.body
             });
         }
@@ -20,13 +21,13 @@ const userMenorController = {
         const dadosForm = {
             NOME_USUARIO: req.body.username,
             SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
-            DT_NASC_USUARIO: req.body.userdate,
+            DT_NASC_USUARIO: req.body.userdatemenor,
             CPF_USUARIO: req.body.userdocuments,
             EMAIL_USUARIO: req.body.useremail,
             CPF_RESPONSAVEL: req.body.userresponsaveldocuments,
             NOME_RESPONSAVEL: req.body.usernameresponsavel,
             DT_CRIACAO_CONTA_USUARIO: new Date(),
-            DIFERENCIACAO_USUARIO: 'Menor de Idade' // Definindo o tipo como 'Menor de Idade'
+            DIFERENCIACAO_USUARIO: 'Menor de Idade'
         };
 
         try {
@@ -46,10 +47,14 @@ const userMenorController = {
 
             // Criando usuário apenas se não houver emails duplicados
             await menor.create(dadosForm);
-            console.log("Dados recebidos:", dadosForm); // Log dos dados recebidos
-            console.log("Usuário Menor de 18 cadastrado com sucesso!!");
-            req.session.autenticado = true; // Apenas após a inserção bem-sucedida
-            res.redirect("/homelogged");
+            console.log("Dados recebidos:", dadosForm);
+            console.log("Usuário Menor de Idade cadastrado com sucesso!!");
+            req.session.autenticado = true;
+            req.session.user = {
+                nome: req.body.username,
+                tipo: 'Menor de Idade'
+            };
+            return { success: true }; // Retorne um objeto de sucesso
         
         } catch (error) {
             console.log("Erro ao cadastrar menor:", error);
@@ -64,59 +69,63 @@ const userMenorController = {
 
     logar: async (req, res) => {
         try {
+            console.log("Função de login chamada");
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.render("pages/index", {
-                    pagina: "logindependentes",
-                    errorsList: errors.array(),
-                    autenticado: null 
-                });
+                return {
+                    success: false,
+                    errorsList: errors.array()
+                };
             }
     
             const dadosForm = {
-                DT_NASC_USUARIO: req.body.userdate, // A data do formulário
+                DT_NASC_USUARIO: req.body.userdate, 
                 CPF_USUARIO: req.body.userdocuments,
                 SENHA_USUARIO: req.body.userpassword
             };
     
             console.log("Dados do formulário:", dadosForm);
     
-            let findUser = await menor.findUserCPF(dadosForm); // Altere aqui para o método correto
+            let findUser = await menor.findUserCPF(dadosForm); 
             if (findUser.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUser[0].SENHA_USUARIO)) {
-                // Comparar a data de nascimento convertendo para o mesmo formato
-                const dataNascFormatadaBanco = findUser[0].DT_NASC_USUARIO.toISOString().split('T')[0]; // Converte para 'YYYY-MM-DD'
-                const dataNascFormatadaForm = new Date(dadosForm.DT_NASC_USUARIO).toISOString().split('T')[0]; // Também converte o formulário para 'YYYY-MM-DD'
+                // Comparar a data de nascimento
+                const dataNascFormatadaBanco = findUser[0].DT_NASC_USUARIO.toISOString().split('T')[0]; 
+                const dataNascFormatadaForm = new Date(dadosForm.DT_NASC_USUARIO).toISOString().split('T')[0]; 
     
                 if (dataNascFormatadaBanco === dataNascFormatadaForm) {
                     console.log("Logou como Menor de Idade!");
                     req.session.autenticado = true;
-                    return res.redirect("/homelogged");
+                    req.session.user = {
+                        id: findUser[0].id,
+                        nome: findUser[0].NOME_USUARIO,
+                        tipo: 'Menor de Idade'
+                    };
+                    return {
+                        success: true,
+                        dados: findUser[0] // Retorna os dados do usuário
+                    }; // Retorne um objeto de sucesso
                 } else {
                     console.log("Data de nascimento não coincide.");
-                    return res.render("pages/index", { 
-                        pagina: "logindependentes", 
-                        errorsList: [{ msg: "Data de nascimento não coincide." }], 
-                        autenticado: null 
-                    });
+                    return {
+                        success: false,
+                        errorsList: [{ msg: "Data de nascimento não coincide." }]
+                    };
                 }
             } else {
                 console.log("Credenciais inválidas");
-                return res.render("pages/index", { 
-                    pagina: "logindependentes", 
-                    errorsList: [{ msg: "Credenciais inválidas" }], 
-                    autenticado: null 
-                });
+                return {
+                    success: false,
+                    errorsList: [{ msg: "Credenciais inválidas" }]
+                };
             }
         } catch (e) {
             console.log("Erro no login menor:", e);
-            return res.render("pages/index", {
-                pagina: "logindependentes",
-                errorsList: [{ msg: "Erro no servidor" }],
-                autenticado: null
-            });
+            return {
+                success: false,
+                errorsList: [{ msg: "Erro no servidor" }]
+            };
         }
-    }
-    
+    }    
 }
 
 module.exports = userMenorController;

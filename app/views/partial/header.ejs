@@ -48,6 +48,12 @@ width: 95px;
 height: 95px;
 }
 
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .menu {
 background: linear-gradient(to right, #ec8d26 17.20%, white 17.20%);
 width: 75.78vw;
@@ -56,7 +62,7 @@ border-radius: 45px;
 align-items: center;
 display: flex;
 justify-content: center;
-margin: 36px auto;
+margin-top: 36px ;
 box-sizing: border-box;
 z-index: 2;
 position: relative;
@@ -93,7 +99,13 @@ margin-bottom: 15px;
 }
 
 
-
+.msg-boasvindas {
+    font-size: 20px;
+    color: white;
+    position: relative;
+    right: 100px;
+    top: 30px;
+}
 
 
 
@@ -429,6 +441,11 @@ header {
 </head>
 <body>
 <header>
+    <% if (usuarioNome) { %>
+        <p class="msg-boasvindas">Bem-vindo, <%= usuarioNome %>!</p>
+    <% } %>
+    
+    
     <article class="menu-device">
         <i class="fa-solid fa-bars" id="menu-smart"></i>
         <section class="right-icons">
@@ -448,6 +465,7 @@ header {
         </ul>
     </section>
 
+    
     <article class="menu">
         <a href="#" class="logo"><img src="/imagens/logo-menu.png" alt="" class="logo-img"></a>
         <ul class="nav-bar">

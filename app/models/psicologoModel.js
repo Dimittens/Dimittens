@@ -35,7 +35,7 @@ const psicologoModel = {
     },
 
     // Nova função para buscar todos os CRPs
-    findUserCRP: async () => {
+    findAllCRPs: async () => {
         try {
             const [results] = await pool.query(
                 "SELECT CRP_USUARIO FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Psicologo'"
@@ -44,6 +44,20 @@ const psicologoModel = {
         } catch (error) {
             console.log("Erro ao encontrar os CRPs dos psicólogos", error);
             return [];
+        }
+    },
+
+    // Manter a função para buscar CRP de um usuário específico
+    findUserCRP: async (camposForm) => {
+        try {
+            const [results] = await pool.query(
+                "SELECT CRP_USUARIO FROM USUARIO WHERE CPF_USUARIO = ?",  
+                [camposForm.CPF_USUARIO] // Aqui você pode passar o CPF do formulário
+            );
+            return results;
+        } catch (error) {
+            console.log("Erro ao encontrar o CRP do psicólogo", error);
+            return error;
         }
     },
 

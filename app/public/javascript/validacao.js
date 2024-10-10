@@ -31,11 +31,34 @@ cpfInputs.forEach(function (input) {
     }
 });
 
+    // Validação do CRP
+    var crpInput = document.getElementById('usercrp');
+    if (crpInput) {
+        crpInput.addEventListener('input', function (e) {
+            let crp = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+            // Limita o CRP a 8 dígitos
+            if (crp.length > 8) {
+                crp = crp.slice(0, 8);
+            }
+
+            // Formata o CRP
+            if (crp.length <= 2) {
+                crp = crp.replace(/(\d{0,2})/, '$1');
+            } else {
+                crp = crp.replace(/(\d{2})(\d{0,6})/, '$1/$2');
+            }
+
+            e.target.value = crp; // Atualiza o valor do input
+        });
+    }
+
+
 form.addEventListener('submit', function(event) {
    
     var inputs = [
         { element: document.getElementById('username'), minLength: 5, errorMessageEmpty: 'O nome é obrigatório.', errorMessageMinLength: 'O nome deve ter pelo menos 5 caracteres.' },
-        { element: document.getElementById('userdate'), minLength: 1, errorMessageEmpty: 'A data de nascimento é obrigatória.', errorMessageInvalidAge: 'Você deve ter entre 6 e 18 anos para criar sua conta.' },
+        { element: document.getElementById('userdatemenor'), minLength: 1, errorMessageEmpty: 'A data de nascimento é obrigatória.', errorMessageInvalidAge: 'Você deve ter entre 6 e 18 anos para criar sua conta.' },
         { element: document.getElementById('userdocuments'), minLength: 1, errorMessageEmpty: 'O RG ou CPF é obrigatório.' },
         { element: document.getElementById('useremail'), minLength: 1, errorMessageEmpty: 'O email é obrigatório.', errorMessageInvalidEmail: 'Por favor, insira um email válido.' },
         { element: document.getElementById('userpassword'), minLength: 8, errorMessageEmpty: 'A senha é obrigatória.', errorMessageMinLength: 'A senha deve ter pelo menos 8 caracteres.', errorMessageWeak: 'A senha deve ter pelo menos 8 caracteres, incluindo pelo menos um número, uma letra maiúscula e um caractere especial (!@#$%^&*).' },
@@ -44,7 +67,7 @@ form.addEventListener('submit', function(event) {
     
     var hasError = false;
     var today = new Date();
-    var userBirthDate = new Date(document.getElementById('userdate').value);
+    var userBirthDate = new Date(document.getElementById('userdatemenor').value);
 
     // Verifica a idade do usuário
     var age = today.getFullYear() - userBirthDate.getFullYear();
@@ -64,7 +87,7 @@ form.addEventListener('submit', function(event) {
 
         var trimmedValue = input.value.trim();
 
-        if (input.id === 'userdate') {
+        if (input.id === 'userdatemenor') {
             // Verificação da data de nascimento
             if (trimmedValue === "") {
                 hasError = true;
@@ -153,7 +176,7 @@ if ((input.element.id === 'userdocuments' || input.element.id === 'userresponsav
 }
 
 // Validação de CRP
-if (input.element.id === 'userpdocuments' && !validarCrp(value)) {
+if (input.element.id === 'usecrp' && !validarCrp(value)) {
     valid = false;
     warning.textContent = input.errorMessageInvalidCNPJ;
 }
