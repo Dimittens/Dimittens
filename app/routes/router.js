@@ -278,7 +278,7 @@ router.post('/loginpacientes', async (req, res) => {
 
 // LOGIN MENOR
 router.get('/logindependentes', (req, res) => {
-  res.render('pages/index', { pagina: "loginmenor", autenticado: null });
+  res.render('pages/index', { pagina: "logindependentes", autenticado: null });
 });
 
 router.post('/logindependentes', async (req, res) => {

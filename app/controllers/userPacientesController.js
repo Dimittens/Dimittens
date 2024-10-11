@@ -1,5 +1,5 @@
 const paciente = require("../models/pacienteModel");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(10);
 

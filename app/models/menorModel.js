@@ -20,7 +20,7 @@ const menorModel = {
             return results || []; // Retorna um array vazio se não houver resultados
         } catch (error) {
             console.log("Erro ao encontrar os menores", error);
-            return []; // Retorna um array vazio em caso de erro
+            return error; // Retorna um array vazio em caso de erro
         }
     },
 
@@ -44,10 +44,10 @@ const menorModel = {
                 "SELECT * FROM USUARIO WHERE CPF_USUARIO = ?",  
                 [camposForm.CPF_USUARIO] 
             );
-            return results || []; // Retorna um array vazio se não houver resultados
+            return results;
         } catch (error) {
             console.log("Erro ao comparar o CPF do menor", error);
-            return []; // Retorna um array vazio em caso de erro
+            return error; // Retorna um array vazio em caso de erro
         }
     },
 
@@ -58,10 +58,10 @@ const menorModel = {
                 "SELECT * FROM USUARIO WHERE CPF_USUARIO = ? AND DT_NASC_USUARIO = ?",  
                 [camposForm.CPF_USUARIO, camposForm.DT_NASC_USUARIO] 
             );
-            return results || []; // Retorna um array vazio se não houver resultados
+            return results; // Retorna um array vazio se não houver resultados
         } catch (error) {
             console.log("Erro ao buscar usuário:", error);
-            return []; // Retorna um array vazio em caso de erro
+            return error; // Retorna um array vazio em caso de erro
         }
     },
 
