@@ -1,27 +1,32 @@
-const menor = require("../models/menorModel");
+const menorModel = require("../models/menorModel");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-const salt = bcrypt.genSaltSync(10);
+var salt = bcrypt.genSaltSync(10);
+
+// Função para formatar a data
+const formatarData = (data) => {
+    return new Date(data).toISOString().split('T')[0]; // Formato yyyy-mm-dd
+};
 
 const userMenorController = {
     cadastrar: async (req, res) => {
         console.log("Função de cadastro chamada");
         const errors = validationResult(req);
-        
-        // Verifica se há erros de validação
+        console.log("Erros de validação:", errors.array());
+
         if (!errors.isEmpty()) {
-            return res.render("pages/index", { 
+            return res.render("pages/index", {
                 pagina: "cadastromenor",
                 autenticado: null,
-                errorsList: errors.array(), 
+                errorsList: errors.array(),
                 valores: req.body
             });
         }
-        
+
         const dadosForm = {
             NOME_USUARIO: req.body.username,
             SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
-            DT_NASC_USUARIO: req.body.userdatemenor,
+            DT_NASC_USUARIO: formatarData(req.body.userdatemenor),  // Formata a data
             CPF_USUARIO: req.body.userdocuments,
             EMAIL_USUARIO: req.body.useremail,
             CPF_RESPONSAVEL: req.body.userresponsaveldocuments,
@@ -30,11 +35,12 @@ const userMenorController = {
             DIFERENCIACAO_USUARIO: 'Menor de Idade'
         };
 
+        console.log('Dados recebidos:', dadosForm);
+
         try {
-            const existingEmails = await menor.findAllEmails();
+            const existingEmails = await menorModel.findAllEmails();
             const emailDuplicado = existingEmails.find(email => email === req.body.useremail);
 
-            // Emitindo log apenas se um email duplicado for encontrado
             if (emailDuplicado) {
                 console.log('Email duplicado encontrado:', emailDuplicado);
                 return res.render("pages/index", {
@@ -45,17 +51,12 @@ const userMenorController = {
                 });
             }
 
-            // Criando usuário apenas se não houver emails duplicados
-            await menor.create(dadosForm);
-            console.log("Dados recebidos:", dadosForm);
+            await menorModel.create(dadosForm);
             console.log("Usuário Menor de Idade cadastrado com sucesso!!");
             req.session.autenticado = true;
-            req.session.user = {
-                nome: req.body.username,
-                tipo: 'Menor de Idade'
-            };
-            return { success: true }; // Retorne um objeto de sucesso
-        
+
+            return { success: true };
+
         } catch (error) {
             console.log("Erro ao cadastrar menor:", error);
             return res.render("pages/index", {
@@ -71,39 +72,33 @@ const userMenorController = {
         try {
             console.log("Função de login chamada");
             const errors = validationResult(req);
+            console.log("Dados recebidos:", req.body);
+
             if (!errors.isEmpty()) {
-                return {
-                    success: false,
-                    errorsList: errors.array()
-                };
+                return { success: false, errorsList: errors.array() };
             }
-    
+
             const dadosForm = {
-                DT_NASC_USUARIO: req.body.userdate, 
+                DT_NASC_USUARIO: formatarData(req.body.userdatemenor),  // Formata a data no login também
                 CPF_USUARIO: req.body.userdocuments,
                 SENHA_USUARIO: req.body.userpassword
             };
-    
+
             console.log("Dados do formulário:", dadosForm);
-    
-            let findUser = await menor.findUserCPF(dadosForm); 
-            if (findUser.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUser[0].SENHA_USUARIO)) {
-                // Comparar a data de nascimento
-                const dataNascFormatadaBanco = findUser[0].DT_NASC_USUARIO.toISOString().split('T')[0]; 
-                const dataNascFormatadaForm = new Date(dadosForm.DT_NASC_USUARIO).toISOString().split('T')[0]; 
-    
+
+            let findUserCPF = await menorModel.findUserCPF(dadosForm);
+            if (findUserCPF.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUserCPF[0].SENHA_USUARIO)) {
+                const dataNascFormatadaBanco = formatarData(findUserCPF[0].DT_NASC_USUARIO);
+                const dataNascFormatadaForm = formatarData(dadosForm.DT_NASC_USUARIO);
+
                 if (dataNascFormatadaBanco === dataNascFormatadaForm) {
                     console.log("Logou como Menor de Idade!");
                     req.session.autenticado = true;
-                    req.session.user = {
-                        id: findUser[0].id,
-                        nome: findUser[0].NOME_USUARIO,
-                        tipo: 'Menor de Idade'
-                    };
+
                     return {
                         success: true,
-                        dados: findUser[0] // Retorna os dados do usuário
-                    }; // Retorne um objeto de sucesso
+                        dados: findUserCPF[0]
+                    };
                 } else {
                     console.log("Data de nascimento não coincide.");
                     return {
@@ -115,17 +110,17 @@ const userMenorController = {
                 console.log("Credenciais inválidas");
                 return {
                     success: false,
-                    errorsList: [{ msg: "Credenciais inválidas" }]
+                    errors: [{ msg: "Credenciais inválidas" }]
                 };
             }
         } catch (e) {
             console.log("Erro no login menor:", e);
             return {
                 success: false,
-                errorsList: [{ msg: "Erro no servidor" }]
+                errors: [{ msg: "Erro no servidor" }]
             };
         }
-    }    
+    }
 }
 
 module.exports = userMenorController;

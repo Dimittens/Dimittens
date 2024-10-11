@@ -1,19 +1,20 @@
 const psicologo = require("../models/psicologoModel");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-const salt = bcrypt.genSaltSync(10);
+var salt = bcrypt.genSaltSync(10);
 
 const userPsicologosController = {
     cadastrar: async (req, res) => {
         console.log("Função de cadastro chamada");
-        console.log("Dados recebidos:", req.body);
         
         const errors = validationResult(req);
+        console.log("Erros de validação:", errors.array());
 
         // Verifica se há erros de validação
         if (!errors.isEmpty()) {
             return res.render("pages/index", { 
-                pagina: "cadastropsicologos", 
+                pagina: "cadastropsicologos",
+                autenticado: null,
                 errorsList: errors.array(), 
                 valores: req.body // Passa valores para a view
             });
@@ -29,6 +30,8 @@ const userPsicologosController = {
             DIFERENCIACAO_USUARIO: 'Psicologo'
         };
 
+        console.log("Dados recebidos:", dadosForm);
+
         try {
             // Verifica se o CPF já está cadastrado
             const existingUsers = await psicologo.findUserCPF(dadosForm);
@@ -43,14 +46,19 @@ const userPsicologosController = {
 
             // Verifica se o email já está cadastrado
             const existingEmails = await psicologo.findAllEmails();
-            if (existingEmails.includes(req.body.useremail)) {
-                console.log('Email duplicado encontrado:', req.body.useremail);
+            const emailDuplicado = existingEmails.find(email => email === req.body.useremail);
+
+            // Emitindo log apenas se um email duplicado for encontrado
+            if (emailDuplicado) {
+                console.log('Email duplicado encontrado:', emailDuplicado);
                 return res.render("pages/index", {
-                    pagina: "cadastropsicologos",
-                    errorsList: [{ msg: "Email já cadastrado." }],
-                    valores: req.body // Passa valores para a view
+                    pagina: "cadastropacientes",
+                    autenticado: null,
+                    errorsList: [{ msg: "Email já cadastrado" }],
+                    valores: req.body
                 });
             }
+
 
             // Verificação para o CRP
             const existingCRPs = await psicologo.findAllCRPs();
@@ -71,11 +79,14 @@ const userPsicologosController = {
             req.session.autenticado = true;
 
             // Redirecionar após o cadastro
-            return { success: true }; // Retorne um objeto de sucesso
+            return {
+                 success: true,
+            }; // Retorne um objeto de sucesso
         } catch (error) {
             console.log("Erro ao cadastrar psicólogo:", error);
             return res.render("pages/index", {
                 pagina: "cadastropsicologos",
+                autenticado: null,
                 errorsList: [{ msg: "Erro ao cadastrar psicólogo." }],
                 valores: req.body
             });
@@ -118,12 +129,15 @@ const userPsicologosController = {
                     req.session.autenticado = true;
                     req.session.user = {
                         id: psicologoData.id,
-                        nome: psicologoData.NOME_USUARIO,
+                        userNome: psicologoData.NOME_USUARIO,
                         tipo: 'Psicologo' // Tipo de usuário
                     };
 
                     console.log("Psicólogo logado com sucesso:", psicologoData);
-                    return { success: true }; // Retorne um objeto de sucesso
+                    return { 
+                        success: true,
+                        dados: findUserCPF[0],
+                     }; // Retorne um objeto de sucesso
                 }
             }
 

@@ -1,5 +1,5 @@
 const paciente = require("../models/pacienteModel");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(10);
 
@@ -24,7 +24,8 @@ const userPacientesController = {
             DT_NASC_USUARIO: req.body.userdate,
             EMAIL_USUARIO: req.body.useremail,
             CPF_USUARIO: req.body.userdocuments,
-            DT_CRIACAO_CONTA_USUARIO: new Date()
+            DT_CRIACAO_CONTA_USUARIO: new Date(),
+            DIFERENCIACAO_USUARIO: 'Comum'
         };
 
         console.log('Dados recebidos:', dadosForm);

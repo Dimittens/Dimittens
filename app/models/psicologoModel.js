@@ -9,8 +9,10 @@ const psicologoModel = {
                 "ID_USUARIO, NOME_USUARIO, " +
                 "EMAIL_USUARIO, SENHA_USUARIO, " +
                 "DT_CRIACAO_CONTA_USUARIO, " +
+                "DT_NASC_USUARIO, " +
                 "CPF_USUARIO, "  +
                 "CRP_USUARIO, "  +
+                "PSICOLOGO_ID_PSICOLOGO, " +
                 "DIFERENCIACAO_USUARIO " +
                 "FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Psicologo'"
             );
