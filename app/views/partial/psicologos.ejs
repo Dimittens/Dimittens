@@ -19,34 +19,33 @@
 
             <section class="option">
 
-                <section class="col1">
+                <form action="" method="post">
+                    <label for="esp">Especialidade</label>
+                    <select name="especialidade" id="esp">
+                        <option value="ansiedade">Ansiedade</option>
+                        <option value="depressao">Depressão</option>
+                    </select>
+                </form>
 
-                    <section class="filtros">
+                <form action="" method="post">
+                    <label for="abord">Abordagem</label>
+                    <select name="abordagem" id="abord">
+                        <option value="humanista">Humanista</option>
+                        <option value="psicanalise">Psicanálise</option>
+                    </select>
+                </form>
 
-                        <section class="box-search">
-                            <h4>Especialidade</h4>
-                            <input type="search" name="especial" id="especialidade"
-                                placeholder="Ex: Ansiedade, Depressão...">
-                        </section>
+                <form action="" method="post">
+                    <label for="pub">Público</label>
+                    <select name="publico" id="pub">
+                        <option value="crianca">Criança</option>
+                        <option value="adulto">Adulto</option>
+                        <option value="idoso">Idoso</option>
+                    </select>
+                </form>
 
-                        <section class="box-search">
-                            <h4>Público</h4>
-                            <input type="search" name="especial" id="especialidade" placeholder="Ex: Adulto, Criança">
-                        </section>
-
-                        <section class="box-search" id="abordagem">
-                            <h4>Abordagem</h4>
-                            <input type="search" name="especial" id="especialidade"
-                                placeholder="Ex: Psicanálise, Humanista...">
-                        </section>
-
-                        <section class="button-box">
-                            <button id="button-box2">Mais Filtros</button> <button id="button-box2">Buscar</button>
-                        </section>
-
-                    </section>
-
-                </section>
+                <button type="button">Mais Filtros</button>
+                <button type="button">Buscar</button>
 
             </section>
 

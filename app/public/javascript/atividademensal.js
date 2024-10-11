@@ -1,57 +1,76 @@
-document.addEventListener('DOMContentLoaded',function() {
-    const monthsBr = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+document.addEventListener('DOMContentLoaded', function() {
+    const monthsBr = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
     const tableDays = document.getElementById('dias');
-    function GetDaysCalendar(mes,ano){
-        document.getElementById('mes').innerHtml = monthsBR[mes];
+
+    function GetDaysCalendar(mes, ano) {
+        document.getElementById('mes').innerHTML = monthsBr[mes];
         document.getElementById('ano').innerHTML = ano;
 
-        let firstDayOfWeek = new Date(ano,mes, 1).getDay()-1;
-        let getLastDayThisMonth = new Date(ano,mes+1,0).getDate();
+        // Limpa a tabela
+        const cells = tableDays.getElementsByTagName('td');
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].innerHTML = '';
+            cells[i].classList.remove('mes-anterior', 'proximo-mes', 'dia-atual');
+        }
 
-        for(var i = -firstDayOfWeek,index = 0; i < (42-firstDayOfWeek); i++,index++){
-            let dt = new Date(ano,mes,i);
-            let dtNow = newDate();
-            let dayTable = tableDays.getElementsByTagName('td')[index];
-            dayTable.classList.remove('mes-anterior')
-            dayTable.classList.remove('proximo-mes')
-            dayTable.classList.remove('dia-atual')
-            dayTable.innerHTML = dt.getDate();
+        // Calcula o primeiro dia da semana e o último dia do mês atual
+        const firstDayOfWeek = new Date(ano, mes, 1).getDay();
+        const getLastDayThisMonth = new Date(ano, mes + 1, 0).getDate();
 
-            if(dt.getFullYear() == dtNow.getFullYear() && dt.getMonth() == dtNow.getMonth() && dt.getDate() == dtNow.getDate()){
-                dayTable.classList.add('dia-atual')
+
+        // Preenche os dias do mês atual
+        for (let i = 1; i <= getLastDayThisMonth; i++) {
+            const dayTable = cells[firstDayOfWeek + i - 1];
+            if (dayTable) {
+                dayTable.innerHTML = i;
+                dayTable.classList.add('dia-atual');
             }
+        }
 
-            if(i < 1) {
-                dayTable.classList.add('mes-anterior')
+        // Preenche os dias do mês anterior
+        const daysInLastMonth = new Date(ano, mes, 0).getDate();
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            const dayTable = cells[i];
+            if (dayTable) {
+                dayTable.innerHTML = daysInLastMonth - firstDayOfWeek + 1 + i;
+                dayTable.classList.add('mes-anterior');
             }
-            if(i > getLastDayThisMonth){
-                dayTable.classList.add('proximo-mes')
+        }
+
+        // Preenche os dias do próximo mês
+        const totalCells = 42; // Total de células no calendário
+        for (let i = 1; firstDayOfWeek + getLastDayThisMonth + i <= totalCells; i++) {
+            const dayTable = cells[firstDayOfWeek + getLastDayThisMonth + i - 1];
+            if (dayTable) {
+                dayTable.innerHTML = i;
+                dayTable.classList.add('proximo-mes');
             }
         }
     }
 
-    let now= new Date();
+    let now = new Date();
     let mes = now.getMonth();
-    let ano = now.getFullYear()
-    GetDaysCalendar(mes,ano);
+    let ano = now.getFullYear();
+    GetDaysCalendar(mes, ano);
 
-    const botao_proximo = document.getElementById('btn_prev')
-    const botao_anterior = document.getElementById('btn_ant')
+    const botao_proximo = document.getElementById('btn_prev');
+    const botao_anterior = document.getElementById('btn_ant');
 
-    botao_proximo.onclick = function (){
+    botao_proximo.onclick = function() {
         mes++;
-        if(mes > 11){
+        if (mes > 11) {
             mes = 0;
             ano++;
         }
-        GetDaysCalendar(mes,ano);
-    }
-    botao_anterior.onclick = function(){
-        mes++;
-        if(mes < 0){
+        GetDaysCalendar(mes, ano);
+    };
+
+    botao_anterior.onclick = function() {
+        mes--;
+        if (mes < 0) {
             mes = 11;
             ano--;
         }
-        GetDaysCalendar(mes,ano);
-    }
-})
+        GetDaysCalendar(mes, ano);
+    };
+});

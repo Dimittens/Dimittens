@@ -1,11 +1,11 @@
 *{
   padding: 0;
   margin: 0;
-  font-family: "Raleway Bold", "Raleway", sans-serif;
+  font-family: 'Lato',sans-serif;
 }
 
-body {
-  background-color: white;
+body{
+  background: #f1f1f1;
 }
 
 .conteudo {
@@ -24,38 +24,26 @@ body {
   position: relative;
 }
 
-h2{
+h2 {
   margin-top: 20px;
   font-size: 32px;
   text-transform: uppercase;
+
 }
 
-.mes {
-  border: 1px solid #ec8d26;
-}
-
-
-.btn-ant,.btn-pro {
+.btn-ant,.btn-pro{
   position: absolute;
   top: 50%;
   height: 32px;
   width: 32px;
   line-height: 32px;
   margin-top: -16px;
-  border: 2px solid #ec8d26;
+  border: 2px solid #cbd1d2;
   border-radius: 50%;
-  color: #ec8d26;
+  color: #cbd1d2;
   font-size: 16px;
   font-weight: bold;
 }
-
-/*#a1 {
-  transform: rotate(-90deg);
-}
-
-#a2 {
-  transform: rotate(90deg);
-}*/
 
 .btn-ant {
   left: 80px;
@@ -66,9 +54,8 @@ h2{
 }
 
 .btn-ant:hover,.btn-pro:hover{
-  background: #ec8d26;
+  background: #cbd1d2;
   color: #f9f9f9;
-
 }
 
 .calendario table {
@@ -76,48 +63,53 @@ h2{
   border-collapse: collapse;
 }
 
-.calendario thead{
-  background-color: white;
+.calendario thead {
+  background: white;
   font-weight: 600;
   text-transform: uppercase;
 }
 
+.calendario thead td{
+  height: 67.4px;
+}
+
 .calendario td {
-  border: 1px solid #ec8d26;
+  border: 1px solid #cbd1d2;
   height: 71.4px;
   text-align: center;
   width: 71.4px;
-  border-radius: 15px 15px 15px 15px;
-
 }
 
 .calendario tbody td {
+  background: white; /* Fundo branco para os dias */
+  border: 1px solid #cbd1d2;
   cursor: pointer;
 }
-.calendario tbody td:hover{
-  background-color: rgba(0,173,223,0.8);
-  color: white;
+
+.calendario tbody td:hover {
+  background: rgba(0, 173, 223, 0.8); /* Azul ao passar o mouse */
+  color: #f9f9f9; /* Cor do texto ao passar o mouse */
 }
 
-.calendario table .dia-atual{
-  background: #c0addf;
-  color:#f9f9f9;
+.calendario table .dia-atual {
+  background: white; /* Fundo branco para o dia atual */
+  color: black; /* Cor do texto do dia atual */
 }
 
 .calendario .mes-anterior, .calendario .proximo-mes{
   color: #cbd1d2;
 }
 
-.calendario .mes-anterior:hover, .calendario .proximo-mes:hover{
-  background: #98a0a0;
+.calendario.mes-anterior:hover, .calendario.proximo-mes:hover{
+  color: #98a0a0;
 }
 
-.event{
+.event {
   position: relative;
 }
 
 .event:after{
-  content: '';
+  content:'';
   width: 7px;
   height: 7px;
   left: 50%;
@@ -129,11 +121,12 @@ h2{
   border-radius: 50%;
 }
 
-.event:hover:after{
+.event:hover::after{
   background: #f9f9f9;
 }
 
-.event.dia-atual:after{
-  background:#f9f9f9;
+.event.dia-atual::after{
+  background: #f9f9f9;
 }
+
 
