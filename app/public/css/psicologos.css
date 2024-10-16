@@ -104,9 +104,10 @@ body {
 }
 
 .option {
-    columns: 2;
+    display: flex;
     width: max-content;
     gap: 80px;
+    columns: 2;
 }
 
 .col1 {
@@ -148,6 +149,36 @@ h4 {
 
 #abordagem {
     flex-direction: column;
+}
+
+label{
+    color: #dfa5d9;
+    display: block;
+    margin-bottom: 5px;
+}
+
+select{
+    width: 360px;
+    height: 50px;
+    border-radius: 17px;
+    margin-bottom: 20px;
+}
+
+#btn1 {
+    width: 117px;
+    height: 34px;
+    border-radius: 12px;
+}
+
+#btn2 {
+    height: 34px;
+    width: 90px;
+    border-radius: 12px;
+}
+
+.btn {
+    margin-left: 150px;
+    margin-top: 40px;
 }
 
 p {
