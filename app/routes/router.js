@@ -66,6 +66,11 @@ router.get('/sobrenos', (req, res) => {
   res.render('pages/index', { pagina: "sobrenos", autenticado: null });
 });
 
+// ROTA PARA PERFIL COMUNIDADE
+router.get('/perfil-comunidade', (req, res) => {
+  res.render('pages/index', { pagina: "perfil-comunidade", autenticado: null });
+});
+
 // ROTA PARA REDIRECIONAMENTO DO SUPORTE
 router.get('/redirecionamentosuporte', (req, res) => {
   res.render('pages/index', { pagina: "redirecionamentosuporte", autenticado: null });
