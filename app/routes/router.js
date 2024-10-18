@@ -196,13 +196,19 @@ router.get('/atividademensal', (req, res) => {
   res.render('pages/index', { pagina: "atividademensal", autenticado: null });
 });
 
-// Calendário
+/* Calendário
 router.get('/calendario', (req, res) => {
   if (req.session.autenticado) {
     res.render('pages/index', { pagina: "calendario", autenticado: req.session.autenticado });
   } else {
     res.redirect('/loginpacientes');
   }
+});
+*/
+
+// Calendário
+router.get('/calendario', (req, res) => {
+  res.render('pages/index', { pagina: "calendario", autenticado: null });
 });
 
 // Pop-Up Psicólogos
