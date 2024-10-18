@@ -4,6 +4,7 @@ const userPacientesController = require("../controllers/userPacientesController"
 const userPsicologosController = require("../controllers/userPsicologosController");
 const userMenorController = require("../controllers/userMenorController");
 const { recordAuthenticatedUser } = require("../models/autenticador_middleware");
+const { append } = require("express/lib/response");
 
 // ROTA PARA HEADER
 router.get('/header', (req, res) => {
@@ -69,6 +70,11 @@ router.get('/sobrenos', (req, res) => {
 // ROTA PARA REDIRECIONAMENTO DO SUPORTE
 router.get('/redirecionamentosuporte', (req, res) => {
   res.render('pages/index', { pagina: "redirecionamentosuporte", autenticado: null });
+});
+
+// ROTA PARA COMUNIDADE
+router.get('/comunidade', (req, res) => {
+  res.render('pages/index', { pagina: "comunidade", autenticado: null });
 });
 
 // ROTA PARA CRIAR POSTAGEM
