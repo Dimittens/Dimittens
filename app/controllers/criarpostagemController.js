@@ -30,6 +30,10 @@ exports.criarPostagem = (req, res) => {
             })
             .catch((err) => {
                 res.status(500).json({ message: 'Erro ao criar postagem.' });
+
             });
     });
 };
+{
+    
+}
