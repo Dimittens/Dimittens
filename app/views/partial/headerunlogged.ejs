@@ -78,6 +78,16 @@ color: white;
 font-size: 38px;
 }
 
+.loginssub {
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+    position: absolute;
+    width: 95px;
+    margin-top: 15px;
+    align-items: center;
+}
+
 #loginBtn {
   width: 95px;
   height: 40px;
@@ -106,6 +116,38 @@ font-size: 38px;
   line-height: normal;
   text-align: center;
 }
+
+#cadastroBtn:hover {
+    background-color: #ec8d26;
+    color: white;
+}
+
+#loginBtnpsic, #loginBtndep, #loginBtnpac {
+   /* display: none;*/
+  width: 95px;
+  height: 30px;
+  border: none;
+  font-family: "Raleway SemiBold", "Raleway", sans-serif;
+  font-weight: 600;
+  background-color: white;
+  text-align: center;
+  line-height: normal;
+}
+
+#loginBtnpsic {
+    color: #dfa5d9;
+}
+
+#loginBtndep {
+    color: #ffd700;
+    border-radius: 0 0 10px 10px;
+}
+
+#loginBtnpac {
+    color: #ec8d26;
+}
+
+
 
 .box-buttons {
     display: flex;
@@ -527,7 +569,14 @@ header {
             <li><a href="chat">Chat</a></li>
         </ul>
         <section class="box-buttons">
-            <a href="loginpacientes"><input type="button" id="loginBtn" value="Entrar"></a>
+            <section class="logins">
+                <input type="button" id="loginBtn" value="Entrar"></a>
+                <section class="loginssub">
+                    <a href="loginpacientes"><input type="button" id="loginBtnpac" value="Paciente"></a>
+                    <a href="loginpsicologos"><input type="button" id="loginBtnpsic" value="Psicólogo"></a>
+                    <a href="logindependentes"><input type="button" id="loginBtndep" value="Menor"></a>
+                </section>
+            </section>
             <a href="cadastropacientes"><input type="button" id="cadastroBtn" value="Cadastrar"></a>
         </section>
     </article>
