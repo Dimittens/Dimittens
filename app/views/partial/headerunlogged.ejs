@@ -78,34 +78,94 @@ color: white;
 font-size: 38px;
 }
 
+.loginssub {
+    display: none;
+    flex-direction: column;
+    z-index: 2;
+    position: absolute;
+    width: 95px;
+    margin-top: 17px;
+    align-items: center;
+}
+
 #loginBtn {
   width: 95px;
   height: 40px;
   border-radius: 45px;
-  border: 1px solid #ec8d26;
-  background-color: #ec8d26;
+  border: 2px solid #422040;
+  background-color: #f7f7f7;
   box-sizing: border-box;
   font-family: "Raleway SemiBold", "Raleway", sans-serif;
   font-weight: 600;
-  color: #f7f7f7;
+  color: #422040;
   text-align: center;
   line-height: normal;
+}
+
+#loginBtn:hover {
+    background-color: #422040;
+    color: white;
+}
+
+#loginBtn:hover + .loginssub{
+    display: flex;
+}
+
+.loginssub:hover {
+    display: flex;
 }
 
 #cadastroBtn {
   width: 120px;
   height: 40px;
   border-radius: 45px;
-  border: 2px solid #ec8d26;
+  border: 2px solid #422040;
   background-color: #f7f7f7;
   box-sizing: border-box;
   font-family: "Raleway SemiBold", "Raleway", sans-serif;
   font-weight: 600;
-  color: #ec8d26;
+  color: #422040;
   text-align: left;
   line-height: normal;
   text-align: center;
 }
+
+#cadastroBtn:hover {
+    background-color: #422040;
+    color: white;
+}
+
+#loginBtnpsic, #loginBtndep, #loginBtnpac {
+  width: 350px;
+  height: 60px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: white;
+  text-align: center;
+  line-height: normal;
+  font-family: "Raleway Medium", "Raleway", "Raleway", sans-serif;
+}
+
+#loginBtnpsic:hover {
+    background-color: #422040;
+    color: white;
+    font-weight: 600;
+}
+
+#loginBtndep:hover {
+    background-color: #422040;
+    color: white;
+    font-weight: 600;
+}
+
+#loginBtnpac:hover {
+    background-color: #422040;
+    color: white;
+    font-weight: 600;
+}
+
+
 
 .box-buttons {
     display: flex;
@@ -506,6 +566,10 @@ header {
 
 
 </style>
+
+<script>
+    
+</script>
 </head>
 <body>
 <header>
@@ -527,7 +591,14 @@ header {
             <li><a href="chat">Chat</a></li>
         </ul>
         <section class="box-buttons">
-            <a href="loginpacientes"><input type="button" id="loginBtn" value="Entrar"></a>
+            <section class="logins">
+                <input type="button" id="loginBtn" value="Entrar"></a>
+                <section class="loginssub">
+                    <a href="loginpacientes"><input type="button" id="loginBtnpac" value="Paciente"></a>
+                    <a href="logindependentes"><input type="button" id="loginBtndep" value="Menor"></a>
+                    <a href="loginpsicologos"><input type="button" id="loginBtnpsic" value="Psicólogo"></a>
+                </section>
+            </section>
             <a href="cadastropacientes"><input type="button" id="cadastroBtn" value="Cadastrar"></a>
         </section>
     </article>
