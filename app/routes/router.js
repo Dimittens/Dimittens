@@ -3,8 +3,8 @@ var router = express.Router();
 const userPacientesController = require("../controllers/userPacientesController");
 const userPsicologosController = require("../controllers/userPsicologosController");
 const userMenorController = require("../controllers/userMenorController");
+const calendarioController = require("../controllers/calendarioController");
 const { recordAuthenticatedUser } = require("../models/autenticador_middleware");
-const { append } = require("express/lib/response");
 
 // ROTA PARA HEADER
 router.get('/header', (req, res) => {
@@ -196,20 +196,16 @@ router.get('/atividademensal', (req, res) => {
   res.render('pages/index', { pagina: "atividademensal", autenticado: null });
 });
 
-/* Calendário
-router.get('/calendario', (req, res) => {
-  if (req.session.autenticado) {
-    res.render('pages/index', { pagina: "calendario", autenticado: req.session.autenticado });
-  } else {
-    res.redirect('/loginpacientes');
-  }
+// Aplica o middleware na rota do calendário
+router.get('/calendario', checkAuthenticatedUser, (req, res) => {
+  res.render('pages/index', {
+    pagina: "calendario",
+    autenticado: req.session.autenticado,
+  });
 });
-*/
 
-// Calendário
-router.get('/calendario', (req, res) => {
-  res.render('pages/index', { pagina: "calendario", autenticado: null });
-});
+// Rota para salvar o evento
+router.post('/calendario/salvar', checkAuthenticatedUser, calendarioController.salvarEvento);
 
 // Pop-Up Psicólogos
 router.get('/popuppsicologos', (req, res) => {

@@ -1,3 +1,4 @@
+require('dotenv').config(); // Garante o carregamento das variáveis do .env
 const mysql = require('mysql2');
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
@@ -12,12 +13,13 @@ const pool = mysql.createPool({
 
 pool.getConnection((err, conn) => {
     if (err) {
-        console.log(err);
-      
+        console.error("Erro na conexão com o banco de dados:", err.code);
+        console.error("Mensagem SQL:", err.sqlMessage);
     } else {
         console.log("Conectado ao Banco de dados");
-       
+        conn.release(); // Libera a conexão de volta para o pool
     }
 });
+
 
 module.exports = pool.promise();

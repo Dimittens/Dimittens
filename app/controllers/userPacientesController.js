@@ -88,6 +88,7 @@ const userPacientesController = {
             console.log("Dados do formulário:", dadosForm);
     
             let findUserCPF = await paciente.findUserCPF(dadosForm);
+            console.log("Resultado da busca por CPF:", findUserCPF);
             if (findUserCPF.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUserCPF[0].SENHA_USUARIO)) {
                 console.log("Logou como Paciente!!");
     

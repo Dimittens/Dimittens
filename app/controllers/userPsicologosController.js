@@ -1,5 +1,5 @@
 const psicologo = require("../models/psicologoModel");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(10);
 
@@ -24,13 +24,12 @@ const userPsicologosController = {
             NOME_USUARIO: req.body.username,
             SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
             EMAIL_USUARIO: req.body.useremail,
+            DT_NASC_USUARIO: req.body.userdate,
             CRP_USUARIO: req.body.usercrp,
             CPF_USUARIO: req.body.userdocuments,
             DT_CRIACAO_CONTA_USUARIO: new Date(),
             DIFERENCIACAO_USUARIO: 'Psicologo'
         };
-
-        console.log("Dados recebidos:", dadosForm);
 
         try {
             // Verifica se o CPF já está cadastrado

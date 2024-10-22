@@ -4,22 +4,23 @@ const bcrypt = require("bcryptjs");
 
 // Middleware para verificar se o usuário está autenticado
 checkAuthenticatedUser = (req, res, next) => {
-    if (req.session.autenticado) {
-        console.log("Usuário autenticado:", req.session.autenticado);
-        res.locals.usuarioNome = req.session.autenticado.usuarioNome; // Passando o nome do usuário para as views
+    if (req.session && req.session.autenticado) {
+      console.log("Usuário autenticado:", req.session.autenticado);
+      res.locals.usuarioNome = req.session.autenticado.usuarioNome; // Disponibiliza o nome do usuário para as views
+      next(); // Permite continuar para a rota desejada
     } else {
-        console.log("Usuário não autenticado");
-        res.locals.usuarioNome = null; // Passando null caso não autenticado
+      console.log("Usuário não autenticado.");
+      res.locals.usuarioNome = null; // Garante que não tenha dados de usuário nas views
+      return res.redirect("/loginpacientes"); // Redireciona para a página de login
     }
-    next();
-};
+  };
+  
 
 // Middleware para limpar a sessão
 clearSession = (req, res, next) => {
     console.log("Sessão antes de limpar:", req.session); // Log do estado da sessão
     req.session.destroy();
     console.log("Usuário saiu!");
-    next();
 };
 
 // Middleware para registrar o usuário autenticado
@@ -43,7 +44,6 @@ const recordAuthenticatedUser = async (req, res, next) => {
         // Verificando se nenhum resultado foi encontrado
         if (!results || results.length === 0) {
             console.log("Nenhum usuário encontrado com o CPF fornecido.");
-            return next(); // Isso deve chamar o próximo middleware
         }
 
         var total = Object.keys(results).length;
@@ -56,6 +56,7 @@ const recordAuthenticatedUser = async (req, res, next) => {
             // Armazenando informações do usuário na sessão
             req.session.autenticado = {
                 usuarioNome: usuarioNome,
+                usuarioId: resultadoLogin.dados.ID_USUARIO,
                 tipo: results[0].DIFERENCIACAO_USUARIO
             };
 
@@ -69,8 +70,6 @@ const recordAuthenticatedUser = async (req, res, next) => {
         req.session.autenticado = null;
         console.log("Erros de validação:", errors.array());
     }
-
-    next(); // Certifique-se de que o next está fora do bloco condicional
 };
 
 // Exportando os middlewares
