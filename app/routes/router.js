@@ -46,6 +46,11 @@ router.get('/headerunlogged', (req, res) => {
   res.render('pages/index', { pagina: "headerunlogged", autenticado: null });
 });
 
+// ROTA PARA FAQ
+router.get('/faq', (req, res) => {
+  res.render('pages/index', { pagina: "faq", autenticado: null });
+});
+
 // ROTA PARA PSICOLOGOS
 router.get('/psicologos', (req, res) => {
   res.render('pages/index', { pagina: "psicologos", autenticado: null });
