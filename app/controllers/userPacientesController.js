@@ -82,35 +82,55 @@ const userPacientesController = {
     
             const dadosForm = {
                 CPF_USUARIO: req.body.userdocuments,
-                SENHA_USUARIO: req.body.userpassword
+                SENHA_USUARIO: req.body.userpassword,
             };
     
             console.log("Dados do formulário:", dadosForm);
     
-            let findUserCPF = await paciente.findUserCPF(dadosForm);
+            // Busca o usuário pelo CPF
+            const findUserCPF = await paciente.findUserCPF(dadosForm);
             console.log("Resultado da busca por CPF:", findUserCPF);
-            if (findUserCPF.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUserCPF[0].SENHA_USUARIO)) {
-                console.log("Logou como Paciente!!");
     
-                return {
-                    success: true,
-                    dados: findUserCPF[0], // Retorna os dados do usuário
-                };
+            if (findUserCPF.length === 1) {
+                const senhaHash = findUserCPF[0].SENHA_USUARIO;
+                const senhaValida = await bcrypt.compare(dadosForm.SENHA_USUARIO, senhaHash); // Comparação assíncrona
+    
+                if (senhaValida) {
+                    console.log("Login bem-sucedido!");
+    
+                    // Define a sessão do usuário
+                    req.session.autenticado = {
+                        usuarioNome: findUserCPF[0].NOME_USUARIO,
+                        usuarioId: findUserCPF[0].ID_USUARIO,
+                    };
+    
+                    // Redireciona para a página inicial logada
+                    return res.redirect("/homelogged");
+                } else {
+                    console.log("Senha incorreta.");
+                    return res.render("pages/index", {
+                        pagina: "loginpacientes",
+                        autenticado: null,
+                        errorsList: [{ msg: "Credenciais inválidas" }],
+                    });
+                }
             } else {
-                console.log("Credenciais inválidas");
-                return {
-                    success: false,
-                    errors: [{ msg: "Credenciais inválidas" }], // Erro de credenciais
-                };
+                console.log("Usuário não encontrado.");
+                return res.render("pages/index", {
+                    pagina: "loginpacientes",
+                    autenticado: null,
+                    errorsList: [{ msg: "Credenciais inválidas" }],
+                });
             }
-        } catch (e) {
-            console.log("Erro no login:", e);
-            return {
-                success: false,
-                errors: [{ msg: "Erro no servidor" }],
-            };
+        } catch (error) {
+            console.error("Erro no login:", error);
+            return res.render("pages/index", {
+                pagina: "loginpacientes",
+                autenticado: null,
+                errorsList: [{ msg: "Erro no servidor" }],
+            });
         }
-    }
+    }    
 };
 
 module.exports = userPacientesController;

@@ -5,70 +5,91 @@ const bcrypt = require("bcryptjs");
 // Middleware para verificar se o usuário está autenticado
 checkAuthenticatedUser = (req, res, next) => {
     if (req.session && req.session.autenticado) {
-      console.log("Usuário autenticado:", req.session.autenticado);
-      res.locals.usuarioNome = req.session.autenticado.usuarioNome; // Disponibiliza o nome do usuário para as views
-      next(); // Permite continuar para a rota desejada
+        console.log("Usuário autenticado:", req.session.autenticado);
+        res.locals.usuarioNome = req.session.autenticado.usuarioNome; // Disponível para as views
+        next(); // Continua para a rota desejada
     } else {
-      console.log("Usuário não autenticado.");
-      res.locals.usuarioNome = null; // Garante que não tenha dados de usuário nas views
-      return res.redirect("/loginpacientes"); // Redireciona para a página de login
+        console.log("Usuário não autenticado.");
+        res.locals.usuarioNome = null; // Limpa dados nas views
+        return res.redirect("/loginpacientes"); // Redireciona para o login
     }
-  };
-  
+};
 
 // Middleware para limpar a sessão
-clearSession = (req, res, next) => {
-    console.log("Sessão antes de limpar:", req.session); // Log do estado da sessão
-    req.session.destroy();
-    console.log("Usuário saiu!");
+clearSession = (req, res) => {
+    console.log("Sessão antes de limpar:", req.session);
+    req.session.destroy(() => {
+        console.log("Sessão destruída, usuário saiu.");
+        res.redirect("/"); // Redireciona para a página inicial
+    });
 };
 
 // Middleware para registrar o usuário autenticado
-const recordAuthenticatedUser = async (req, res, next) => {
+ recordAuthenticatedUser = async (req, res, next) => {
     console.log("Entrou no middleware de registro do usuário");
     const errors = validationResult(req);
     console.log("Erros de validação:", errors.array());
 
-    if (errors.isEmpty()) { 
-        var dadosForm = {
-            CPF_USUARIO: req.body.userdocuments,
-            SENHA_USUARIO: req.body.userpassword,
-            CRP_PSICOLOGO: req.body.usercrp,
-            DATA_NASC_USUARIO: req.body.userdatemenor
-        };
+    if (errors.isEmpty()) {
+        try {
+            const dadosForm = {
+                CPF_USUARIO: req.body.userdocuments,
+                SENHA_USUARIO: req.body.userpassword,
+            };
 
-        // Busca pelo usuário através do CPF
-        var results = await paciente.findUserCPF(dadosForm);
-        console.log("Resultados da busca:", results);
+            // Busca o usuário pelo CPF
+            const results = await paciente.findUserCPF(dadosForm);
+            console.log("Resultados da busca:", results);
 
-        // Verificando se nenhum resultado foi encontrado
-        if (!results || results.length === 0) {
-            console.log("Nenhum usuário encontrado com o CPF fornecido.");
-        }
+            if (results.length === 0) {
+                console.log("Nenhum usuário encontrado com o CPF fornecido.");
+                return res.render("pages/index", {
+                    pagina: "loginpacientes",
+                    autenticado: null,
+                    errorsList: [{ msg: "CPF não encontrado." }],
+                });
+            }
 
-        var total = Object.keys(results).length;
+            const usuario = results[0];
 
-        if (total === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, results[0].SENHA_USUARIO)) {
-            // Definindo o nome do usuário
-            const usuarioNome = results[0].NOME_USUARIO;
-            console.log("Nome do usuário encontrado:", usuarioNome);
+            // Comparação de senha usando bcrypt
+            const senhaValida = await bcrypt.compare(dadosForm.SENHA_USUARIO, usuario.SENHA_USUARIO);
+            if (!senhaValida) {
+                console.log("Senha incorreta.");
+                return res.render("pages/index", {
+                    pagina: "loginpacientes",
+                    autenticado: null,
+                    errorsList: [{ msg: "Credenciais inválidas." }],
+                });
+            }
+
+            console.log("Login bem-sucedido! Nome do usuário:", usuario.NOME_USUARIO);
 
             // Armazenando informações do usuário na sessão
             req.session.autenticado = {
-                usuarioNome: usuarioNome,
-                usuarioId: resultadoLogin.dados.ID_USUARIO,
-                tipo: results[0].DIFERENCIACAO_USUARIO
+                usuarioNome: usuario.NOME_USUARIO,
+                usuarioId: usuario.ID_USUARIO,
+                tipo: usuario.DIFERENCIACAO_USUARIO,
             };
 
             console.log("Sessão após login:", req.session.autenticado);
             return res.redirect("/homelogged");
-        } else {
-            req.session.autenticado = null;
-            console.log("Login falhou: senha ou CPF incorretos.");
+
+        } catch (error) {
+            console.error("Erro ao registrar o usuário autenticado:", error);
+            return res.render("pages/index", {
+                pagina: "loginpacientes",
+                autenticado: null,
+                errorsList: [{ msg: "Erro no servidor." }],
+            });
         }
     } else {
-        req.session.autenticado = null;
         console.log("Erros de validação:", errors.array());
+        return res.render("pages/index", {
+            pagina: "loginpacientes",
+            autenticado: null,
+            errorsList: errors.array(),
+        });
     }
 };
 
