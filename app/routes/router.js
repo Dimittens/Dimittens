@@ -34,7 +34,7 @@ router.post('/cadastropacientes', async (req, res) => {
     if (!resultadoCadastro || res.headersSent) return;
 
     if (resultadoCadastro.success) {
-      return res.redirect('/homelogged');
+      return res.redirect('/');
     } else {
       return res.render('pages/index', {
         pagina: "cadastropacientes",
@@ -66,12 +66,21 @@ router.post('/loginpacientes', async (req, res) => {
     const resultadoLogin = await userPacientesController.logar(req);
 
     if (resultadoLogin && resultadoLogin.success) {
+      // Armazena dados do usuário na sessão
       req.session.autenticado = {
         usuarioNome: resultadoLogin.dados.NOME_USUARIO,
         usuarioId: resultadoLogin.dados.ID_USUARIO,
         tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
       };
-      return res.redirect('/homelogged');
+
+      req.session.save((err) => {
+        if (err) {
+          console.error("Erro ao salvar a sessão:", err);
+          return res.status(500).send('Erro no servidor.');
+        }
+        // Redireciona para a home após login bem-sucedido
+        return res.redirect('/');
+      });
     } else {
       return res.status(401).render('pages/index', {
         pagina: 'loginpacientes',
@@ -153,8 +162,15 @@ router.post('/logindependentes', async (req, res) => {
 
 // HOME E LOGOUT
 router.get('/', (req, res) => {
-  res.render('pages/index', { pagina: "home", autenticado: null });
+  console.log('Sessão atual:', req.session);
+
+  const autenticado = req.session.autenticado || false;
+  res.render('pages/index', {
+    pagina: autenticado ? 'homelogged' : 'home',
+    autenticado: req.session.autenticado,
+  });
 });
+
 
 router.get('/homelogged', (req, res) => {
   if (req.session.autenticado) {
@@ -170,10 +186,15 @@ router.get('/homelogged', (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
-    if (err) return res.status(500).redirect('/');
+    if (err) {
+      console.error('Erro ao destruir a sessão:', err);
+      return res.status(500).redirect('/');
+    }
+    res.clearCookie('user_session'); // Limpa o cookie da sessão
     res.redirect('/');
   });
 });
+
 
 // ROTA PARA CALENDÁRIO E CHAT
 router.get("/calendario", checkAuthenticatedUser, (req, res) => {
@@ -207,38 +228,6 @@ router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
   }
 });
 
-// ROTA PARA LISTAR EVENTOS
-router.get("/eventos", checkAuthenticatedUser, async (req, res) => {
-  try {
-    const eventos = await listarEventos(req);
-    res.status(200).json(eventos);
-  } catch (error) {
-    console.error("Erro ao listar eventos:", error);
-    res.status(500).json({ message: "Erro ao listar eventos." });
-  }
-});
-
-// Rota para criar uma nova postagem
-router.post("/postagem", upload.single('picture__input'), criarpostagemController.salvar, async (req, res) => {
-  try {
-      const resultado = await salvarEvento(req);
-
-      if (resultado.success) {
-          return res.status(201).json(resultado);
-      } else {
-          return res.status(400).json(resultado);  
-      }
-  } catch (error) {
-      console.error("Erro na rota de postagem:", error);
-
-      if (!res.headersSent) {
-          return res.status(500).json({
-              success: false,
-              message: "Erro interno do servidor.",
-          });
-      }
-  }
-});
 
 
 
