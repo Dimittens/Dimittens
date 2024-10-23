@@ -1,10 +1,8 @@
-const Postagem = require("../models/criarpostagemController");
-const { validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-var salt = bcrypt.genSaltSync(10);
+const Postagem = require("../models/criarpostagemModel");
+
 
 const criarpostagemController = {
-    cadastrar: async (req, res) => { // Adicione 'res' como parâmetro
+    salvar: async (req, res) => { // Adicione 'res' como parâmetro
         console.log("Função de postagem chamada");
 
         try {
@@ -25,6 +23,7 @@ const criarpostagemController = {
             // Salva a imagem recebida
             const imagemFile = req.files.picture__input; // Verifique se 'req.files' está definido
             const imagemPath = path.join(__dirname, '..', 'uploads', `${Date.now()}_${imagemFile.name}`);
+            console.log("Erros de validação:", errors.array());
 
             // Escreve a imagem no servidor
             fs.writeFileSync(imagemPath, imagemFile.data); // Salva a imagem
@@ -33,6 +32,8 @@ const criarpostagemController = {
 
             // Aqui você deve chamar a função para salvar a postagem no banco de dados
             const novaPostagem = await Postagem.create(dadosForm);
+            console.log("Erros de validação:", errors.array());
+
 
             return res.status(201).json({ success: true, postagem: novaPostagem });
         } catch (error) {
