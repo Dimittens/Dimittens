@@ -4,11 +4,12 @@
     box-sizing: border-box;
 }
 
+
 .previews {
     margin-top: 30px;
     display: flex;
     justify-content: center;
-    background-color: white;
+    background-color: #422040;
 }
 
 .preview-conteudos {
@@ -27,6 +28,7 @@
     padding: 30px;
     margin-bottom: 50px;
     margin-top: 80px;
+    background-color: white;
 }
 
 .text-preview p {
@@ -36,8 +38,14 @@
     font-weight: 500;
     color: dimgray;
     font-size: 24px;
+    margin-right: 35px;
 }
 
 .text {
     margin-right: 20px;
+}
+
+.imgs {
+    width: 900px;
+    height: 500px;
 }
