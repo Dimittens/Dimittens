@@ -6,6 +6,7 @@ const userMenorController = require("../controllers/userMenorController");
 const { salvarEvento } = require("../controllers/calendarioController");
 const { recordAuthenticatedUser } = require("../models/autenticador_middleware");
 
+
 // ROTA PARA HEADER
 router.get('/header', (req, res) => {
   res.render('pages/index', { pagina: "header", autenticado: null });
@@ -171,6 +172,12 @@ router.post('/logindependentes', async (req, res) => {
   }
 });
 
+// ROTA PARA HOME
+router.get('/', (req, res) => {
+  res.render('pages/index', { pagina: "home", autenticado: null });
+});
+
+
 // ROTA PARA HOME LOGGED
 router.get('/homelogged', (req, res) => {
   if (req.session.autenticado) {
@@ -198,6 +205,13 @@ router.get('/logout', (req, res) => {
 router.get("/calendario", checkAuthenticatedUser, (req, res) => {
   res.render("pages/index", {
       pagina: "calendario",
+      autenticado: req.session.autenticado,
+  });
+});
+
+router.get("/chat", checkAuthenticatedUser, (req, res) => {
+  res.render("pages/index", {
+      pagina: "chat",
       autenticado: req.session.autenticado,
   });
 });
