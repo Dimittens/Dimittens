@@ -6,6 +6,12 @@ const userMenorController = require("../controllers/userMenorController");
 const { salvarEvento } = require("../controllers/calendarioController");
 const { recordAuthenticatedUser } = require("../models/autenticador_middleware");
 
+// ROTA DE PAGAMENTO
+const express = require('express'); // Usamos require ao invés de import
+const CreateOrderController = require('./controllers/CreateOrderController'); // Mesma coisa para os módulos
+const createOrderController = new CreateOrderController(); // Cria uma instância do controller
+router.post('/', createOrderController.handler.bind(createOrderController)); // Usamos bind para garantir o contexto correto
+module.exports = router; // Exportamos o router usando module.exports
 
 // ROTA PARA HEADER
 router.get('/header', (req, res) => {
@@ -253,6 +259,7 @@ rotasEstaticas.forEach((pagina) => {
     res.render('pages/index', { pagina, autenticado: null });
   });
 });
+
 
 // EXPORTANDO O ROUTER
 module.exports = router;
