@@ -3,9 +3,8 @@ const router = express.Router();
 const userPacientesController = require("../controllers/userPacientesController");
 const userPsicologosController = require("../controllers/userPsicologosController");
 const userMenorController = require("../controllers/userMenorController");
-const { salvarEvento } = require("../controllers/calendarioController");
-const { recordAuthenticatedUser } = require("../models/autenticador_middleware");
-
+const { salvarEvento, listarEventos } = require("../controllers/calendarioController");
+const { recordAuthenticatedUser, checkAuthenticatedUser } = require("../models/autenticador_middleware");
 
 // ROTA PARA HEADER
 router.get('/header', (req, res) => {
@@ -28,14 +27,10 @@ router.get('/cadastropacientes', (req, res) => {
   });
 });
 
-router.post('/cadastropacientes', async (req, res,) => {
+router.post('/cadastropacientes', async (req, res) => {
   try {
-    // Verifique se o middleware já enviou uma resposta
     if (res.headersSent) return;
-
     const resultadoCadastro = await userPacientesController.cadastrar(req);
-
-    // Verifique se o controlador já tratou tudo ou se o middleware já enviou uma resposta
     if (!resultadoCadastro || res.headersSent) return;
 
     if (resultadoCadastro.success) {
@@ -50,7 +45,6 @@ router.post('/cadastropacientes', async (req, res,) => {
     }
   } catch (error) {
     console.error("Erro no cadastro de pacientes:", error);
-
     if (!res.headersSent) {
       return res.status(500).render('pages/index', {
         pagina: "cadastropacientes",
@@ -62,45 +56,40 @@ router.post('/cadastropacientes', async (req, res,) => {
   }
 });
 
-// ROTA PARA LOGIN PACIENTES
+// LOGIN PACIENTES
 router.get('/loginpacientes', (req, res) => {
   res.render('pages/index', { pagina: "loginpacientes", autenticado: null });
 });
 
 router.post('/loginpacientes', async (req, res) => {
   try {
-      const resultadoLogin = await userPacientesController.logar(req);
+    const resultadoLogin = await userPacientesController.logar(req);
 
-      if (resultadoLogin && resultadoLogin.success) {
-          const { dados } = resultadoLogin;
-
-          req.session.autenticado = {
-              usuarioNome: dados.NOME_USUARIO,
-              usuarioId: dados.ID_USUARIO,
-              tipo: dados.DIFERENCIACAO_USUARIO,
-          };
-
-          console.log("Sessão após login:", req.session.autenticado);
-          return res.redirect('/homelogged'); // GARANTE QUE A EXECUÇÃO SE ENCERRA AQUI
-      } else {
-          console.log("Erro no login:", resultadoLogin.errors);
-          return res.status(401).render('pages/index', {
-              pagina: 'loginpacientes',
-              errorsList: resultadoLogin.errors || [{ msg: "Erro desconhecido" }],
-              autenticado: null,
-          });
-      }
-  } catch (error) {
-      console.error("Erro na rota de login:", error);
-      return res.status(500).render('pages/index', {
-          pagina: 'loginpacientes',
-          errorsList: [{ msg: "Erro no servidor" }],
-          autenticado: null,
+    if (resultadoLogin && resultadoLogin.success) {
+      req.session.autenticado = {
+        usuarioNome: resultadoLogin.dados.NOME_USUARIO,
+        usuarioId: resultadoLogin.dados.ID_USUARIO,
+        tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
+      };
+      return res.redirect('/homelogged');
+    } else {
+      return res.status(401).render('pages/index', {
+        pagina: 'loginpacientes',
+        errorsList: resultadoLogin.errors || [{ msg: "Erro desconhecido" }],
+        autenticado: null,
       });
+    }
+  } catch (error) {
+    console.error("Erro na rota de login:", error);
+    return res.status(500).render('pages/index', {
+      pagina: 'loginpacientes',
+      errorsList: [{ msg: "Erro no servidor" }],
+      autenticado: null,
+    });
   }
 });
 
-// ROTA PARA LOGIN PSICÓLOGOS
+// LOGIN PSICÓLOGOS
 router.get('/loginpsicologos', (req, res) => {
   res.render('pages/index', { pagina: "loginpsicologos", autenticado: null });
 });
@@ -109,17 +98,12 @@ router.post('/loginpsicologos', async (req, res) => {
   try {
     const resultadoLogin = await userPsicologosController.logar(req, res);
     if (resultadoLogin.success) {
-      const { NOME_USUARIO, DIFERENCIACAO_USUARIO } = resultadoLogin.dados;
-
       req.session.autenticado = {
-        usuarioNome: NOME_USUARIO,
-        tipo: DIFERENCIACAO_USUARIO,
+        usuarioNome: resultadoLogin.dados.NOME_USUARIO,
+        tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
       };
-
-      console.log("Sessão após login:", req.session.autenticado);
       return res.redirect('/homelogged');
     } else {
-      console.log("Erro no login:", resultadoLogin.errors);
       res.render('pages/index', {
         pagina: 'loginpsicologos',
         errorsList: resultadoLogin.errors || [{ msg: "Credenciais inválidas" }],
@@ -136,7 +120,7 @@ router.post('/loginpsicologos', async (req, res) => {
   }
 });
 
-// ROTA PARA LOGIN DEPENDENTES
+// LOGIN DEPENDENTES
 router.get('/logindependentes', (req, res) => {
   res.render('pages/index', { pagina: "logindependentes", autenticado: null });
 });
@@ -145,17 +129,12 @@ router.post('/logindependentes', async (req, res) => {
   try {
     const resultadoLogin = await userMenorController.logar(req, res);
     if (resultadoLogin.success) {
-      const { NOME_USUARIO, DIFERENCIACAO_USUARIO } = resultadoLogin.dados;
-
       req.session.autenticado = {
-        usuarioNome: NOME_USUARIO,
-        tipo: DIFERENCIACAO_USUARIO,
+        usuarioNome: resultadoLogin.dados.NOME_USUARIO,
+        tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
       };
-
-      console.log("Sessão após login:", req.session.autenticado);
       res.redirect('/homelogged');
     } else {
-      console.log("Erro no login:", resultadoLogin.errors);
       res.render('pages/index', {
         pagina: 'logindependentes',
         errorsList: resultadoLogin.errors || [{ msg: "Credenciais inválidas" }],
@@ -172,13 +151,11 @@ router.post('/logindependentes', async (req, res) => {
   }
 });
 
-// ROTA PARA HOME
+// HOME E LOGOUT
 router.get('/', (req, res) => {
   res.render('pages/index', { pagina: "home", autenticado: null });
 });
 
-
-// ROTA PARA HOME LOGGED
 router.get('/homelogged', (req, res) => {
   if (req.session.autenticado) {
     res.render('pages/index', {
@@ -191,60 +168,62 @@ router.get('/homelogged', (req, res) => {
   }
 });
 
-// ROTA PARA LOGOUT
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
-    if (err) {
-      console.error("Erro ao destruir a sessão:", err);
-      return res.status(500).redirect('/');
-    }
+    if (err) return res.status(500).redirect('/');
     res.redirect('/');
   });
 });
 
+// ROTA PARA CALENDÁRIO E CHAT
 router.get("/calendario", checkAuthenticatedUser, (req, res) => {
   res.render("pages/index", {
-      pagina: "calendario",
-      autenticado: req.session.autenticado,
+    pagina: "calendario",
+    autenticado: req.session.autenticado,
   });
 });
 
 router.get("/chat", checkAuthenticatedUser, (req, res) => {
   res.render("pages/index", {
-      pagina: "chat",
-      autenticado: req.session.autenticado,
+    pagina: "chat",
+    autenticado: req.session.autenticado,
   });
 });
 
-// Rota para salvar o evento no calendário
+// ROTA PARA SALVAR EVENTOS
 router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
   try {
-      const resultado = await salvarEvento(req);
-
-      if (resultado.success) {
-          return res.status(201).json(resultado);  // Finaliza com 'return'
-      } else {
-          return res.status(400).json(resultado);  // Finaliza com 'return'
-      }
+    const resultado = await salvarEvento(req);
+    if (resultado.success) {
+      return res.status(201).json(resultado);
+    } else {
+      return res.status(400).json(resultado);
+    }
   } catch (error) {
-      console.error("Erro na rota de calendário:", error);
-
-      if (!res.headersSent) {
-          return res.status(500).json({
-              success: false,
-              message: "Erro interno do servidor.",
-          });
-      }
+    console.error("Erro na rota de calendário:", error);
+    if (!res.headersSent) {
+      return res.status(500).json({ success: false, message: "Erro interno do servidor." });
+    }
   }
 });
 
+// ROTA PARA LISTAR EVENTOS
+router.get("/eventos", checkAuthenticatedUser, async (req, res) => {
+  try {
+    const eventos = await listarEventos(req);
+    res.status(200).json(eventos);
+  } catch (error) {
+    console.error("Erro ao listar eventos:", error);
+    res.status(500).json({ message: "Erro ao listar eventos." });
+  }
+});
 
 // ROTAS ESTÁTICAS
 const rotasEstaticas = [
-  'headerunlogged', 'faq', 'psicologos', 'interesses', 'transtornos', 
-  'sobrenos', 'perfil-comunidade', 'redirecionamentosuporte', 'comunidade', 
-  'criarpostagem', 'criarcomunidade', 'carroseltranstornos', 'comentarios', 
-  'rodape', 'passoapasso', 'passoapassopsico', 'editeseuperfil', 'perfil', 
+  'headerunlogged', 'faq', 'psicologos', 'interesses', 'transtornos',
+  'sobrenos', 'perfil-comunidade', 'redirecionamentosuporte', 'comunidade',
+  'criarpostagem', 'criarcomunidade', 'carroseltranstornos', 'comentarios',
+  'rodape', 'passoapasso', 'passoapassopsico', 'editeseuperfil', 'perfil',
   'consultas', 'atividademensal', 'popuppsicologos'
 ];
 
@@ -254,5 +233,4 @@ rotasEstaticas.forEach((pagina) => {
   });
 });
 
-// EXPORTANDO O ROUTER
 module.exports = router;

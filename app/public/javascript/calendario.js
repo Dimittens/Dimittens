@@ -28,7 +28,22 @@ const months = [
 ];
 
 const eventsArr = [];
-getEvents();
+
+// Função para buscar eventos do backend e renderizar no calendário
+async function getEvents() {
+  try {
+    const response = await fetch('/eventos');
+    if (response.ok) {
+      const storedEvents = await response.json();
+      eventsArr.push(...storedEvents); // Preenche o array local com os eventos
+      initCalendar(); // Re-renderiza o calendário com os eventos
+    } else {
+      console.error("Erro ao carregar eventos.");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar eventos:", error);
+  }
+}
 
 function initCalendar() {
   const firstDay = new Date(year, month, 1);
@@ -115,12 +130,11 @@ function updateEvents(day) {
   eventsArr.forEach((eventObj) => {
     if (eventObj.day === day && eventObj.month === month + 1 && eventObj.year === year) {
       eventObj.events.forEach((event) => {
-        const [from, to] = event.time.split(" - ");
         events += `<div class="event">
           <div class="title">
             <h3>${event.note}</h3>
           </div>
-          <div class="time">${formatTime(from)} - ${formatTime(to)}</div>
+          <div class="time">${event.time}</div>
         </div>`;
       });
     }
@@ -129,15 +143,7 @@ function updateEvents(day) {
   eventsContainer.innerHTML = events || `<div class="no-event">Sem Eventos</div>`;
 }
 
-addEventBtn.addEventListener("click", () => {
-  addEventWrapper.classList.toggle("active");
-});
-
-addEventCloseBtn.addEventListener("click", () => {
-  addEventWrapper.classList.remove("active");
-});
-
-addEventSubmit.addEventListener("click", (e) => {
+addEventSubmit.addEventListener("click", async (e) => {
   e.preventDefault();
 
   if (!addEventNote.value || !addEventFrom.value || !addEventTo.value) {
@@ -145,63 +151,40 @@ addEventSubmit.addEventListener("click", (e) => {
     return;
   }
 
-  const usuarioId = 1; // Ajuste conforme sua lógica
-
   const evento = {
-    data: `${year}-${month + 1}-${activeDay}`,
-    nota: addEventNote.value,
-    horarioInicio: addEventFrom.value,
-    horarioFim: addEventTo.value,
-    usuarioId,
+    day: activeDay,
+    month: month + 1,
+    year: year,
+    note: addEventNote.value,
+    time: `${addEventFrom.value} - ${addEventTo.value}`,
   };
 
-  fetch('/calendario/salvar', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(evento),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert(data.message);
-        updateEvents(activeDay);
-      } else {
-        alert("Erro ao salvar o evento.");
-      }
-    })
-    .catch((error) => {
-      console.error('Erro:', error);
+  try {
+    const response = await fetch('/calendario/salvar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(evento),
     });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert(data.message);
+      eventsArr.push(evento); // Adiciona o evento ao array local
+      updateEvents(activeDay); // Atualiza a lista de eventos
+    } else {
+      alert("Erro ao salvar o evento.");
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
 
   addEventWrapper.classList.remove("active");
   addEventNote.value = "";
   addEventFrom.value = "";
   addEventTo.value = "";
-});
-
-function saveEvents() {
-  localStorage.setItem("events", JSON.stringify(eventsArr));
-}
-
-function getEvents() {
-  const storedEvents = JSON.parse(localStorage.getItem("events"));
-  if (storedEvents) eventsArr.push(...storedEvents);
-}
-
-function formatTime(time) {
-  const [hour, minute] = time.split(":").map(Number);
-  const period = hour >= 12 ? "PM" : "AM";
-  return `${hour < 10 ? "0" + hour : hour}:${minute < 10 ? "0" + minute : minute} ${period}`;
-}
-
-[addEventFrom, addEventTo].forEach((input) => {
-  input.addEventListener("input", (e) => {
-    input.value = input.value.replace(/[^0-9:]/g, "");
-    if (input.value.length === 2) input.value += ":";
-    if (input.value.length > 5) input.value = input.value.slice(0, 5);
-  });
 });
 
 prev.addEventListener("click", prevMonth);
@@ -213,4 +196,5 @@ todayBtn.addEventListener("click", () => {
   initCalendar();
 });
 
-initCalendar();
+getEvents(); // Carrega os eventos ao iniciar
+initCalendar(); // Inicializa o calendário
