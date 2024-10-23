@@ -239,6 +239,31 @@ router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
 });
 
 
+// Rota para criar uma nova postagem
+router.post("/postagem", upload.single('picture__input'), criarpostagemController.salvar, async (req, res) => {
+  try {
+      const resultado = await salvarEvento(req);
+
+      if (resultado.success) {
+          return res.status(201).json(resultado);
+      } else {
+          return res.status(400).json(resultado);  
+      }
+  } catch (error) {
+      console.error("Erro na rota de postagem:", error);
+
+      if (!res.headersSent) {
+          return res.status(500).json({
+              success: false,
+              message: "Erro interno do servidor.",
+          });
+      }
+  }
+});
+
+
+
+
 // ROTAS ESTÁTICAS
 const rotasEstaticas = [
   'headerunlogged', 'faq', 'psicologos', 'interesses', 'transtornos', 

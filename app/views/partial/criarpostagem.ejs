@@ -27,7 +27,13 @@
                   <input type="file" name="picture__input" id="picture__input">
             </section>
 
-                <form method="">
+                <form method="POST" action="/postagem" enctype="multipart/form-data">
+                    <section class="input-file">
+                        <label class="picture" for="picture__input" tabIndex="0">
+                            <span class="picture__image"></span>
+                        </label>
+                        <input type="file" name="picture__input" id="picture__input" required>
+                    </section>">
                     <section class="box-inputs">
                         <section class="input-label">
                             <label for="input-text" class="label-inputs">Título</label>
