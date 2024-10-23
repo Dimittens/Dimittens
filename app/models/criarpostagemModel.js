@@ -1,19 +1,35 @@
-const bd = require("../../config/pool_de_conexao");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db'); // Certifique-se de que o caminho para db.js está correto
 
-class Postagem {
-    static criarPostagem(idUsuario, titulo, tipo, topico, idComunidade, imagemPostagem) {
-        return new Promise((resolve, reject) => {
-            const query = `INSERT INTO Postagens (idUsuario, titulo, tipo, topico, idComunidade, imagemPostagem) VALUES (?, ?, ?, ?, ?, ?)`;
-            bd.query(query, [idUsuario, titulo, tipo, topico, idComunidade, imagemPostagem], (err, results) => {
-                if (err) {
-                    return reject(err);
-                    
-                }
-                resolve(results);
-                console.log('Criação da Postagem:', results);
-            });
-        });
-    }
-}
+const Postagem = sequelize.define('Postagem', {
+    TITULO_POSTAGEM_PUBLICACOMU: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    TIPO_DE_POSTAGEM: {
+        type: DataTypes.ENUM('pergunta', 'enquete'),
+        allowNull: false,
+    },
+    TOPICO_DE_POSTAGEM: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    ESCOLHA_COMUNIDADE: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    IMAGEM: {
+        type: DataTypes.STRING, // Aqui armazenaremos o caminho da imagem
+        allowNull: false,
+    },
+    CRIADO_EM: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+    },
+});
+
+Postagem.sync()
+    .then(() => console.log("Tabela de Postagem criada com sucesso!"))
+    .catch((error) => console.error("Erro ao criar tabela de Postagem:", error));
 
 module.exports = Postagem;

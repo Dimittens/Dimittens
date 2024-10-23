@@ -3,8 +3,8 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(10);
 
-const userPacientesController = {
-    cadastrar: async (req) => {
+const criarpostagemController = {
+    cadastrar: async (req, res) => { // Adicione 'res' como parâmetro
         console.log("Função de postagem chamada");
 
         try {
@@ -12,21 +12,19 @@ const userPacientesController = {
             console.log("Erros de validação:", errors.array());
 
             if (!errors.isEmpty()) {
-                return { success: false, errors: errors.array() };
+                return res.status(400).json({ success: false, errors: errors.array() });
             }
-        }
-            
+
             const dadosForm = {
-                TITULO_POSTAGEM_PUBLICACOMU: req.body.input-text,
-                BLABLABLA: req.body.tipodepost,
-                BLABLABLA: req.body.topicodapost,
-                BLABLABLA: req.body.escolhacomunidade,
+                TITULO_POSTAGEM_PUBLICACOMU: req.body["input-text"], // Use colchetes para acessar o campo
+                TIPO_DE_POSTAGEM: req.body.tipodepost,
+                TOPICO_DE_POSTAGEM: req.body.topicodapost,
+                ESCOLHA_COMUNIDADE: req.body.escolhacomunidade,
             };
 
-
             // Salva a imagem recebida
-            const imagemFile = req.files.picture__input; // Supondo que você está usando uma biblioteca para manipular arquivos
-            const imagemPath = path.join(__dirname, 'uploads', `${Date.now()}_${imagemFile.name}`);
+            const imagemFile = req.files.picture__input; // Verifique se 'req.files' está definido
+            const imagemPath = path.join(__dirname, '..', 'uploads', `${Date.now()}_${imagemFile.name}`);
 
             // Escreve a imagem no servidor
             fs.writeFileSync(imagemPath, imagemFile.data); // Salva a imagem
@@ -41,7 +39,9 @@ const userPacientesController = {
             console.error("Erro ao criar postagem:", error);
             return res.status(500).json({ success: false, message: "Erro ao criar postagem" });
         }
+    }
+};
 
-        }
+module.exports = criarpostagemController;
 
     
