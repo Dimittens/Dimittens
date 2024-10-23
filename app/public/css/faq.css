@@ -2,7 +2,9 @@ body {
     background-color: white;
 
 }
-
+main{
+margin-bottom: 14vh;
+}
 .menu {
     background-color: #ec8d26;
     color: white;
@@ -17,6 +19,7 @@ h1 {
     font-weight: 500;
     font-size: 32px;
     margin-left: 232px;
+    margin-top: 30px;
 }
 
 #quest {
@@ -63,18 +66,21 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .wpp {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .insta {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .email p, .wpp p, .insta p {
@@ -119,25 +125,32 @@ hr {
     width: 1392px;
     border: 1px solid #ec8d26;
     margin-top: 40px;
+    margin-left: 26vh;
 }
 
 h3 {
     font-size: 30px;
     font-family: "Raleway SemiBold", "Raleway", sans-serif;
     font-weight: 600;
-    margin-left: 233px;
+    margin-left: 23vh;
+    margin-top: 2vh;
 }
 
 h4 {
     font-size: 19px;
     font-family: "Raleway SemiBold", "Raleway", sans-serif;
-    font-weight: 600;
+    font-weight: 500;
+    margin-left: 24px;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-.ans p{
+li p{
     font-size: 14px;
     font-family: "Raleway", sans-serif;
     color: #422040;
+    margin-left: 24px;
+
 }
 
 li {
@@ -154,8 +167,12 @@ li {
     display: grid;
     columns: 2;
     margin-left: 264px;
+    margin-top: 6.5vh;
 }
 
-.second {
+.colunas {
     display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
 }
+
