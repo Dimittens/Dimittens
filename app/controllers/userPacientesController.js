@@ -4,24 +4,17 @@ const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(10);
 
 const userPacientesController = {
-    cadastrar: async (req, res) => {
+    cadastrar: async (req) => {
         console.log("Função de cadastro chamada");
 
         try {
-            // Validação dos dados
             const errors = validationResult(req);
             console.log("Erros de validação:", errors.array());
 
             if (!errors.isEmpty()) {
-                return res.render("pages/index", {
-                    pagina: "cadastropacientes",
-                    autenticado: null,
-                    errorsList: errors.array(),
-                    valores: req.body,
-                });
+                return { success: false, errors: errors.array() };
             }
 
-            // Monta os dados do formulário
             const dadosForm = {
                 NOME_USUARIO: req.body.username,
                 SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
@@ -32,7 +25,6 @@ const userPacientesController = {
                 DIFERENCIACAO_USUARIO: "Comum",
             };
 
-            // Verifica se o email já está cadastrado
             const existingEmails = await paciente.findAllEmails();
             const emailDuplicado = existingEmails.find(
                 (email) => email === req.body.useremail
@@ -40,39 +32,33 @@ const userPacientesController = {
 
             if (emailDuplicado) {
                 console.log("Email duplicado encontrado:", emailDuplicado);
-                return res.render("pages/index", {
-                    pagina: "cadastropacientes",
-                    autenticado: null,
-                    errorsList: [{ msg: "Email já cadastrado" }],
-                    valores: req.body,
-                });
+                return {
+                    success: false,
+                    errors: [{ msg: "Email já cadastrado" }],
+                };
             }
 
-            // Criação do novo usuário
-            const novoUsuario = await paciente.create(dadosForm);
-            console.log("Paciente cadastrado com sucesso!", novoUsuario);
+            const resultado = await paciente.create(dadosForm);
+            if (!resultado || !resultado.insertId) {
+                throw new Error("Erro ao inserir o novo usuário.");
+            }
 
-            // Renderiza a página de sucesso ou redireciona
-            return res.render("pages/index", {
-                pagina: "cadastropacientes",
-                autenticado: null,
-                successMessage: "Usuário cadastrado com sucesso!",
-                valores: {},
-            });
+            console.log("Paciente cadastrado com sucesso!", dadosForm);
 
+            req.session.user = {
+                id: resultado.insertId,
+                nome: req.body.username,
+                email: req.body.useremail,
+            };
+            console.log("Sessão de usuário criada:", req.session.user);
+
+            return { success: true };
         } catch (error) {
             console.error("Erro ao cadastrar:", error);
-
-            // Em caso de erro, renderiza a página com mensagem de erro
-            return res.render("pages/index", {
-                pagina: "cadastropacientes",
-                autenticado: null,
-                errorsList: [{ msg: "Erro ao cadastrar usuário." }],
-                valores: req.body,
-            });
+            return { success: false, errors: [{ msg: "Erro no servidor." }] };
         }
     },
-
+        
     logar: async (req) => {
         try {
             console.log("Função de login chamada");

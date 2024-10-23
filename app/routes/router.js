@@ -27,28 +27,37 @@ router.get('/cadastropacientes', (req, res) => {
   });
 });
 
-router.post('/cadastropacientes', async (req, res) => {
+router.post('/cadastropacientes', async (req, res,) => {
   try {
-    const resultadoCadastro = await userPacientesController.cadastrar(req, res);
+    // Verifique se o middleware já enviou uma resposta
+    if (res.headersSent) return;
+
+    const resultadoCadastro = await userPacientesController.cadastrar(req);
+
+    // Verifique se o controlador já tratou tudo ou se o middleware já enviou uma resposta
+    if (!resultadoCadastro || res.headersSent) return;
+
     if (resultadoCadastro.success) {
-      await recordAuthenticatedUser(req, res);
-      res.redirect('/homelogged');
+      return res.redirect('/homelogged');
     } else {
-      res.render('pages/index', {
+      return res.render('pages/index', {
         pagina: "cadastropacientes",
         autenticado: null,
         errorsList: resultadoCadastro.errors,
-        valores: req.body
+        valores: req.body,
       });
     }
   } catch (error) {
     console.error("Erro no cadastro de pacientes:", error);
-    res.status(500).render('pages/index', {
-      pagina: "cadastropacientes",
-      autenticado: null,
-      errorsList: [{ msg: "Erro no servidor" }],
-      valores: req.body
-    });
+
+    if (!res.headersSent) {
+      return res.status(500).render('pages/index', {
+        pagina: "cadastropacientes",
+        autenticado: null,
+        errorsList: [{ msg: "Erro no servidor." }],
+        valores: req.body,
+      });
+    }
   }
 });
 

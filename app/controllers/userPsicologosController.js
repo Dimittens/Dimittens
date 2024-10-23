@@ -77,6 +77,13 @@ const userPsicologosController = {
             // Define o estado de autenticação após o cadastro
             req.session.autenticado = true;
 
+                        // Configura o estado de autenticação (usando sessão)
+                        req.session.user = {
+                            id: novoUsuario.insertId,
+                            nome: req.body.username,
+                            email: req.body.useremail,
+                        };
+                        console.log("Sessão de usuário criada:", req.session.user);
             // Redirecionar após o cadastro
             return {
                  success: true,
