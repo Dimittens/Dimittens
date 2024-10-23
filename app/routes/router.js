@@ -209,6 +209,13 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
   });
 });
 
+router.get("/chat", checkAuthenticatedUser, (req, res) => {
+  res.render("pages/index", {
+      pagina: "chat",
+      autenticado: req.session.autenticado,
+  });
+});
+
 // Rota para salvar o evento no calendário
 router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
   try {
