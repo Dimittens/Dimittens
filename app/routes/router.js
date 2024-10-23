@@ -186,31 +186,33 @@ router.get('/logout', (req, res) => {
   });
 });
 
-// ROTA PARA CALENDÁRIO E SALVAR EVENTOS
-router.get('/calendario', async (req, res) => {
-  if (req.session.autenticado) {
-    res.render('pages/index', {
+router.get("/calendario", checkAuthenticatedUser, (req, res) => {
+  res.render("pages/index", {
       pagina: "calendario",
       autenticado: req.session.autenticado,
-    });
-  } else {
-    res.redirect('/loginpacientes');
+  });
+});
+
+// Rota para salvar o evento no calendário
+router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
+  try {
+      const resultado = await calendarioController.salvarEvento(req, res);
+
+      if (resultado.success) {
+          res.status(201).json(resultado);
+      } else {
+          res.status(400).json(resultado);
+      }
+  } catch (error) {
+      console.error("Erro na rota de calendário:", error);
+      res.status(500).json({
+          success: false,
+          message: "Erro interno do servidor.",
+      });
   }
 });
 
-router.post('/calendario/salvar', async (req, res) => {
-  try {
-    const eventoSalvo = await calendarioController.salvarEvento(req, res);
-    if (eventoSalvo.success) {
-      res.status(201).json({ message: "Evento salvo com sucesso!" });
-    } else {
-      res.status(400).json({ message: "Erro ao salvar evento." });
-    }
-  } catch (error) {
-    console.error("Erro ao salvar evento:", error);
-    res.status(500).json({ message: "Erro no servidor" });
-  }
-});
+
 
 // ROTAS ESTÁTICAS
 const rotasEstaticas = [
