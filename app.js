@@ -3,7 +3,7 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const WebSocket = require('ws');
 const http = require('http');
-const pool = require('./config/pool_de_conexao'); // Conexão com o banco
+const pool = require('./config/pool_de_conexao');
 const app = express();
 const server = http.createServer(app);
 const port = 3000;
@@ -14,7 +14,6 @@ const path = require('path');
 
 const sessionStore = new MySQLStore({}, pool);
 const activeConnections = new Map();
-// Configuração da sessão
 app.use(
   session({
     key: 'user_session',
@@ -22,11 +21,10 @@ app.use(
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // 24 horas
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 
-// Middleware para adicionar o nome do usuário às views
 app.use((req, res, next) => {
   res.locals.usuarioNome = req.session.autenticado
     ? req.session.autenticado.usuarioNome
@@ -34,21 +32,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware para arquivos estáticos
 app.use(express.static('app/public'));
 
-// Configuração do EJS como view engine
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Importar rotas definidas
 const rotas = require('./app/routes/router');
 app.use('/', rotas);
 
-// Middleware de autenticação para rotas protegidas
+
 function verificarAutenticacao(req, res, next) {
   if (req.session.autenticado) {
     return next();
@@ -58,7 +53,7 @@ function verificarAutenticacao(req, res, next) {
 }
 app.post('/api/denunciar', async (req, res) => {
     const { nomeDenunciante, nomeDenunciado, motivoDenuncia, textoDenuncia } = req.body;
-    const usuarioId = req.session.autenticado.usuarioId; // ID do usuário logado (denunciante)
+    const usuarioId = req.session.autenticado.usuarioId;
 
     try {
         await pool.query(`
@@ -75,7 +70,7 @@ app.post('/api/denunciar', async (req, res) => {
 });
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/') // Certifique-se de que esta pasta existe
+        cb(null, 'uploads/')
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -84,7 +79,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Filtro para aceitar apenas imagens e documentos
 const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
     if (allowedTypes.includes(file.mimetype)) {
@@ -94,13 +88,11 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-// Limite de tamanho do arquivo (5 MB neste exemplo)
 
 app.post('/api/banir', async (req, res) => {
     const { nomeUsuario } = req.body;
   
     try {
-      // Buscando o ID do usuário pelo nome
       const [usuario] = await pool.query(
         `SELECT ID_USUARIO FROM usuario WHERE NOME_USUARIO = ?`, 
         [nomeUsuario]
@@ -112,7 +104,6 @@ app.post('/api/banir', async (req, res) => {
   
       const usuarioId = usuario[0].ID_USUARIO;
   
-      // Atualizando o status do usuário para banido (ajustar conforme sua lógica de banimento)
       await pool.query(
         `UPDATE usuario SET DIFERENCIACAO_USUARIO = 'Banido' WHERE ID_USUARIO = ?`, 
         [usuarioId]
@@ -125,7 +116,6 @@ app.post('/api/banir', async (req, res) => {
     }
   });
 
-// Atualizar as rotas do chat
 app.get('/chat', checkAuthenticatedUser, async (req, res) => {
     try {
         const [sessoesChatAtivas] = await pool.query(`
@@ -165,7 +155,7 @@ app.get('/chat', checkAuthenticatedUser, async (req, res) => {
     }
 });
 app.get('/api/usuario/cpf/:cpf', async (req, res) => {
-    const cpf = req.params.cpf; // Pega o CPF dos parâmetros da URL
+    const cpf = req.params.cpf;
     
     if (!cpf) {
       return res.status(400).json({ error: 'CPF não fornecido' });
@@ -205,7 +195,6 @@ app.get('/api/usuario/cpf/:cpf', async (req, res) => {
       res.status(500).json({ success: false, message: 'Erro ao agendar consulta' });
     }
   });
-// WebSocket - Configuração de mensagens
 wss.on('connection', (ws, req) => {
     console.log('Nova conexão WebSocket estabelecida');
 
@@ -221,11 +210,9 @@ wss.on('connection', (ws, req) => {
 
             switch (data.type) {
                 case 'join':
-                    // Armazenar informações da conexão
                     ws.consultaId = data.consultaId;
                     ws.usuarioId = data.usuarioId;
                     
-                    // Armazenar a conexão no mapa
                     if (!activeConnections.has(data.consultaId)) {
                         activeConnections.set(data.consultaId, new Set());
                     }
@@ -235,7 +222,6 @@ wss.on('connection', (ws, req) => {
                     break;
 
                 case 'nova_mensagem':
-                    // Broadcast para todos os clientes na mesma consulta
                     const connections = activeConnections.get(data.consultaId) || new Set();
                     connections.forEach(client => {
                         if (client.readyState === WebSocket.OPEN) {
@@ -248,7 +234,6 @@ wss.on('connection', (ws, req) => {
                     });
                     break;
                 case 'novo_arquivo':
-                        // Broadcast de um novo arquivo enviado
                         const arquivoConnections = activeConnections.get(data.consultaId) || new Set();
                         arquivoConnections.forEach(client => {
                             if (client.readyState === WebSocket.OPEN) {
@@ -267,7 +252,6 @@ wss.on('connection', (ws, req) => {
     });
 
     ws.on('close', () => {
-        // Remover conexão quando fechada
         if (ws.consultaId && activeConnections.has(ws.consultaId)) {
             activeConnections.get(ws.consultaId).delete(ws);
             if (activeConnections.get(ws.consultaId).size === 0) {
@@ -285,11 +269,9 @@ app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
     const { consultaId, remetenteId } = req.body;
 
     try {
-        // Adicionar logs para debug
         console.log('File:', req.file);
         console.log('Body:', req.body);
 
-        // Verificar se consultaId e remetenteId existem
         if (!consultaId || !remetenteId) {
             return res.status(400).json({ 
                 error: 'consultaId e remetenteId são obrigatórios',
@@ -297,13 +279,11 @@ app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
             });
         }
 
-        // Salvar no banco de dados
         await pool.query(`
             INSERT INTO chat (ID_CONSULTA, ID_REMETENTE, MENSAGEM_CHAT, DOCUMENTOS_CHAT, DATA_HORA_CHAT) 
             VALUES (?, ?, ?, ?, NOW())
         `, [consultaId, remetenteId, '', req.file.filename]);
 
-        // Broadcast para WebSocket
         const connections = activeConnections.get(consultaId) || new Set();
         connections.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
@@ -319,7 +299,7 @@ app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
         res.status(200).json({ 
             success: true, 
             arquivo: req.file.filename,
-            path: `/uploads/${req.file.filename}` // Adicionar o caminho do arquivo na resposta
+            path: `/uploads/${req.file.filename}`
         });
     } catch (error) {
         console.error('Erro detalhado ao salvar arquivo:', error);
@@ -331,9 +311,7 @@ app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
     }
 });
 
-// Adicione esta rota para servir os arquivos
 app.use('/uploads', express.static('uploads'));
-// Verificar conexões inativas a cada 30 segundos
 const interval = setInterval(() => {
     wss.clients.forEach(ws => {
         if (ws.isAlive === false) {
@@ -364,7 +342,6 @@ app.post('/enviar-mensagem', async (req, res) => {
 });
 
 
-// Rota protegida que renderiza uma view
 app.get('/homelogged', verificarAutenticacao, (req, res) => {
   res.render('home', {
     usuarioNome: req.session.autenticado.usuarioNome,
@@ -374,7 +351,6 @@ app.get('/homelogged', verificarAutenticacao, (req, res) => {
 
 
 
-// Iniciar o servidor
 server.listen(port, () => {
     console.log(`Servidor aberto na porta ${port}\nhttp://localhost:${port}`);
 
