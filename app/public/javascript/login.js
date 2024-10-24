@@ -4,7 +4,6 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     var userCpf = document.getElementById('usercpf');
     var userPassword = document.getElementById('userpassword');
 
-    // Clear previous error states
     userCpf.classList.remove('error');
     userPassword.classList.remove('error');
     document.querySelectorAll('.warning').forEach(function(warning) {

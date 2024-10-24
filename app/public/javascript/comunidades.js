@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sliderContainer = document.querySelector('.comunidades-recomendadas');
     const sliderItems = document.querySelectorAll('.comunidades-unidade');
   
-    sliderContainer.innerHTML += sliderContainer.innerHTML; // Duplicar os itens para criar um loop contínuo
+    sliderContainer.innerHTML += sliderContainer.innerHTML;
   
     let offset = 0;
-    const speed = 1; // Velocidade de movimento em pixels
+    const speed = 1;
   
     function animate() {
       offset -= speed;

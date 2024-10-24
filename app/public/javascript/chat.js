@@ -43,26 +43,22 @@ dropZone.addEventListener('drop', (e) => {
     }
 });
 
-// Evento de seleção de arquivo pelo input
 fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
         handleFileSelection(e.target.files[0]);
     }
 });
 
-// Remover arquivo selecionado
 removeFile.addEventListener('click', () => {
     clearFileSelection();
 });
 
-// Função para lidar com a seleção de arquivo
 function handleFileSelection(file) {
     selectedFile = file;
     fileName.textContent = file.name;
     filePreview.style.display = 'flex';
 }
 
-// Função para limpar a seleção de arquivo
 function clearFileSelection() {
     selectedFile = null;
     fileName.textContent = '';
@@ -82,7 +78,7 @@ submitBtn.addEventListener('click', async () => {
             formData.append('consultaId', currentConsultaId);
             formData.append('remetenteId', window.usuarioId);
             
-            const response = await fetch('/api/upload', {  // Removido o parâmetro da URL
+            const response = await fetch('/api/upload', { 
                 method: 'POST',
                 body: formData
             });
@@ -90,10 +86,10 @@ submitBtn.addEventListener('click', async () => {
             const data = await response.json();
             
             if (data.success) {
-                // Notificar via WebSocket
+
                 wsConnection.send(JSON.stringify({
                     type: 'novo_arquivo',
-                    consultaId: currentConsultaId, // Corrigido para usar currentConsultaId
+                    consultaId: currentConsultaId,
                     remetenteId: window.usuarioId,
                     arquivo: data.arquivo
                 }));
@@ -105,7 +101,6 @@ submitBtn.addEventListener('click', async () => {
         }
         
         if (message) {
-            // Seu código existente para enviar mensagens de texto
             messageInput.value = '';
         }
     } catch (error) {
@@ -127,10 +122,8 @@ async function openChatSession(consultaId) {
 
         const data = await response.json();
         
-        // Atualiza o ID da consulta atual
         currentConsultaId = consultaId;
         
-        // Atualiza a interface
         const profileImg = document.getElementById('current-profile-img');
         const psychologistName = document.getElementById('current-psychologist-name');
         const chatArea = document.getElementById('chat-area');
@@ -138,11 +131,9 @@ async function openChatSession(consultaId) {
         psychologistName.textContent = data.psicologo.nome;
         chatArea.style.display = 'block';
 
-        // Limpa as mensagens antigas
         const mainChat = document.getElementById('main-chat');
         mainChat.innerHTML = '';
 
-        // Renderiza as novas mensagens
         if (Array.isArray(data.mensagens)) {
             data.mensagens.forEach(msg => appendMessage(msg));
         }
@@ -154,13 +145,12 @@ async function openChatSession(consultaId) {
     }
 }
 
-// Modifique a função openChatSession existente
 async function handleSendMessage() {
     const message = messageInput.value.trim();
     if (!message || !currentConsultaId) return;
 
     try {
-        // Criar objeto da mensagem
+
         const messageData = {
             type: 'nova_mensagem',
             consultaId: currentConsultaId,
@@ -172,13 +162,12 @@ async function handleSendMessage() {
             }
         };
 
-        // Verificar estado do WebSocket
         if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
             wsConnection.send(JSON.stringify(messageData));
         } else {
             console.warn('WebSocket não está conectado. Reconectando...');
             initializeWebSocket();
-            // Tentar enviar após reconexão
+
             setTimeout(() => {
                 if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
                     wsConnection.send(JSON.stringify(messageData));
@@ -186,14 +175,13 @@ async function handleSendMessage() {
             }, 1000);
         }
 
-        // Exibir mensagem imediatamente
         appendMessage(messageData.mensagem);
         scrollToBottom();
         
-        // Limpar input
+
         messageInput.value = '';
 
-        // Salvar no banco de dados
+
         const response = await fetch('/enviar-mensagem', {
             method: 'POST',
             headers: {
@@ -210,7 +198,7 @@ async function handleSendMessage() {
             throw new Error('Erro ao enviar mensagem');
         }
 
-        // Atualizar preview na lista de chats
+
         updateChatPreview(currentConsultaId, messageData.mensagem);
 
     } catch (error) {
@@ -219,17 +207,16 @@ async function handleSendMessage() {
     }
 }
 
-// Função auxiliar para rolar para o fim do chat
 function scrollToBottom() {
     mainChat.scrollTop = mainChat.scrollHeight;
 }
 
-// Função para formatar mensagem no chat
+
 function appendMessage(msg) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('mensagem-box');
     
-    // Adiciona classe 'sent' se a mensagem for do usuário atual
+
     if (msg.remetenteId === window.usuarioId) {
         messageElement.classList.add('sent');
     }
@@ -255,12 +242,11 @@ function appendMessage(msg) {
     scrollToBottom();
 }
 
-// Função para rolar o chat para baixo
 function scrollToBottom() {
     mainChat.scrollTop = mainChat.scrollHeight;
 }
 
-// Função para configurar o evento de envio
+
 function setupEventListeners() {
     submitBtn.addEventListener('click', handleSendMessage);
     messageInput.addEventListener('keypress', (e) => {
@@ -278,7 +264,7 @@ async function loadChatSessions() {
         if (!response.ok) throw new Error('Erro ao carregar sessões de chat');
         const sessions = await response.json();
         renderChatSessions(sessions);
-        // Initialize WebSocket connection
+
         initializeWebSocket();
     } catch (error) {
         console.error('Erro ao carregar sessões de chat:', error);
@@ -292,7 +278,7 @@ function initializeWebSocket() {
 
     wsConnection.onopen = () => {
         console.log('WebSocket conectado');
-        // Entrar na sala de chat atual se existir
+
         if (currentConsultaId) {
             wsConnection.send(JSON.stringify({
                 type: 'join',
@@ -308,19 +294,16 @@ function initializeWebSocket() {
             console.log('Mensagem recebida:', data);
 
             if (data.type === 'nova_mensagem' && data.consultaId === currentConsultaId) {
-                // Só append se não for nossa própria mensagem
                 if (data.mensagem.remetenteId !== window.usuarioId) {
                     appendMessage(data.mensagem);
                     scrollToBottom();
-                    // Atualizar preview na lista de chats
                     updateChatPreview(data.consultaId, data.mensagem);
                 }
             
             }
             else if (data.type === 'novo_arquivo') {
-                // Exibir o arquivo no chat
                 const chatBox = document.getElementById('chatBox');
-                const arquivoUrl = `/uploads/${data.arquivo}`; // Caminho do arquivo no servidor
+                const arquivoUrl = `/uploads/${data.arquivo}`; 
         
                 if (data.arquivo.endsWith('.jpg') || data.arquivo.endsWith('.png') || data.arquivo.endsWith('.gif')) {
                     chatBox.innerHTML += `<div><img src="${arquivoUrl}" alt="Imagem Enviada" /></div>`;
@@ -335,7 +318,6 @@ function initializeWebSocket() {
 
     wsConnection.onclose = () => {
         console.log('WebSocket desconectado');
-        // Tentar reconectar após 3 segundos
         setTimeout(() => {
             if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                 console.log('Tentando reconectar...');
@@ -352,7 +334,7 @@ function initializeWebSocket() {
 
 function renderChatSessions(sessions) {
     const contactList = document.getElementById('contact-list');
-    contactList.innerHTML = ''; // Limpa sessões anteriores
+    contactList.innerHTML = ''; 
 
     sessions.forEach(session => {
         const sessionItem = document.createElement('div');
@@ -386,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    window.usuarioId = usuarioId; // Tornar disponível globalmente
+    window.usuarioId = usuarioId;
     loadChatSessions();
     setupEventListeners();
     initializeWebSocket();
@@ -403,7 +385,6 @@ function updateChatPreview(consultaId, mensagem) {
             previewElement.textContent = preview;
         }
         
-        // Atualizar horário
         const timeElement = sessionItem.querySelector('.session-time');
         if (timeElement) {
             const time = new Date(mensagem.dataCriacao).toLocaleTimeString('pt-BR', {

@@ -21,7 +21,7 @@ let activeDay;
 let month = today.getMonth();
 let year = today.getFullYear();
 let isEditing = false;
-let eventToEdit = null; // Evento sendo editado
+let eventToEdit = null;
 
 const months = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -30,13 +30,11 @@ const months = [
 
 let eventsArr = [];
 
-// Inicializa o calendário e carrega eventos
 async function initCalendar() {
   await fetchEvents();
   renderCalendar();
 }
 
-// Função para buscar eventos do backend (sessão)
 async function fetchEvents() {
   try {
     const response = await fetch('/calendario/listar-sessao');
@@ -56,7 +54,6 @@ async function fetchEvents() {
   }
 }
 
-// Renderiza o calendário
 function renderCalendar() {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -99,7 +96,6 @@ function renderCalendar() {
   addListeners();
 }
 
-// Adiciona listeners para os eventos
 function addListeners() {
   const days = document.querySelectorAll(".day");
   days.forEach((day) => {
@@ -121,12 +117,11 @@ function addListeners() {
     addEventWrapper.classList.remove("active");
   });
 
-  // Formatação dos inputs de hora (HH:mm)
   [addEventFrom, addEventTo].forEach((input) => {
     input.addEventListener("input", (e) => {
       let value = input.value.replace(/[^0-9:]/g, "");
       if (value.length === 2 && !value.includes(":")) value += ":";
-      input.value = value.slice(0, 5); // Garante o formato HH:mm
+      input.value = value.slice(0, 5); 
     });
 
     input.addEventListener("blur", () => {
@@ -142,7 +137,6 @@ function addListeners() {
   });
 }
 
-// Exibe o dia ativo
 function getActiveDay(day) {
   const selectedDay = new Date(year, month, day);
   const dayName = selectedDay.toLocaleDateString("pt-BR", { weekday: "long" });
@@ -150,7 +144,6 @@ function getActiveDay(day) {
   eventDate.innerHTML = `${day} ${months[month]} ${year}`;
 }
 
-// Atualiza a lista de eventos do dia ativo
 function updateEvents(day) {
   const events = eventsArr.filter(event =>
     event.day === day && event.month === month + 1 && event.year === year
@@ -174,7 +167,7 @@ function updateEvents(day) {
   eventsContainer.innerHTML = eventsHTML || `<div class="no-event">Sem Eventos</div>`;
 }
 
-// Edita o evento selecionado
+
 function editEvent(eventId) {
   const event = eventsArr.find(e => e.id === eventId);
   if (event) {
@@ -189,7 +182,7 @@ function editEvent(eventId) {
   }
 }
 
-// Adiciona ou edita um evento
+
 addEventSubmit.addEventListener("click", async (e) => {
   e.preventDefault();
 
@@ -219,7 +212,7 @@ addEventSubmit.addEventListener("click", async (e) => {
   isEditing = false;
 });
 
-// Salva ou edita evento no backend
+
 async function saveEvent(event, method, url) {
   try {
     const response = await fetch(url, {
@@ -241,7 +234,7 @@ async function saveEvent(event, method, url) {
   }
 }
 
-// Navegação entre meses
+
 prev.addEventListener("click", () => {
   month--;
   if (month < 0) {
@@ -267,4 +260,4 @@ todayBtn.addEventListener("click", () => {
   renderCalendar();
 });
 
-initCalendar(); // Inicializa o calendário
+initCalendar();
