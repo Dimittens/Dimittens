@@ -1,18 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../../config/pool_de_conexao'); // Pool de conexão com o banco
+const pool = require('../../config/pool_de_conexao');
 const { listarEventosUsuario } = require('../controllers/calendarioController');
+const userPacientesController = require('../controllers/userPacientesController');
+const userPsicologosController = require('../controllers/userPsicologosController');
+const userMenorController = require('../controllers/userMenorController');
 
 // Middleware para verificar autenticação
 function verificarAutenticacao(req, res, next) {
     if (req.session.autenticado) {
-        return next(); // Usuário autenticado, prosseguir
-    } else {
-        res.redirect('/loginpacientes'); // Redirecionar para login se não autenticado
+        return next();
     }
+    res.redirect('/loginpacientes');
 }
 
-// Rotas principais (home e página logada)
+// Rota principal: Home ou Página Logada
 router.get('/', (req, res) => {
     const autenticado = req.session.autenticado || false;
     res.render('pages/index', {
@@ -21,6 +23,7 @@ router.get('/', (req, res) => {
     });
 });
 
+// Página Logada
 router.get('/homelogged', verificarAutenticacao, (req, res) => {
     res.render('pages/index', {
         pagina: 'homelogged',
@@ -28,7 +31,84 @@ router.get('/homelogged', verificarAutenticacao, (req, res) => {
     });
 });
 
-// Rota de login para pacientes
+// Cadastro de Pacientes
+router.get('/cadastropacientes', (req, res) => {
+    res.render('pages/index', {
+        pagina: 'cadastropacientes',
+        autenticado: null,
+        errorsList: null,
+        valores: {
+            username: '',
+            userdate: '',
+            userpassword: '',
+            useremail: '',
+            userdocuments: ''
+        }
+    });
+});
+
+router.post('/cadastropacientes', async (req, res) => {
+    try {
+        const resultado = await userPacientesController.cadastrar(req);
+        if (resultado.success) {
+            res.redirect('/');
+        } else {
+            res.render('pages/index', {
+                pagina: 'cadastropacientes',
+                autenticado: null,
+                errorsList: resultado.errors,
+                valores: req.body,
+            });
+        }
+    } catch (error) {
+        console.error('Erro no cadastro:', error);
+        res.status(500).render('pages/index', {
+            pagina: 'cadastropacientes',
+            errorsList: [{ msg: 'Erro no servidor.' }],
+            valores: req.body,
+        });
+    }
+});
+
+// Cadastro de Psicólogos
+router.get('/cadastropsicologos', (req, res) => {
+    res.render('pages/index', {
+        pagina: 'cadastropsicologos',
+        autenticado: null,
+        errorsList: null,
+        valores: {
+            username: '',
+            useremail: '',
+            userpassword: '',
+            userdocuments: '',
+            usercrp: ''
+        }
+    });
+});
+
+router.post('/cadastropsicologos', async (req, res) => {
+    try {
+        const resultado = await userPsicologosController.cadastrar(req);
+        if (resultado.success) {
+            res.redirect('/');
+        } else {
+            res.render('pages/index', {
+                pagina: 'cadastropsicologos',
+                errorsList: resultado.errors,
+                valores: req.body,
+            });
+        }
+    } catch (error) {
+        console.error('Erro no cadastro de psicólogos:', error);
+        res.status(500).render('pages/index', {
+            pagina: 'cadastropsicologos',
+            errorsList: [{ msg: 'Erro no servidor.' }],
+            valores: req.body,
+        });
+    }
+});
+
+// Login de Pacientes
 router.get('/loginpacientes', (req, res) => {
     res.render('pages/index', { pagina: 'loginpacientes', autenticado: null });
 });
@@ -42,22 +122,11 @@ router.post('/loginpacientes', async (req, res) => {
                 usuarioId: resultadoLogin.dados.ID_USUARIO,
                 tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
             };
-
-            const eventos = await listarEventosUsuario(req.session.autenticado.usuarioId);
-            req.session.eventos = eventos;
-
-            req.session.save((err) => {
-                if (err) {
-                    console.error('Erro ao salvar sessão:', err);
-                    return res.status(500).send('Erro ao salvar sessão.');
-                }
-                res.redirect('/homelogged');
-            });
+            res.redirect('/homelogged');
         } else {
             res.status(401).render('pages/index', {
                 pagina: 'loginpacientes',
-                errorsList: resultadoLogin.errors || [{ msg: 'Erro desconhecido' }],
-                autenticado: null,
+                errorsList: resultadoLogin.errors || [{ msg: 'Credenciais inválidas.' }],
             });
         }
     } catch (error) {
@@ -65,33 +134,41 @@ router.post('/loginpacientes', async (req, res) => {
         res.status(500).render('pages/index', {
             pagina: 'loginpacientes',
             errorsList: [{ msg: 'Erro no servidor.' }],
-            autenticado: null,
         });
     }
 });
 
-// Rota de logout
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Erro ao destruir a sessão:', err);
-            return res.status(500).redirect('/');
-        }
-        res.clearCookie('user_session');
-        res.redirect('/');
-    });
+// Login de Psicólogos
+router.get('/loginpsicologos', (req, res) => {
+    res.render('pages/index', { pagina: 'loginpsicologos', autenticado: null });
 });
 
-// Rota para listar eventos da sessão
-router.get('/calendario/listar-sessao', verificarAutenticacao, (req, res) => {
-    if (req.session.eventos) {
-        res.status(200).json(req.session.eventos);
-    } else {
-        res.status(404).json({ message: 'Nenhum evento encontrado.' });
+router.post('/loginpsicologos', async (req, res) => {
+    try {
+        const resultadoLogin = await userPsicologosController.logar(req);
+        if (resultadoLogin.success) {
+            req.session.autenticado = {
+                usuarioNome: resultadoLogin.dados.NOME_USUARIO,
+                usuarioId: resultadoLogin.dados.ID_USUARIO,
+                tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
+            };
+            res.redirect('/homelogged');
+        } else {
+            res.render('pages/index', {
+                pagina: 'loginpsicologos',
+                errorsList: resultadoLogin.errors || [{ msg: 'Credenciais inválidas.' }],
+            });
+        }
+    } catch (error) {
+        console.error('Erro no login de psicólogos:', error);
+        res.status(500).render('pages/index', {
+            pagina: 'loginpsicologos',
+            errorsList: [{ msg: 'Erro no servidor.' }],
+        });
     }
 });
 
-// Rota de chat protegida
+// Chat Protegido
 router.get('/chat', verificarAutenticacao, async (req, res) => {
     try {
         const sessoesChatAtivas = await pool.query(`
@@ -117,90 +194,39 @@ router.get('/chat', verificarAutenticacao, async (req, res) => {
 
         res.render('pages/index', {
             pagina: 'chat',
-            autenticado: req.session.autenticado,
             sessoesChatAtivas,
+            autenticado: req.session.autenticado,
         });
     } catch (error) {
         console.error('Erro ao carregar chat:', error);
-        res.status(500).render('pages/index', {
-            pagina: 'chat',
-            autenticado: req.session.autenticado,
-            error: 'Erro ao carregar sessões de chat',
-        });
+        res.status(500).render('pages/index', { pagina: 'chat', error: 'Erro ao carregar o chat.' });
     }
 });
 
-// Middleware para verificar se o usuário é psicólogo
-async function verificarPsicologo(req, res, next) {
-    const usuarioId = req.session.autenticado.usuarioId;
-
-    try {
-        const [result] = await pool.query(
-            `SELECT DIFERENCIACAO_USUARIO FROM usuario WHERE ID_USUARIO = ?`,
-            [usuarioId]
-        );
-
-        if (result.length > 0 && result[0].DIFERENCIACAO_USUARIO === 'Psicologo') {
-            next(); // O usuário é psicólogo, prosseguir
+// Logout
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erro ao destruir a sessão:', err);
+            res.status(500).redirect('/');
         } else {
-            res.status(403).send('Acesso negado. Apenas psicólogos podem acessar esta página.');
+            res.clearCookie('user_session');
+            res.redirect('/');
         }
-    } catch (error) {
-        console.error('Erro ao verificar psicólogo:', error);
-        res.status(500).send('Erro no servidor.');
-    }
-}
-
-// Rota protegida: formulário de consulta para psicólogos
-router.get('/formularioconsulta', verificarAutenticacao, verificarPsicologo, (req, res) => {
-    res.render('pages/index', {
-        pagina: 'formularioconsulta',
-        psicologoId: req.session.autenticado.usuarioId,
     });
 });
 
-// Rotas estáticas (carregar views específicas)
+// Rotas Estáticas
 const rotasEstaticas = [
     'headerunlogged', 'faq', 'psicologos', 'interesses', 'transtornos',
-    'sobrenos', 'perfil-comunidade', 'redirecionamentosuporte', 'comunidade',
-    'criarpostagem', 'criarcomunidade', 'carroseltranstornos', 'comentarios',
-    'rodape', 'passoapasso', 'passoapassopsico', 'editeseuperfil', 'perfil',
-    'consultas', 'atividademensal', 'popuppsicologos'
+    'sobrenos', 'perfil-comunidade', 'comunidade', 'criarpostagem',
+    'criarcomunidade', 'comentarios', 'rodape', 'perfil'
 ];
 
-// Registrar todas as rotas estáticas
 rotasEstaticas.forEach((pagina) => {
     router.get(`/${pagina}`, (req, res) => {
         res.render('pages/index', { pagina, autenticado: req.session.autenticado || null });
     });
-});
-
-// Rota para banir usuário
-router.post('/api/banir', verificarAutenticacao, async (req, res) => {
-    const { nomeUsuario } = req.body;
-
-    try {
-        const [usuario] = await pool.query(
-            `SELECT ID_USUARIO FROM usuario WHERE NOME_USUARIO = ?`, 
-            [nomeUsuario]
-        );
-
-        if (usuario.length === 0) {
-            return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
-        }
-
-        const usuarioId = usuario[0].ID_USUARIO;
-
-        await pool.query(
-            `UPDATE usuario SET DIFERENCIACAO_USUARIO = 'Banido' WHERE ID_USUARIO = ?`, 
-            [usuarioId]
-        );
-
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Erro ao banir usuário:', error);
-        res.status(500).json({ success: false, message: 'Erro ao banir usuário.' });
-    }
 });
 
 module.exports = router;
