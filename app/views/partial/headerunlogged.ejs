@@ -84,10 +84,24 @@ font-size: 38px;
     z-index: 2;
     position: absolute;
     width: 350px;
-    margin-top: 0;
     align-items: center;
-    height: 200px;
+    height: 190px;
     background-color: white;
+    margin-left: -130px;
+    padding-top: 17px;
+}
+
+.signsub {
+    display: none;
+    flex-direction: column;
+    z-index: 2;
+    position: absolute;
+    width: 350px;
+    align-items: center;
+    height: 190px;
+    background-color: white;
+    padding-top: 17px;
+    margin-left: -118px;
 }
 
 #loginBtn {
@@ -110,6 +124,14 @@ font-size: 38px;
 }
 
 #loginBtn:hover + .loginssub{
+    display: flex;
+}
+
+#cadastroBtn:hover + .signsub{
+    display: flex;
+}
+
+.signsub:hover {
     display: flex;
 }
 
@@ -146,26 +168,61 @@ font-size: 38px;
   background-color: white;
   text-align: center;
   line-height: normal;
-  margin-top: 17px;
   font-family: "Raleway Medium", "Raleway", "Raleway", sans-serif;
+}
+
+#signBtnpsic, #signBtndep, #signBtnpac {
+  width: 350px;
+  height: 60px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: white;
+  text-align: center;
+  line-height: normal;
+  font-family: "Raleway Medium", "Raleway", "Raleway", sans-serif;
+}
+
+#signBtnpsic:hover {
+background-color: #422040;
+color: white;
+font-weight: 600;
+cursor: pointer;
+}
+
+#signBtndep:hover {
+background-color: #422040;
+color: white;
+font-weight: 600;
+cursor: pointer;
+}
+
+#signBtnpac:hover {
+background-color: #422040;
+color: white;
+font-weight: 600;
+cursor: pointer;
 }
 
 #loginBtnpsic:hover {
     background-color: #422040;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 }
 
 #loginBtndep:hover {
     background-color: #422040;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 }
 
 #loginBtnpac:hover {
     background-color: #422040;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 }
 
 
@@ -590,8 +647,8 @@ header {
             <li><a href="psicologos">Psicólogos</a></li>
             <li><a href="calendario">Calendário</a></li>
             <li><a href="comunidade">Comunidades</a></li>
-            <li><a href="sobrenos">Sobre nós</a></li>
             <li><a href="chat">Chat</a></li>
+            <li><a href="sobrenos">Sobre nós</a></li>
         </ul>
         <section class="box-buttons">
             <section class="logins">
@@ -602,7 +659,14 @@ header {
                     <a href="loginpsicologos"><input type="button" id="loginBtnpsic" value="Psicólogo"></a>
                 </section>
             </section>
-            <a href="cadastropacientes"><input type="button" id="cadastroBtn" value="Cadastrar"></a>
+            <section class="sign">
+                <input type="button" id="cadastroBtn" value="Cadastrar">
+                <section class="signsub">
+                    <a href="cadastropacientes"><input type="button" id="signBtnpac" value="Paciente"></a>
+                    <a href="cadastromenor"><input type="button" id="signBtndep" value="Menor"></a>
+                    <a href="cadastropsicologos"><input type="button" id="signBtnpsic" value="Psicólogo"></a>
+                </section>
+            </section>
         </section>
     </article>
 </header>
