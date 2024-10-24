@@ -8,14 +8,12 @@ var cpfInputs = [
 cpfInputs.forEach(function (input) {
     if (input) {
         input.addEventListener('input', function (e) {
-            let cpf = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            let cpf = e.target.value.replace(/\D/g, '');
 
-            // Limita o CPF a 11 dígitos
             if (cpf.length > 11) {
                 cpf = cpf.slice(0, 11);
             }
 
-            // Formata o CPF
             if (cpf.length <= 3) {
                 cpf = cpf.replace(/(\d{0,3})/, '$1');
             } else if (cpf.length <= 6) {
@@ -26,30 +24,27 @@ cpfInputs.forEach(function (input) {
                 cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
             }
 
-            e.target.value = cpf; // Atualiza o valor do input
+            e.target.value = cpf;
         });
     }
 });
 
-    // Validação do CRP
     var crpInput = document.getElementById('usercrp');
     if (crpInput) {
         crpInput.addEventListener('input', function (e) {
-            let crp = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            let crp = e.target.value.replace(/\D/g, '');
 
-            // Limita o CRP a 8 dígitos
             if (crp.length > 8) {
                 crp = crp.slice(0, 8);
             }
 
-            // Formata o CRP
             if (crp.length <= 2) {
                 crp = crp.replace(/(\d{0,2})/, '$1');
             } else {
                 crp = crp.replace(/(\d{2})(\d{0,6})/, '$1/$2');
             }
 
-            e.target.value = crp; // Atualiza o valor do input
+            e.target.value = crp;
         });
     }
 
@@ -69,7 +64,6 @@ form.addEventListener('submit', function(event) {
     var today = new Date();
     var userBirthDate = new Date(document.getElementById('userdatemenor').value);
 
-    // Verifica a idade do usuário
     var age = today.getFullYear() - userBirthDate.getFullYear();
     var monthDiff = today.getMonth() - userBirthDate.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < userBirthDate.getDate())) {
@@ -88,7 +82,6 @@ form.addEventListener('submit', function(event) {
         var trimmedValue = input.value.trim();
 
         if (input.id === 'userdatemenor') {
-            // Verificação da data de nascimento
             if (trimmedValue === "") {
                 hasError = true;
                 input.style.border = '1px solid red';
@@ -150,21 +143,16 @@ form.addEventListener('submit', function(event) {
     }
 });
 
-// Adiciona um event listener para o evento 'paste' no campo de confirmação de senha
 document.getElementById('usercpassword').addEventListener('paste', function(event) {
-    // Cancela o evento de colar
     event.preventDefault();
 });
 
-// Função para validar o formato do email
 function isValidEmail(email) {
-    var emailRegex = /^[^\s@]+@[^\s@]+\.(com|hotmail)+$/; // Aceita apenas .com e hotmail
+    var emailRegex = /^[^\s@]+@[^\s@]+\.(com|hotmail)+$/;
     return emailRegex.test(email);
 }
 
-// Função para verificar se a senha é forte o suficiente
 function isStrongPassword(password) {
-    // Pelo menos 8 caracteres, 1 número, 1 letra maiúscula e 1 caractere especial
     var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
     return passwordRegex.test(password);
 }

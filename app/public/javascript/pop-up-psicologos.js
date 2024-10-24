@@ -42,7 +42,6 @@ const eventsArr = [];
 getEvents();
 console.log(eventsArr);
 
-//function to add days in days with class day and prev-date next-date on previous month and next month days and active on today
 function initCalendar() {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -61,7 +60,7 @@ function initCalendar() {
   }
 
   for (let i = 1; i <= lastDate; i++) {
-    //check if event is present on that day
+ 
     let event = false;
     eventsArr.forEach((eventObj) => {
       if (
@@ -99,7 +98,7 @@ function initCalendar() {
   addListner();
 }
 
-//function to add month and year on prev and next button
+
 function prevMonth() {
   month--;
   if (month < 0) {
@@ -242,7 +241,6 @@ function updateEvents(date) {
   saveEvents();
 }
 
-//function to add event
 addEventBtn.addEventListener("click", () => {
   addEventWrapper.classList.toggle("active");
 });
@@ -257,7 +255,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
-//allow 50 chars in eventtitle
+
 addEventTitle.addEventListener("input", (e) => {
   addEventTitle.value = addEventTitle.value.slice(0, 60);
 });
@@ -270,7 +268,7 @@ function defineProperty() {
   
   defineProperty();
 
-//allow only time in eventtime from and to
+
 addEventFrom.addEventListener("input", (e) => {
   addEventFrom.value = addEventFrom.value.replace(/[^0-9:]/g, "");
   if (addEventFrom.value.length === 2) {
@@ -407,7 +405,6 @@ eventsContainer.addEventListener("click", (e) => {
   }
 });
 
-//function to save events in local storage
 function saveEvents() {
   localStorage.setItem("events", JSON.stringify(eventsArr));
 }

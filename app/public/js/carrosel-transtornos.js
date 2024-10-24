@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const numberOfCardsVisible = 3;
     const totalCards = cards.length;
     let currentIndex = 0;
-    let isDragging = false; // Adicionando uma variável para rastrear o arrastar
+    let isDragging = false;
 
     const updateCardWidth = () => {
         return cards[0].getBoundingClientRect().width;
@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cloneCards();
 
-    // Atualiza a referência dos cards após clonar
     const newCards = Array.from(track.children);
 
     const resetTrack = () => {
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             moveToCard(currentIndex);
         }
         if (currentIndex === totalCards) {
-            setTimeout(resetTrack, 500); // Espera a transição terminar antes de resetar
+            setTimeout(resetTrack, 500);
         }
     };
 
@@ -54,31 +53,27 @@ document.addEventListener('DOMContentLoaded', () => {
             moveToCard(currentIndex);
         }
         if (currentIndex === 0) {
-            setTimeout(resetTrack, 500); // Espera a transição terminar antes de resetar
+            setTimeout(resetTrack, 500);
         }
     };
 
-    // Adicionar eventos de arrastar (ou toque)
     let startX;
 
     track.addEventListener('mousedown', (e) => {
         startX = e.pageX;
         isDragging = true;
-        // Permitindo a seleção de texto enquanto arrasta
         track.style.userSelect = 'none';
     });
 
     track.addEventListener('touchstart', (e) => {
         startX = e.touches[0].pageX;
         isDragging = true;
-        // Permitindo a seleção de texto enquanto arrasta
         track.style.userSelect = 'none';
     });
 
     document.addEventListener('mouseup', () => {
         if (isDragging) {
             isDragging = false;
-            // Restaurando a capacidade de selecionar texto quando o arrasto termina
             track.style.userSelect = 'auto';
         }
     });
@@ -86,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchend', () => {
         if (isDragging) {
             isDragging = false;
-            // Restaurando a capacidade de selecionar texto quando o arrasto termina
             track.style.userSelect = 'auto';
         }
     });

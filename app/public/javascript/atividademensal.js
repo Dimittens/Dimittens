@@ -6,19 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('mes').innerHTML = monthsBr[mes];
         document.getElementById('ano').innerHTML = ano;
 
-        // Limpa a tabela
+   
         const cells = tableDays.getElementsByTagName('td');
         for (let i = 0; i < cells.length; i++) {
             cells[i].innerHTML = '';
             cells[i].classList.remove('mes-anterior', 'proximo-mes', 'dia-atual');
         }
 
-        // Calcula o primeiro dia da semana e o último dia do mês atual
         const firstDayOfWeek = new Date(ano, mes, 1).getDay();
         const getLastDayThisMonth = new Date(ano, mes + 1, 0).getDate();
 
-
-        // Preenche os dias do mês atual
         for (let i = 1; i <= getLastDayThisMonth; i++) {
             const dayTable = cells[firstDayOfWeek + i - 1];
             if (dayTable) {
@@ -27,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Preenche os dias do mês anterior
         const daysInLastMonth = new Date(ano, mes, 0).getDate();
         for (let i = 0; i < firstDayOfWeek; i++) {
             const dayTable = cells[i];
@@ -36,9 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dayTable.classList.add('mes-anterior');
             }
         }
-
-        // Preenche os dias do próximo mês
-        const totalCells = 42; // Total de células no calendário
+        const totalCells = 42;
         for (let i = 1; firstDayOfWeek + getLastDayThisMonth + i <= totalCells; i++) {
             const dayTable = cells[firstDayOfWeek + getLastDayThisMonth + i - 1];
             if (dayTable) {
