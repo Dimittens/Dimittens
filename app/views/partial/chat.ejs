@@ -1,148 +1,88 @@
-
-<link rel="stylesheet" href="css/chat.css">
-<title>Chat</title>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="usuario-id" content="<%= usuarioId %>">
+    <title>Chat Moderno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/chat.css">
 </head>
 <body>
-<nav id="sidebar">
-    <div id="sidebar_content">
-        <div id="user">
-            <img src="imagens/profile2.jpg" id="user_avatar" alt="Avatar">
-            <p id="user_infos">
-                <span class="item-description">Larissa Fernandes</span>
-                <span class="item-description">Paciente</span>
-            </p>
+    <nav id="sidebar">
+        <div id="user_infos">
+            <div class="user-avatar">
+                <%= usuarioNome.charAt(0).toUpperCase() %>
+            </div>
+            <div>
+                <div><%= usuarioNome %></div>
+                <small style="opacity: 0.7">Paciente</small>
+            </div>
         </div>
         <ul id="side_items">
             <li class="side-item active">
-                <a href="#">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span class="item-description">Agenda</span>
-                </a>
+                <a href="/agenda"><i class="fa-solid fa-calendar-days"></i>Agenda</a>
             </li>
             <li class="side-item">
-                <a href="#">
-                    <i class="fa-solid fa-phone"></i>
-                    <span class="item-description">Ligações</span>
-                </a>
+                <a href="/ligacoes"><i class="fa-solid fa-phone"></i>Ligações</a>
             </li>
             <li class="side-item">
-                <a href="#">
-                    <i class="fa-solid fa-folder"></i>
-                    <span class="item-description">Mídias</span>
-                </a>
+                <a href="/midias"><i class="fa-solid fa-folder"></i>Mídias</a>
             </li>
         </ul>
-        <button id="open_btn">
-            <i id="open_btn_icon" class="fa-solid fa-chevron-right"></i>
-        </button>
-    </div>
-    <div id="logout">
         <button id="logout_btn">
             <i class="fa-solid fa-right-from-bracket"></i>
-            <span class="item-description">Sair do Chat</span>
+            <span>Sair do Chat</span>
         </button>
+    </nav>
+
+    <div class="box-contatos">
+        <div class="topo-titulo">
+            <h1>Conversas</h1>
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+        </div>
+        <div id="contact-list">
+            <!-- Chat sessions will be loaded here -->
+        </div>
     </div>
-</nav>
 
-<article class="box-contatos">
-    <section class="topo-titulo">
-        <h1>Chats</h1>
-        <i class="fa-solid fa-ellipsis-vertical"></i>
-    </section>
-    <section class="input-container-box">
-        <section class="input-container">
-            <input type="text" placeholder="Buscar...">
-            <i class="fa-solid fa-magnifying-glass" id="icon-left"></i>
-        </section>
-    </section>
-    <section class="contato" data-contact-id="1">
-        <section class="contato-img">
-            <img src="imagens/profile3-psico.jpg" alt="" class="profiles-img">
-        </section>
-        <section class="contato-text">
-            <section class="h1-span-alinhados">
-                <h2>Wanessa Pedroso</h2>
-                <section class="span-right">
-                    <span>10:40</span>
-                </section>
-            </section>
-            <p>Sem mensagens...</p>
-        </section>
-    </section>
-    <section class="contato" data-contact-id="2">
-        <section class="contato-img">
-            <img src="imagens/profile-psico.jpg" alt="" class="profiles-img">
-        </section>
-        <section class="contato-text">
-            <section class="h1-span-alinhados">
-                <h2>Pedro Lardal</h2>
-                <section class="span-right">
-                    <span>10:40</span>
-                </section>
-            </section>
-            <p>Sem mensagens...</p>
-        </section>
-    </section>
-    <section class="contato" data-contact-id="3">
-        <section class="contato-img">
-            <img src="imagens/profile2-psico.jpg" alt="" class="profiles-img">
-        </section>
-        <section class="contato-text">
-            <section class="h1-span-alinhados">
-                <h2>Bruno Ferreira</h2>
-                <section class="span-right">
-                    <span>10:40</span>
-                </section>
-            </section>
-            <p>Sem mensagens...</p>
-        </section>
-    </section>
-    <section class="contato" data-contact-id="4">
-        <section class="contato-img">
-            <img src="imagens/profile7.jpg" alt="" class="profiles-img">
-        </section>
-        <section class="contato-text">
-            <section class="h1-span-alinhados">
-                <h2>Douglas Dias</h2>
-                <section class="span-right">
-                    <span>10:40</span>
-                </section>
-            </section>
-            <p>Sem mensagens...</p>
-        </section>
-    </section>
-</article>
+    <div class="area-coluna" id="chat-area" style="display: none;">
+        <div class="chat-menu">
+            <h2 id="current-psychologist-name"></h2>
+        </div>
 
-<article class="area-coluna">
-    <article class="chat-menu">
-        <section class="menu-perfil-conversa">
-            <img src="imagens/profile3-psico.jpg" alt="" class="menu-perfil-img" id="current-profile-img">
-            <h3>Wanessa Pedroso</h3>
-        </section>
-    </article>
+        <div class="area-mensagens" id="main-chat">
+            <div class="empty-state">
+                <i class="fa-regular fa-comments"></i>
+                <h3>Selecione uma conversa para começar</h3>
+                <p>Escolha um psicólogo da lista para iniciar o chat</p>
+            </div>
+        </div>
+        <div class="input-mensagem-box" id="dropZone">
+            <div class="file-preview" id="filePreview" style="display: none">
+                <span id="fileName"></span>
+                <button class="remove-file" id="removeFile">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+            
+            <div class="input-actions">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" class="file-input" multiple>
+                    <button class="file-button" type="button">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                </div>
+                
+                <button id="submitBtn" class="send-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
- 
-
-    <article class="area-mensagens" id="main-chat">
-        <section class="mensagem-psicologo-box">
-            <section class="mensagem-psicologo-content">
-                <p>Olá! Eu sou a Dra. Ana, psicóloga. É um prazer conhecê-lo(a). Gostaria de saber um pouco mais sobre você e o que te trouxe aqui hoje. Pode se sentir à vontade para compartilhar o que quiser, no seu próprio tempo.</p>
-            </section>
-        </section>
-    </article>
-
-    <article class="input-mensagem-box">
-        <input type="text" id="message-input" placeholder="Digite uma mensagem...">
-        <section class="itens-input-mensagem">
-            <i class="fa-regular fa-face-smile"></i>
-            <i class="fa-regular fa-file-lines"></i>
-            <i class="fa-regular fa-image"></i>
-            <button id="submitBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
-        </section>
-        
-    </article>
-
-</article>
-
-<script src="javascript/chat.js"></script>
-
+    <script src="javascript/chat.js"></script>
+</body>
