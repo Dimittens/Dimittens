@@ -3,7 +3,7 @@ const router = express.Router();
 const userPacientesController = require("../controllers/userPacientesController");
 const userPsicologosController = require("../controllers/userPsicologosController");
 const userMenorController = require("../controllers/userMenorController");
-const { salvarEvento, listarEventos } = require("../controllers/calendarioController");
+const { salvarEvento, listarEventosUsuario } = require("../controllers/calendarioController");
 const { recordAuthenticatedUser, checkAuthenticatedUser } = require("../models/autenticador_middleware");
 
 // ROTA PARA HEADER
@@ -61,25 +61,28 @@ router.get('/loginpacientes', (req, res) => {
   res.render('pages/index', { pagina: "loginpacientes", autenticado: null });
 });
 
+// Carregar eventos na sessão ao fazer login
 router.post('/loginpacientes', async (req, res) => {
   try {
     const resultadoLogin = await userPacientesController.logar(req);
 
     if (resultadoLogin && resultadoLogin.success) {
-      // Armazena dados do usuário na sessão
       req.session.autenticado = {
         usuarioNome: resultadoLogin.dados.NOME_USUARIO,
         usuarioId: resultadoLogin.dados.ID_USUARIO,
         tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
       };
 
+      // Carregar eventos na sessão
+      const eventos = await listarEventosUsuario(req.session.autenticado.usuarioId);
+      req.session.eventos = eventos;
+
       req.session.save((err) => {
         if (err) {
-          console.error("Erro ao salvar a sessão:", err);
-          return res.status(500).send('Erro no servidor.');
+          console.error("Erro ao salvar sessão:", err);
+          return res.status(500).send('Erro ao salvar sessão.');
         }
-        // Redireciona para a home após login bem-sucedido
-        return res.redirect('/');
+        return res.redirect('/calendario');
       });
     } else {
       return res.status(401).render('pages/index', {
@@ -97,6 +100,69 @@ router.post('/loginpacientes', async (req, res) => {
     });
   }
 });
+
+// Rota para listar eventos armazenados na sessão do Express
+router.get('/calendario/listar-sessao', (req, res) => {
+  if (req.session.eventos) {
+    return res.status(200).json(req.session.eventos);
+  } else {
+    return res.status(404).json({ message: "Nenhum evento encontrado." });
+  }
+});
+
+// Rota para salvar evento e armazená-lo na sessão do Express
+router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
+  try {
+    const resultado = await salvarEvento(req);
+
+    if (resultado.success) {
+      // Inicializa o array de eventos na sessão, se não existir
+      if (!req.session.eventos) {
+        req.session.eventos = [];
+      }
+
+      // Adiciona o novo evento na sessão
+      req.session.eventos.push(req.body);
+
+      // Salva a sessão atualizada
+      req.session.save((err) => {
+        if (err) {
+          console.error("Erro ao salvar sessão:", err);
+          return res.status(500).json({ success: false, message: "Erro ao salvar sessão." });
+        }
+        return res.status(201).json(resultado);
+      });
+    } else {
+      return res.status(400).json(resultado);
+    }
+  } catch (error) {
+    console.error("Erro ao salvar evento:", error);
+    return res.status(500).json({ success: false, message: "Erro interno do servidor." });
+  }
+});
+
+// Rota para editar um evento existente
+router.put("/calendario/editar/:id", checkAuthenticatedUser, async (req, res) => {
+  try {
+    const resultado = await salvarEvento(req, true); // Chamamos a função de salvar com uma flag de edição
+
+    if (resultado.success) {
+      // Atualiza o evento na sessão
+      const index = req.session.eventos.findIndex(e => e.id === parseInt(req.params.id));
+      if (index !== -1) {
+        req.session.eventos[index] = { ...req.body, id: parseInt(req.params.id) };
+      }
+
+      return res.status(200).json({ success: true, message: "Evento atualizado com sucesso!" });
+    } else {
+      return res.status(400).json(resultado);
+    }
+  } catch (error) {
+    console.error("Erro ao editar evento:", error);
+    return res.status(500).json({ success: false, message: "Erro interno do servidor." });
+  }
+});
+
 
 // LOGIN PSICÓLOGOS
 router.get('/loginpsicologos', (req, res) => {
@@ -210,25 +276,6 @@ router.get("/chat", checkAuthenticatedUser, (req, res) => {
     autenticado: req.session.autenticado,
   });
 });
-
-// ROTA PARA SALVAR EVENTOS
-router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
-  try {
-    const resultado = await salvarEvento(req);
-    if (resultado.success) {
-      return res.status(201).json(resultado);
-    } else {
-      return res.status(400).json(resultado);
-    }
-  } catch (error) {
-    console.error("Erro na rota de calendário:", error);
-    if (!res.headersSent) {
-      return res.status(500).json({ success: false, message: "Erro interno do servidor." });
-    }
-  }
-});
-
-
 
 
 
