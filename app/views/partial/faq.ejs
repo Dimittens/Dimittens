@@ -4,8 +4,8 @@
 </head>
 
 <body>
+    <main>
     <article class="first">
-        <header>
             <section class="menu">
                 <h1>Fale Conosco</h1>
                 <section class="pesquisa">
@@ -13,24 +13,23 @@
                     <i id="lupa" class="fa-solid fa-magnifying-glass"></i>
                 </section>
             </section>
-        </header>
-        <main>
+       
 
             <section class="contato">
                 <section class="email">
-                    <container class="box"><i class="fa-regular fa-envelope"></i></container>
+                    <div class="box"><i class="fa-regular fa-envelope"></i></div>
                     <h2>dimittens.contato@gmail.com</h2>
                     <p><strong>Disponível 24h</strong><br>Responderemos dentro de<br>dois dias úteis</p>
                 </section>
 
                 <section class="wpp">
-                    <container class="box"><i class="fa-brands fa-whatsapp"></i></container>
+                    <div class="box"><i class="fa-brands fa-whatsapp"></i></div>
                     <h2>+55 (11) 96077-5578</h2>
                     <p><strong>Disponível 24h</strong><br>Responderemos dentro de<br>dois dias úteis</p>
                 </section>
 
                 <section class="insta">
-                    <container class="box"><i class="fa-brands fa-instagram"></i></container>
+                    <div class="box"><i class="fa-brands fa-instagram"></i></div>
                     <h2>dimittens_</h2>
                     <p><strong>Disponível 24h</strong><br>Responderemos dentro de<br>dois dias úteis</p>
                 </section>
@@ -43,17 +42,18 @@
         <section class="question">
             <h3>Perguntas Frequentes</h3>
             <section class="questions">
-                <ul>
+                <ul class="colunas">
                     <li>
                         <h4>O que é a Dimittens</h4>
-                        <p>A Dimittens é uma plataforma de suporte à saúde mental, que surge como uma resposta <br> dinâmica
-                        às necessidades escassas de ajuda nesse âmbito</p>
+                        <p>A Dimittens é uma plataforma de suporte à saúde mental, que surge como uma resposta <br>
+                            dinâmica
+                            às necessidades escassas de ajuda nesse âmbito</p>
                     </li>
 
                     <li>
                         <h4>Qual é o valor da consulta?</h4>
                         <p>Os valores de consulta são definidos pelos psicólogos e variam de acordo com cada <br>
-                        profissional.</p>
+                            profissional.</p>
                     </li>
 
                     <li>
@@ -63,14 +63,15 @@
 
                     <li>
                         <h4>O que é a Dimittens</h4>
-                        <p>A Dimittens é uma plataforma de suporte à saúde mental, que surge como uma resposta <br> dinâmica
-                        às necessidades escassas de ajuda nesse âmbito</p>
+                        <p>A Dimittens é uma plataforma de suporte à saúde mental, que surge como uma resposta <br>
+                            dinâmica
+                            às necessidades escassas de ajuda nesse âmbito</p>
                     </li>
 
                     <li>
                         <h4>Qual é o valor da consulta?</h4>
                         <p>Os valores de consulta são definidos pelos psicólogos e variam de acordo com cada <br>
-                        profissional.</p>
+                            profissional.</p>
                     </li>
 
                     <li>
@@ -80,8 +81,14 @@
                 </ul>
             </section>
         </section>
-        </main>
     </article>
+    </main>
+
+    <footer>
+        <%- include("../partial/rodape") %>
+    </footer>
+
 </body>
+
 
 </html>

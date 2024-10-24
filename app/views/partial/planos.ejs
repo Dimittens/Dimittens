@@ -1,4 +1,9 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planos</title>
     <link rel="stylesheet" href="css/planos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -14,7 +19,7 @@
                         <h2>60</h2>
                     </section>
                     <p class="p-tempo">Todo mês <br>
-                        Válido por 1 messes</p>
+                        Válido por 1 mês</p>
                 </section>
                 <section class="box-beneficios">
                     <ul class="items-lista">
@@ -36,7 +41,7 @@
                         </section>
                         <section class="items-beneficios">
                             <i class="fa-solid fa-check"></i>
-                            <li>Maior relevãncia em comentarios</li>
+                            <li>Maior relevância em comentários</li>
                         </section>
                         <section class="items-beneficios">
                             <i class="fa-solid fa-check"></i>
@@ -44,7 +49,7 @@
                         </section>
                     </ul>
 
-                    <input type="button" value="Comprar" class="input-comprar">
+                    <input type="button" value="Comprar" class="input-comprar" data-plano="mensal" data-valor="60">
                 </section>
             </section>
 
@@ -56,7 +61,7 @@
                         <h2>45</h2>
                     </section>
                     <p>Todo mês <br>
-                        Válido por 3 messes</p>
+                        Válido por 3 meses</p>
                 </section>
                 <section class="box-beneficios">
                     <ul class="items-lista">
@@ -78,7 +83,7 @@
                         </section>
                         <section class="items-beneficios">
                             <i class="fa-solid fa-check"></i>
-                            <li>Maior relevãncia em comentarios</li>
+                            <li>Maior relevância em comentários</li>
                         </section>
                         <section class="items-beneficios">
                             <i class="fa-solid fa-check"></i>
@@ -86,10 +91,9 @@
                         </section>
                     </ul>
 
-                    <input type="button" value="Comprar" class="input-comprar">
+                    <input type="button" value="Comprar" class="input-comprar" data-plano="trimestral" data-valor="45">
                 </section>
             </section>
-
 
             <section class="planos">
                 <section class="promo-box">
@@ -104,7 +108,7 @@
                         <h2>30</h2>
                     </section>
                     <p>Todo mês <br>
-                        Válido por 12 messes</p>
+                        Válido por 12 meses</p>
                 </section>
                 <section class="box-beneficios">
                     <ul class="items-lista">
@@ -126,7 +130,7 @@
                         </section>
                         <section class="items-beneficios">
                             <i class="fa-solid fa-check"></i>
-                            <li>Maior relevãncia em comentarios</li>
+                            <li>Maior relevância em comentários</li>
                         </section>
                         <section class="items-beneficios">
                             <i class="fa-solid fa-check"></i>
@@ -134,11 +138,49 @@
                         </section>
                     </ul>
 
-                    <input type="button" value="Comprar" class="input-comprar" id="input-comprar-anual">
+                    <input type="button" value="Comprar" class="input-comprar" data-plano="anual" data-valor="30">
                 </section>
             </section>
 
         </article>
     </main>
+
+    <script>
+        document.querySelectorAll('.input-comprar').forEach(button => {
+            button.addEventListener('click', async () => {
+                const plano = button.getAttribute('data-plano');
+                const valor = button.getAttribute('data-valor');
+                
+                const transactionData = {
+                    token: 'seu_token_aqui', // O token do cartão de crédito que você vai obter através do Mercado Pago
+                    payment_method_id: 'cartao', // Ou outro método de pagamento, você pode implementar lógica para isso
+                    transaction_amount: parseFloat(valor), // O valor da transação
+                    description: `Assinatura do plano ${plano}`,
+                    installments: 1, // Número de parcelas
+                    email: 'email_do_cliente@example.com' // Email do comprador, você pode substituir pelo valor do input do usuário
+                };
+
+                try {
+                    const response = await fetch('http://localhost:5000/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(transactionData)
+                    });
+
+                    const data = await response.json();
+                    if (data.body && data.body.init_point) {
+                        // Redireciona o usuário para o link de pagamento do Mercado Pago
+                        window.location.href = data.body.init_point;
+                    } else {
+                        alert('Erro ao processar pagamento: ' + (data.error || 'Unknown error'));
+                    }
+                } catch (error) {
+                    alert('Erro na comunicação com o servidor: ' + error.message);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

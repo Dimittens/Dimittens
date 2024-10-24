@@ -9,9 +9,6 @@ body {
     overflow-x: hidden;
 }
 
-
-<<<<<<< HEAD
-
 .passo-a-passo {
     width: 100vw;
     margin-top: -100px;
@@ -28,8 +25,6 @@ body {
     font-size: 36px;
 }
 
-=======
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 main {
     padding: 0;
     margin: 0;
@@ -149,10 +144,7 @@ main {
     transform: translateY(-232px);
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 .tipo-terapia > section {
     display: flex;
     flex-direction: column;
@@ -207,17 +199,45 @@ main {
     font-family: "Arial Bold", "Arial Normal", "Arial", sans-serif;
 }
 
-<<<<<<< HEAD
+ h2 .msg-boasvindas {
+    font-size: 20px;
+    font-family: "Arial Bold", "Arial Normal", "Arial", sans-serif;
+    color: white;
+    position: relative;
+    right: 100px;
+    top: 20px;
+    margin-bottom: 20px;
+}
 
-=======
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
+.msg-boasvindas {
+    border-right: 16px solid white;
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 26.5ch;
+    animation: mark .5s step-end infinite, write 7s steps(22, end) 1;
+}
+
+@keyframes mark {
+    50%{
+        border-right-color: transparent;
+    }
+}
+
+@keyframes write {
+    0%{
+        width: 0;
+    }
+}
+
 .p-slogan {
     text-align: left;
     color: white;
-    font-size: 34px;
+    font-size: 20px;
     font-family: "Arial Bold", "Arial Normal", "Arial", sans-serif;
     font-weight: 500;
     line-height: none;
+    margin-top: 20px;
 }
 
 .primeiro-quadrante {
@@ -309,10 +329,6 @@ main {
         font-size: 13px;
         margin: 20px 60px 70px 60px;
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 @media (min-width: 400px) and (max-width: 480px) {
@@ -380,13 +396,10 @@ main {
         font-size: 16px;
         margin: 20px 80px 70px 80px;
     }
-<<<<<<< HEAD
 
-=======
     .passo-a-passo {
         margin-top: -350px;
     }
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 @media (min-width: 768px) and (max-width: 900px) {
@@ -640,10 +653,6 @@ main {
         font-size: 18px;
         margin: 20px 80px 94px 80px;
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 
@@ -761,10 +770,6 @@ main {
     .tipo-terapia {
         transform: translateY(-195px);
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 355b138de76daa84a76929f8035b03f08dacfbfe
 }
 
 @media (min-width: 1350px) and (max-width: 1550px) {

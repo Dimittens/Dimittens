@@ -1,11 +1,10 @@
+// Seleção dos elementos do DOM
 const calendar = document.querySelector(".calendar"),
   date = document.querySelector(".date"),
   daysContainer = document.querySelector(".days"),
   prev = document.querySelector(".prev"),
   next = document.querySelector(".next"),
   todayBtn = document.querySelector(".today-btn"),
-  gotoBtn = document.querySelector(".goto-btn"),
-  dateInput = document.querySelector(".date-input"),
   eventDay = document.querySelector(".event-day"),
   eventDate = document.querySelector(".event-date"),
   eventsContainer = document.querySelector(".events"),
@@ -21,16 +20,44 @@ let today = new Date();
 let activeDay;
 let month = today.getMonth();
 let year = today.getFullYear();
+let isEditing = false;
+let eventToEdit = null; // Evento sendo editado
 
 const months = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
-const eventsArr = [];
-getEvents();
+let eventsArr = [];
 
-function initCalendar() {
+// Inicializa o calendário e carrega eventos
+async function initCalendar() {
+  await fetchEvents();
+  renderCalendar();
+}
+
+// Função para buscar eventos do backend (sessão)
+async function fetchEvents() {
+  try {
+    const response = await fetch('/calendario/listar-sessao');
+    const data = await response.json();
+    eventsArr = data.map(event => ({
+      id: event.id,
+      day: event.day,
+      month: event.month,
+      year: event.year,
+      nota: event.nota,
+      horarioInicio: event.horarioInicio,
+      horarioFim: event.horarioFim,
+    }));
+    renderCalendar();
+  } catch (error) {
+    console.error('Erro ao buscar eventos:', error);
+  }
+}
+
+// Renderiza o calendário
+function renderCalendar() {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const prevLastDay = new Date(year, month, 0);
@@ -48,19 +75,19 @@ function initCalendar() {
   }
 
   for (let i = 1; i <= lastDate; i++) {
-    let event = eventsArr.some(eventObj =>
-      eventObj.day === i && eventObj.month === month + 1 && eventObj.year === year
+    const hasEvent = eventsArr.some(event =>
+      event.day === i && event.month === month + 1 && event.year === year
     );
 
     if (i === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
       activeDay = i;
       getActiveDay(i);
       updateEvents(i);
-      days += event ? `<div class="day today active event">${i}</div>` :
-                      `<div class="day today active">${i}</div>`;
+      days += hasEvent ? `<div class="day today active event">${i}</div>` :
+                         `<div class="day today active">${i}</div>`;
     } else {
-      days += event ? `<div class="day event">${i}</div>` :
-                      `<div class="day">${i}</div>`;
+      days += hasEvent ? `<div class="day event">${i}</div>` :
+                         `<div class="day">${i}</div>`;
     }
   }
 
@@ -72,24 +99,7 @@ function initCalendar() {
   addListeners();
 }
 
-function prevMonth() {
-  month--;
-  if (month < 0) {
-    month = 11;
-    year--;
-  }
-  initCalendar();
-}
-
-function nextMonth() {
-  month++;
-  if (month > 11) {
-    month = 0;
-    year++;
-  }
-  initCalendar();
-}
-
+// Adiciona listeners para os eventos
 function addListeners() {
   const days = document.querySelectorAll(".day");
   days.forEach((day) => {
@@ -101,8 +111,38 @@ function addListeners() {
       e.target.classList.add("active");
     });
   });
+
+  addEventBtn.addEventListener("click", () => {
+    isEditing = false;
+    addEventWrapper.classList.add("active");
+  });
+
+  addEventCloseBtn.addEventListener("click", () => {
+    addEventWrapper.classList.remove("active");
+  });
+
+  // Formatação dos inputs de hora (HH:mm)
+  [addEventFrom, addEventTo].forEach((input) => {
+    input.addEventListener("input", (e) => {
+      let value = input.value.replace(/[^0-9:]/g, "");
+      if (value.length === 2 && !value.includes(":")) value += ":";
+      input.value = value.slice(0, 5); // Garante o formato HH:mm
+    });
+
+    input.addEventListener("blur", () => {
+      const [hour, minute] = input.value.split(":").map(Number);
+      if (
+        isNaN(hour) || isNaN(minute) ||
+        hour < 0 || hour > 23 || minute < 0 || minute > 59
+      ) {
+        alert("Por favor, insira um horário válido no formato HH:mm.");
+        input.value = "";
+      }
+    });
+  });
 }
 
+// Exibe o dia ativo
 function getActiveDay(day) {
   const selectedDay = new Date(year, month, day);
   const dayName = selectedDay.toLocaleDateString("pt-BR", { weekday: "long" });
@@ -110,34 +150,47 @@ function getActiveDay(day) {
   eventDate.innerHTML = `${day} ${months[month]} ${year}`;
 }
 
+// Atualiza a lista de eventos do dia ativo
 function updateEvents(day) {
-  let events = "";
-  eventsArr.forEach((eventObj) => {
-    if (eventObj.day === day && eventObj.month === month + 1 && eventObj.year === year) {
-      eventObj.events.forEach((event) => {
-        const [from, to] = event.time.split(" - ");
-        events += `<div class="event">
-          <div class="title">
-            <h3>${event.note}</h3>
+  const events = eventsArr.filter(event =>
+    event.day === day && event.month === month + 1 && event.year === year
+  );
+
+  let eventsHTML = "";
+
+  events.forEach((event) => {
+    eventsHTML += `
+      <div class="event">
+        <div class="title">
+          <h3>${event.nota}</h3>
+          <div class="box-icone-editar">
+            <i id="icon-editar" class="fa-solid fa-pen" onclick="editEvent(${event.id})"></i>
           </div>
-          <div class="time">${formatTime(from)} - ${formatTime(to)}</div>
-        </div>`;
-      });
-    }
+        </div>
+        <div class="time">${event.horarioInicio} - ${event.horarioFim}</div>
+      </div>`;
   });
 
-  eventsContainer.innerHTML = events || `<div class="no-event">Sem Eventos</div>`;
+  eventsContainer.innerHTML = eventsHTML || `<div class="no-event">Sem Eventos</div>`;
 }
 
-addEventBtn.addEventListener("click", () => {
-  addEventWrapper.classList.toggle("active");
-});
+// Edita o evento selecionado
+function editEvent(eventId) {
+  const event = eventsArr.find(e => e.id === eventId);
+  if (event) {
+    isEditing = true;
+    eventToEdit = event;
 
-addEventCloseBtn.addEventListener("click", () => {
-  addEventWrapper.classList.remove("active");
-});
+    addEventNote.value = event.nota;
+    addEventFrom.value = event.horarioInicio;
+    addEventTo.value = event.horarioFim;
 
-addEventSubmit.addEventListener("click", (e) => {
+    addEventWrapper.classList.add("active");
+  }
+}
+
+// Adiciona ou edita um evento
+addEventSubmit.addEventListener("click", async (e) => {
   e.preventDefault();
 
   if (!addEventNote.value || !addEventFrom.value || !addEventTo.value) {
@@ -145,72 +198,73 @@ addEventSubmit.addEventListener("click", (e) => {
     return;
   }
 
-  const usuarioId = 1; // Ajuste conforme sua lógica
-
-  const evento = {
-    data: `${year}-${month + 1}-${activeDay}`,
+  const newEvent = {
+    id: isEditing ? eventToEdit.id : null,
+    day: activeDay,
+    month: month + 1,
+    year: year,
     nota: addEventNote.value,
     horarioInicio: addEventFrom.value,
     horarioFim: addEventTo.value,
-    usuarioId,
   };
 
-  fetch('/calendario/salvar', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(evento),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert(data.message);
-        updateEvents(activeDay);
-      } else {
-        alert("Erro ao salvar o evento.");
-      }
-    })
-    .catch((error) => {
-      console.error('Erro:', error);
-    });
+  const method = isEditing ? "PUT" : "POST";
+  const url = isEditing ? `/calendario/editar/${newEvent.id}` : "/calendario/salvar";
 
+  await saveEvent(newEvent, method, url);
   addEventWrapper.classList.remove("active");
   addEventNote.value = "";
   addEventFrom.value = "";
   addEventTo.value = "";
+  isEditing = false;
 });
 
-function saveEvents() {
-  localStorage.setItem("events", JSON.stringify(eventsArr));
+// Salva ou edita evento no backend
+async function saveEvent(event, method, url) {
+  try {
+    const response = await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(event),
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      alert("Evento salvo com sucesso!");
+      if (!isEditing) eventsArr.push(event);
+      updateEvents(activeDay);
+    } else {
+      alert("Erro ao salvar o evento.");
+    }
+  } catch (error) {
+    console.error("Erro ao salvar evento:", error);
+  }
 }
 
-function getEvents() {
-  const storedEvents = JSON.parse(localStorage.getItem("events"));
-  if (storedEvents) eventsArr.push(...storedEvents);
-}
-
-function formatTime(time) {
-  const [hour, minute] = time.split(":").map(Number);
-  const period = hour >= 12 ? "PM" : "AM";
-  return `${hour < 10 ? "0" + hour : hour}:${minute < 10 ? "0" + minute : minute} ${period}`;
-}
-
-[addEventFrom, addEventTo].forEach((input) => {
-  input.addEventListener("input", (e) => {
-    input.value = input.value.replace(/[^0-9:]/g, "");
-    if (input.value.length === 2) input.value += ":";
-    if (input.value.length > 5) input.value = input.value.slice(0, 5);
-  });
+// Navegação entre meses
+prev.addEventListener("click", () => {
+  month--;
+  if (month < 0) {
+    month = 11;
+    year--;
+  }
+  renderCalendar();
 });
 
-prev.addEventListener("click", prevMonth);
-next.addEventListener("click", nextMonth);
+next.addEventListener("click", () => {
+  month++;
+  if (month > 11) {
+    month = 0;
+    year++;
+  }
+  renderCalendar();
+});
+
 todayBtn.addEventListener("click", () => {
   today = new Date();
   month = today.getMonth();
   year = today.getFullYear();
-  initCalendar();
+  renderCalendar();
 });
 
-initCalendar();
+initCalendar(); // Inicializa o calendário
