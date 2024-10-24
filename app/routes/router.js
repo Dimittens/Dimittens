@@ -87,7 +87,7 @@ router.post('/loginpacientes', async (req, res) => {
           console.error("Erro ao salvar sessão:", err);
           return res.status(500).send('Erro ao salvar sessão.');
         }
-        return res.redirect('/calendario');
+        return res.redirect('/');
       });
     } else {
       return res.status(401).render('pages/index', {
