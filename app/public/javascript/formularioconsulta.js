@@ -1,10 +1,10 @@
 const form = document.getElementById('form-consulta');
 
 form.addEventListener('submit', async (event) => {
-  event.preventDefault(); // Evita o reload da página
+  event.preventDefault();
 
   const formData = new FormData(form);
-  const cpfUsuario = formData.get('cpfUsuario'); // Obtem o CPF inserido
+  const cpfUsuario = formData.get('cpfUsuario');
 
   try {
     const userResponse = await fetch(`/api/usuario/cpf/${cpfUsuario}`);
@@ -23,10 +23,9 @@ form.addEventListener('submit', async (event) => {
       tempo: formData.get('tempo'),
       anotacoes: formData.get('anotacoes'),
       usuarioId: userData.idUsuario,
-      psicologoId: "<%= psicologoId %>" // Inserir o ID do psicólogo logado via template
+      psicologoId: "<%= psicologoId %>" 
     };
 
-    // Enviar a consulta para o backend
     const response = await fetch('/api/consultas', {
       method: 'POST',
       headers: {
