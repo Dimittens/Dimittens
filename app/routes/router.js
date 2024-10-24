@@ -122,7 +122,7 @@ router.post('/loginpacientes', async (req, res) => {
                 usuarioId: resultadoLogin.dados.ID_USUARIO,
                 tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
             };
-            res.redirect('/homelogged');
+            res.redirect('/');
         } else {
             res.status(401).render('pages/index', {
                 pagina: 'loginpacientes',
