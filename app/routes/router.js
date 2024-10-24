@@ -27,6 +27,52 @@ router.get('/cadastropacientes', (req, res) => {
   });
 });
 
+// CADASTRO PSICOLOGOS
+router.get('/cadastropsicologos', (req, res) => {
+  res.render('pages/index', {
+    pagina: "cadastropsicologos",
+    autenticado: null,
+    errorsList: null,
+    valores: {
+      username: "",
+      userdate: "",
+      userpassword: "",
+      useremail: "",
+      userdocuments: "",
+      usercrp: ""
+    }
+  });
+});
+
+router.post('/cadastropsicologos', async (req, res) => {
+  try {
+    if (res.headersSent) return;
+    const resultadoCadastro = await userPacientesController.cadastrar(req);
+    if (!resultadoCadastro || res.headersSent) return;
+
+    if (resultadoCadastro.success) {
+      return res.redirect('/');
+    } else {
+      return res.render('pages/index', {
+        pagina: "cadastropsicologos",
+        autenticado: null,
+        errorsList: resultadoCadastro.errors,
+        valores: req.body,
+      });
+    }
+  } catch (error) {
+    console.error("Erro no cadastro de psicologos:", error);
+    if (!res.headersSent) {
+      return res.status(500).render('pages/index', {
+        pagina: "cadastropsicologos",
+        autenticado: null,
+        errorsList: [{ msg: "Erro no servidor." }],
+        valores: req.body,
+      });
+    }
+  }
+});
+
 router.post('/cadastropacientes', async (req, res) => {
   try {
     if (res.headersSent) return;
