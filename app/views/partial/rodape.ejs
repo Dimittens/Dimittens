@@ -52,5 +52,111 @@
             <h2 class="direitos-rodape">©2024Dimittens. <br>
                 Todos os direitos reservados</h2>
         </section>
+        <div>
+            <button id="denunciaButton">
+                <i class="fas fa-exclamation-triangle"></i> Denunciar
+            </button>
+        </div>   
+        
+        <!-- Janela Modal -->
+        <div id="denunciaModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Realizar Denúncia</h2>
+                <form id="denunciaForm">
+                    <label for="nomeDenunciante">Seu Nome:</label>
+                    <input type="text" id="nomeDenunciante" name="nomeDenunciante" value=<%= usuarioNome %>! readonly>
+        
+                    <label for="nomeDenunciado">Nome do Denunciado:</label>
+                    <input type="text" id="nomeDenunciado" name="nomeDenunciado" required>
+        
+                    <label for="motivoDenuncia">Motivo:</label>
+                    <select id="motivoDenuncia" name="motivoDenuncia" required>
+                        <option value="">Selecione um motivo</option>
+                        <option value="Abuso">Abuso</option>
+                        <option value="Comportamento Inadequado">Comportamento Inadequado</option>
+                        <option value="Fraude">Fraude</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+        
+                    <label for="textoDenuncia">Descrição:</label>
+                    <textarea id="textoDenuncia" name="textoDenuncia" rows="4" required></textarea>
+        
+                    <button type="submit">Enviar Denúncia</button>
+                    <button type="button" id="limparButton">Limpar</button>
+                </form>
+            </div>
+        </div>
     </footer>
 </body>
+<script>
+
+    const denunciaButton = document.getElementById('denunciaButton');
+const denunciaModal = document.getElementById('denunciaModal');
+const closeButton = document.querySelector('.close-button');
+const denunciaForm = document.getElementById('denunciaForm');
+const limparButton = document.getElementById('limparButton');
+
+// Função para abrir a modal
+denunciaButton.onclick = function() {
+    denunciaModal.style.display = "block";
+};
+
+// Função para fechar a modal
+closeButton.onclick = function() {
+    denunciaModal.style.display = "none";
+};
+
+// Fechar a modal se o usuário clicar fora dela
+window.onclick = function(event) {
+    if (event.target === denunciaModal) {
+        denunciaModal.style.display = "none";
+    }
+};
+
+// Função para limpar o formulário
+limparButton.onclick = function() {
+    denunciaForm.reset();
+};
+
+// Enviar o formulário (você pode adicionar a lógica para enviar os dados aqui)
+denunciaForm.onsubmit = function(event) {
+    event.preventDefault(); // Evita o envio padrão do formulário
+
+    const nomeDenunciante = document.getElementById('nomeDenunciante').value;
+    const motivoDenuncia = document.getElementById('motivoDenuncia').value;
+    const nomeDenunciado = document.getElementById('nomeDenunciado').value;
+    const textoDenuncia = document.getElementById('textoDenuncia').value;
+    
+    // Verifique se os campos necessários foram preenchidos
+    if (!nomeDenunciante || !motivoDenuncia|| !nomeDenunciado || !textoDenuncia) {
+        alert('Por favor, preencha todos os campos.');
+        return; // Não prossegue se os campos não estão preenchidos
+    }
+    
+    // Enviar a denúncia ao servidor
+    fetch('/api/denunciar', {
+        method: 'POST',
+        body: JSON.stringify({ nomeDenunciante, motivoDenuncia, nomeDenunciado, textoDenuncia }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Denúncia enviada com sucesso!');
+            denunciaModal.style.display = 'none'; // Fecha a modal após enviar
+            denunciaForm.reset(); // Limpa o formulário
+        } else {
+            alert('Erro ao enviar denúncia: ' + response.statusText);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao enviar a denúncia:', error);
+        alert('Erro ao enviar a denúncia. Tente novamente mais tarde.');
+    });
+    
+    console.log('Denúncia enviada:', { nomeDenunciante, motivoDenuncia, nomeDenunciado, textoDenuncia });
+
+    console.log('Denúncia enviada:', { nomeDenunciante, motivoDenuncia, nomeDenunciado, textoDenuncia });
+    denunciaModal.style.display = 'none'; // Fecha a modal após enviar
+};
+</script>
