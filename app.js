@@ -13,35 +13,43 @@ const app = express();
 const server = http.createServer(app);
 const port = 3000;
 
+// **Certifique-se de que o pool foi criado corretamente**
+console.log('Conexão com o banco estabelecida:', pool);
+
+// **Inicialização do MySQLStore**
+let sessionStore;
+try {
+  sessionStore = new MySQLStore({}, pool);  // Certifique-se de que pool é válido
+  console.log('MySQL Store configurado corretamente.');
+} catch (error) {
+  console.error('Erro ao inicializar MySQLStore:', error);
+  process.exit(1); // Finaliza a aplicação se houver erro
+}
+
+// **Configuração do trust proxy** (Render usa HTTPS por padrão)
 app.set('trust proxy', 1);
 
-// Configuração do armazenamento de sessões no MySQL
+// **Configuração do middleware de sessão**
 app.use(
   session({
     key: 'user_session',
     secret: 'pudimcombolodecenoura',
-    store: sessionStore,
+    store: sessionStore,  // Certifique-se de que sessionStore foi inicializado
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',  // Usa cookie seguro em produção
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
-      httpOnly: true,  // Protege contra ataques XSS
     },
   })
 );
 
 // Middleware global para variáveis nas views
 app.use((req, res, next) => {
-  const autenticado = req.session.autenticado || false;  // Evita erro se não existir
+  const autenticado = req.session.autenticado || false;
   res.locals.autenticado = autenticado;
   res.locals.usuarioNome = autenticado ? autenticado.usuarioNome : null;
-  next();
-});
-
-
-app.use((req, res, next) => {
-  console.log('Sessão atual:', req.session);
   next();
 });
 
@@ -56,28 +64,8 @@ app.set('views', path.join(__dirname, 'app/views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuração do Multer para uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
-  },
-});
-const upload = multer({ storage });
-
 // Importação e uso das rotas
 app.use('/', router);
-
-// Middleware para verificar autenticação
-function verificarAutenticacao(req, res, next) {
-  if (req.session.autenticado) {
-    return next(); // Usuário autenticado
-  }
-  res.redirect('/loginpacientes'); // Redirecionar se não autenticado
-}
 
 // Configuração do WebSocket
 const wss = new WebSocket.Server({ server });
@@ -139,8 +127,11 @@ setInterval(() => {
   });
 }, 30000);
 
+// Servir arquivos da pasta 'uploads'
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Rota de upload de arquivos
-app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
+app.post('/api/upload', multer({ storage }).single('arquivo'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Nenhum arquivo enviado' });
   }
@@ -175,9 +166,6 @@ app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
     res.status(500).json({ error: 'Erro ao salvar arquivo' });
   }
 });
-
-// Servir arquivos da pasta 'uploads'
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 server.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}\nhttp://localhost:${port}`);
