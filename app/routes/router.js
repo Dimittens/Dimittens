@@ -52,10 +52,10 @@ router.post('/cadastropacientes', async (req, res) => {
     try {
         const resultado = await userPacientesController.cadastrar(req);
         if (resultado.success) {
-            req.session.autenticado = {
-                usuarioNome: resultadoLogin.dados.NOME_USUARIO,
-                usuarioId: resultadoLogin.dados.ID_USUARIO,
-                tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
+            req.session.user = {
+                id: resultado.insertId,
+                nome: req.body.username,
+                email: req.body.useremail,
             };
             res.redirect('/');    
         } else {
