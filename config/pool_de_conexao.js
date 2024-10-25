@@ -1,18 +1,19 @@
 const mysql = require('mysql2');
 
 const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306,
+    host: 'hv-mtl2-020.clvrcld.net',  // Direct Hostname
+    port: 13728,  // Direct Port
+    user: 'ubeinqxvw6gz7f5h',
+    password: 'a6zpJpq0zMWb2YxQxw3Z',
+    database: 'b7nmairb8dsvar1ji739',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
     multipleStatements: true,
-    connectTimeout: 20000,  // 20 segundos de timeout para conectar
-    acquireTimeout: 20000,  // 20 segundos para adquirir conexão do pool
+    connectTimeout: 30000,
+    acquireTimeout: 30000,
 });
+
 
 pool.getConnection((err, conn) => {
     if (err) {
