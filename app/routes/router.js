@@ -47,15 +47,20 @@ router.get('/cadastropacientes', (req, res) => {
     });
 });
 
+
 router.post('/cadastropacientes', async (req, res) => {
     try {
         const resultado = await userPacientesController.cadastrar(req);
         if (resultado.success) {
-            res.redirect('/');
+            req.session.autenticado = {
+                usuarioNome: resultadoLogin.dados.NOME_USUARIO,
+                usuarioId: resultadoLogin.dados.ID_USUARIO,
+                tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
+            };
+            res.redirect('/');    
         } else {
-            res.render('pages/index', {
+            res.status(401).render('pages/index', {
                 pagina: 'cadastropacientes',
-                autenticado: null,
                 errorsList: resultado.errors,
                 valores: req.body,
             });
