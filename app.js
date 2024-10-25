@@ -17,14 +17,15 @@ const port = 3000;
 app.set('trust proxy', 1);
 
 // **Configuração do MySQLStore**
-let sessionStore;
-try {
-  sessionStore = new MySQLStore({}, pool);
-  console.log('MySQL Store configurado corretamente.');
-} catch (error) {
-  console.error('Erro ao inicializar MySQLStore:', error);
-  process.exit(1); // Finaliza a aplicação se houver erro
-}
+let sessionStore = new MySQLStore(
+  {
+      expiration: 1800000,  // 30 minutos
+      checkExpirationInterval: 300000,  // Verifica sessões expiradas a cada 5 minutos
+      endConnectionOnClose: true,  // Fecha conexões após o encerramento
+  },
+  pool
+);
+
 
 // **Configuração do middleware de sessão**
 app.use(
@@ -37,7 +38,7 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 horas
+      maxAge: 30 * 60 * 1000,
     },
   })
 );
@@ -47,6 +48,11 @@ app.use((req, res, next) => {
   const autenticado = req.session.autenticado || false;
   res.locals.autenticado = autenticado;
   res.locals.usuarioNome = autenticado ? autenticado.usuarioNome : null;
+  next();
+});
+
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
   next();
 });
 

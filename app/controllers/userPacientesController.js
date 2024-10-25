@@ -45,12 +45,13 @@ const userPacientesController = {
 
             console.log("Paciente cadastrado com sucesso!", dadosForm);
 
-            req.session.user = {
-                id: resultado.insertId,
-                nome: req.body.username,
-                email: req.body.useremail,
+            // Alinhar a estrutura da sessão com o login
+            req.session.autenticado = {
+                usuarioNome: req.body.username,
+                usuarioId: resultado.insertId,
+                tipo: "Comum",
             };
-            console.log("Sessão de usuário criada:", req.session.user);
+            console.log("Sessão de usuário criada:", req.session.autenticado);
 
             return { success: true };
         } catch (error) {
@@ -58,61 +59,44 @@ const userPacientesController = {
             return { success: false, errors: [{ msg: "Erro no servidor." }] };
         }
     },
-        
+
     logar: async (req) => {
         try {
-            console.log("Função de login chamada");
-
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return { success: false, errors: errors.array() };
             }
-
+    
             const dadosForm = {
                 CPF_USUARIO: req.body.userdocuments,
                 SENHA_USUARIO: req.body.userpassword,
             };
-
+    
             const findUserCPF = await paciente.findUserCPF(dadosForm);
-            console.log("Resultado da busca por CPF:", findUserCPF);
-
             if (findUserCPF.length === 1) {
-                const usuario = findUserCPF[0];
+                const usuario = findUserCPF[0];  // Objeto do usuário encontrado
+    
                 const senhaValida = await bcrypt.compare(
                     dadosForm.SENHA_USUARIO,
                     usuario.SENHA_USUARIO
                 );
-
+    
                 if (senhaValida) {
                     console.log("Paciente logado com sucesso!");
-
-                    return {
-                        success: true,
-                        dados: {
-                            NOME_USUARIO: usuario.NOME_USUARIO,
-                            ID_USUARIO: usuario.ID_USUARIO,
-                            DIFERENCIACAO_USUARIO: usuario.DIFERENCIACAO_USUARIO,
-                        },
-                    };
+    
+                    // Retorna o objeto do usuário como parte da resposta
+                    return { success: true, usuario };
                 } else {
-                    console.log("Senha incorreta.");
-                    return {
-                        success: false,
-                        errors: [{ msg: "Credenciais inválidas" }],
-                    };
+                    return { success: false, errors: [{ msg: "Credenciais inválidas." }] };
                 }
             } else {
-                console.log("Usuário não encontrado.");
-                return {
-                    success: false,
-                    errors: [{ msg: "Usuário não encontrado" }],
-                };
+                return { success: false, errors: [{ msg: "Usuário não encontrado." }] };
             }
         } catch (error) {
             console.error("Erro no login:", error);
-            return { success: false, errors: [{ msg: "Erro no servidor" }] };
+            return { success: false, errors: [{ msg: "Erro no servidor." }] };
         }
-    },
+    }
 };
 
 module.exports = userPacientesController;

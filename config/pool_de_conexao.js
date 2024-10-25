@@ -1,28 +1,27 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const pool = mysql.createPool({
-    host: 'hv-mtl2-020.clvrcld.net',  // Direct Hostname
-    port: 13728,  // Direct Port
-    user: 'ubeinqxvw6gz7f5h',
-    password: 'a6zpJpq0zMWb2YxQxw3Z',
-    database: 'b7nmairb8dsvar1ji739',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+    connectionLimit: 3,  // Reduzido para 3
+    queueLimit: 0,  // Limita a fila para evitar sobrecarga
     multipleStatements: true,
     connectTimeout: 30000,
-    acquireTimeout: 30000,
 });
 
+// Teste de Conexão
+pool.getConnection()
+    .then(conn => {
+        console.log('Conectado ao Banco de Dados');
+        conn.release();  // Libera a conexão imediatamente
+    })
+    .catch(err => {
+        console.error('Erro ao conectar ao Banco de Dados:', err.message);
+    });
 
-pool.getConnection((err, conn) => {
-    if (err) {
-        console.error("Erro na conexão com o banco de dados:", err.code);
-        console.error("Mensagem SQL:", err.sqlMessage || 'Não disponível');
-    } else {
-        console.log("Conectado ao Banco de dados");
-        conn.release(); // Libera a conexão
-    }
-});
-
-module.exports = pool.promise();
+module.exports = pool;

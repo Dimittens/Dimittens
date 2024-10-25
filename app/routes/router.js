@@ -14,14 +14,23 @@ function verificarAutenticacao(req, res, next) {
     res.redirect('/loginpacientes');
 }
 
-// Rota principal: Home ou Página Logada
+
 router.get('/', (req, res) => {
-    const autenticado = req.session.autenticado || false;
+    console.log('Sessão atual:', req.session);  // Log detalhado da sessão
+
+    const autenticado = req.session.autenticado || null;
+    const usuarioNome = autenticado ? autenticado.usuarioNome : 'Visitante';
+
     res.render('pages/index', {
         pagina: autenticado ? 'homelogged' : 'home',
-        autenticado: req.session.autenticado,
+        autenticado: autenticado,
+        usuarioNome: usuarioNome,
     });
 });
+
+
+
+
 
 // Página Logada
 router.get('/homelogged', verificarAutenticacao, (req, res) => {
@@ -51,13 +60,23 @@ router.get('/cadastropacientes', (req, res) => {
 router.post('/cadastropacientes', async (req, res) => {
     try {
         const resultado = await userPacientesController.cadastrar(req);
+
         if (resultado.success) {
-            req.session.user = {
-                id: resultado.insertId,
-                nome: req.body.username,
-                email: req.body.useremail,
+            // Adiciona as informações na sessão
+            req.session.autenticado = {
+                usuarioNome: req.body.username,  // Nome do usuário
+                usuarioId: resultado.id,         // ID do usuário
+                tipo: 'Comum',                   // Tipo de usuário
             };
-            res.redirect('/');    
+
+            // Salva a sessão antes do redirecionamento
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Erro ao salvar sessão:', err);
+                    return res.status(500).send('Erro ao salvar sessão.');
+                }
+                res.redirect('/');  // Redireciona para a página inicial
+            });
         } else {
             res.status(401).render('pages/index', {
                 pagina: 'cadastropacientes',
@@ -91,22 +110,36 @@ router.get('/cadastropsicologos', (req, res) => {
     });
 });
 
-router.post('/cadastropsicologos', async (req, res) => {
+router.post('/cadastropacientes', async (req, res) => {
     try {
-        const resultado = await userPsicologosController.cadastrar(req);
+        const resultado = await userPacientesController.cadastrar(req);
+
         if (resultado.success) {
-            res.redirect('/');
+            req.session.autenticado = {
+                usuarioNome: req.body.username,  // Nome do usuário
+                usuarioId: resultado.id,         // ID do usuário
+                tipo: 'Comum',
+            };
+
+            // Salva a sessão antes de redirecionar para garantir que será persistida
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Erro ao salvar sessão:', err);
+                    return res.status(500).send('Erro ao salvar sessão.');
+                }
+                res.redirect('/');  // Redireciona para a página principal
+            });
         } else {
-            res.render('pages/index', {
-                pagina: 'cadastropsicologos',
+            res.status(401).render('pages/index', {
+                pagina: 'cadastropacientes',
                 errorsList: resultado.errors,
                 valores: req.body,
             });
         }
     } catch (error) {
-        console.error('Erro no cadastro de psicólogos:', error);
+        console.error('Erro no cadastro:', error);
         res.status(500).render('pages/index', {
-            pagina: 'cadastropsicologos',
+            pagina: 'cadastropacientes',
             errorsList: [{ msg: 'Erro no servidor.' }],
             valores: req.body,
         });
@@ -121,13 +154,24 @@ router.get('/loginpacientes', (req, res) => {
 router.post('/loginpacientes', async (req, res) => {
     try {
         const resultadoLogin = await userPacientesController.logar(req);
+
         if (resultadoLogin.success) {
+            const usuario = resultadoLogin.usuario;
+
             req.session.autenticado = {
-                usuarioNome: resultadoLogin.dados.NOME_USUARIO,
-                usuarioId: resultadoLogin.dados.ID_USUARIO,
-                tipo: resultadoLogin.dados.DIFERENCIACAO_USUARIO,
+                usuarioNome: usuario.NOME_USUARIO,
+                usuarioId: usuario.ID_USUARIO,
+                tipo: usuario.DIFERENCIACAO_USUARIO,
             };
-            res.redirect('/');
+
+            // Salva a sessão antes de redirecionar
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Erro ao salvar sessão:', err);
+                    return res.status(500).send('Erro ao salvar sessão.');
+                }
+                res.redirect('/');  // Redireciona corretamente
+            });
         } else {
             res.status(401).render('pages/index', {
                 pagina: 'loginpacientes',
@@ -142,6 +186,7 @@ router.post('/loginpacientes', async (req, res) => {
         });
     }
 });
+
 
 // Login de Psicólogos
 router.get('/loginpsicologos', (req, res) => {

@@ -10,9 +10,12 @@
     <article class="primeiro-quadrante">
         <section class="text">
             <h1 class="titulo">Dimittens<br>Cuidando da sua Mente</h1>
-            <% if (usuarioNome) { %>
-                <h2 class="msg-boasvindas">Bem-vindo, <%= usuarioNome %>!</h2>
-            <% } %>
+            <% console.log('Variável autenticado no EJS:', autenticado); %>
+            <% if (autenticado && autenticado.usuarioNome) { %>
+                <h2 class="msg-boasvindas">Bem-vindo, <%= autenticado.usuarioNome %>!</h2>
+            <% } else { %>
+                <h2 class="msg-boasvindas">Bem-vindo, Visitante!</h2>
+            <% } %>                     
             <p class="p-slogan">Nosso bem-estar é o que fazemos dele <br>
             coloque a sua saúde mental em primeiro lugar!<br>
             Cuide-se agora, sem sair de casa.</p>
