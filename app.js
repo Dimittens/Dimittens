@@ -13,8 +13,9 @@ const app = express();
 const server = http.createServer(app);
 const port = 3000;
 
+app.set('trust proxy', 1);
+
 // Configuração do armazenamento de sessões no MySQL
-const sessionStore = new MySQLStore({}, pool);
 app.use(
   session({
     key: 'user_session',
@@ -22,13 +23,25 @@ app.use(
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // Sessão de 24 horas
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',  // Usa cookie seguro em produção
+      maxAge: 24 * 60 * 60 * 1000, // 24 horas
+      httpOnly: true,  // Protege contra ataques XSS
+    },
   })
 );
 
 // Middleware global para variáveis nas views
 app.use((req, res, next) => {
-  res.locals.usuarioNome = req.session.autenticado ? req.session.autenticado.usuarioNome : null;
+  const autenticado = req.session.autenticado || false;  // Evita erro se não existir
+  res.locals.autenticado = autenticado;
+  res.locals.usuarioNome = autenticado ? autenticado.usuarioNome : null;
+  next();
+});
+
+
+app.use((req, res, next) => {
+  console.log('Sessão atual:', req.session);
   next();
 });
 
