@@ -1,170 +1,204 @@
-var form = document.getElementById('cadastroForm') || document.getElementById('loginForm');
+var form = document.getElementById('cadastroForm');
 
+// Seleciona os campos de CPF e CRP corretamente
 var cpfInputs = [
     document.getElementById('userdocuments'),
     document.getElementById('userresponsaveldocuments')
-];
+].filter(Boolean);  // Remove valores nulos
 
+var crpInput = document.getElementById('usercrp');  // Campo de CRP, se existir
+
+// Aplica formatação para CPF
 cpfInputs.forEach(function (input) {
-    if (input) {
-        input.addEventListener('input', function (e) {
-            let cpf = e.target.value.replace(/\D/g, '');
-
-            if (cpf.length > 11) {
-                cpf = cpf.slice(0, 11);
-            }
-
-            if (cpf.length <= 3) {
-                cpf = cpf.replace(/(\d{0,3})/, '$1');
-            } else if (cpf.length <= 6) {
-                cpf = cpf.replace(/(\d{3})(\d{0,3})/, '$1.$2');
-            } else if (cpf.length <= 9) {
-                cpf = cpf.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
-            } else {
-                cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
-            }
-
-            e.target.value = cpf;
-        });
-    }
+    input.addEventListener('input', function (e) {
+        let cpf = e.target.value.replace(/\D/g, '');
+        if (cpf.length > 11) cpf = cpf.slice(0, 11);
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+        e.target.value = cpf;
+    });
 });
 
-    var crpInput = document.getElementById('usercrp');
-    if (crpInput) {
-        crpInput.addEventListener('input', function (e) {
-            let crp = e.target.value.replace(/\D/g, '');
+// Aplica formatação para CRP
+if (crpInput) {
+    crpInput.addEventListener('input', function (e) {
+        let crp = e.target.value.replace(/\D/g, '');
+        if (crp.length > 8) crp = crp.slice(0, 8);
+        crp = crp.replace(/(\d{2})(\d{0,6})/, '$1/$2');
+        e.target.value = crp;
+    });
+}
 
-            if (crp.length > 8) {
-                crp = crp.slice(0, 8);
-            }
-
-            if (crp.length <= 2) {
-                crp = crp.replace(/(\d{0,2})/, '$1');
-            } else {
-                crp = crp.replace(/(\d{2})(\d{0,6})/, '$1/$2');
-            }
-
-            e.target.value = crp;
-        });
-    }
-
-
-form.addEventListener('submit', function(event) {
-   
-    var inputs = [
-        { element: document.getElementById('username'), minLength: 5, errorMessageEmpty: 'O nome é obrigatório.', errorMessageMinLength: 'O nome deve ter pelo menos 5 caracteres.' },
-        { element: document.getElementById('userdatemenor'), minLength: 1, errorMessageEmpty: 'A data de nascimento é obrigatória.', errorMessageInvalidAge: 'Você deve ter entre 6 e 18 anos para criar sua conta.' },
-        { element: document.getElementById('userdocuments'), minLength: 1, errorMessageEmpty: 'O RG ou CPF é obrigatório.' },
-        { element: document.getElementById('useremail'), minLength: 1, errorMessageEmpty: 'O email é obrigatório.', errorMessageInvalidEmail: 'Por favor, insira um email válido.' },
-        { element: document.getElementById('userpassword'), minLength: 8, errorMessageEmpty: 'A senha é obrigatória.', errorMessageMinLength: 'A senha deve ter pelo menos 8 caracteres.', errorMessageWeak: 'A senha deve ter pelo menos 8 caracteres, incluindo pelo menos um número, uma letra maiúscula e um caractere especial (!@#$%^&*).' },
-        { element: document.getElementById('usercpassword'), minLength: 8, errorMessageEmpty: 'A confirmação de senha é obrigatória.', errorMessageMinLength: 'A confirmação de senha deve ter pelo menos 8 caracteres.', errorMessageMatch: 'As senhas não coincidem.' }
-    ];
-    
+// Validação na submissão do formulário
+form.addEventListener('submit', function (event) {
     var hasError = false;
-    var today = new Date();
-    var userBirthDate = new Date(document.getElementById('userdatemenor').value);
+    var routeToCadastromenor = false;
 
-    var age = today.getFullYear() - userBirthDate.getFullYear();
-    var monthDiff = today.getMonth() - userBirthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < userBirthDate.getDate())) {
-        age--;
-    }
+    var inputs = [
+        { 
+            element: document.getElementById('username'), 
+            minLength: 5, 
+            errorMessageEmpty: 'O nome é obrigatório.', 
+            errorMessageMinLength: 'O nome deve ter pelo menos 5 caracteres.' 
+        },
+        { 
+            element: document.getElementById('userdate'), 
+            optional: true, 
+            errorMessageEmpty: 'A data de nascimento é obrigatória.', 
+            errorMessageInvalidAge: 'A idade deve ser maior ou igual a 18 anos.' 
+        },
+        { 
+            element: document.getElementById('userdatemenor'), 
+            optional: true, 
+            errorMessageEmpty: 'A data de nascimento é obrigatória.', 
+            errorMessageInvalidAge: 'A idade deve ser entre 6 e 17 anos.' 
+        },
+        { 
+            element: document.getElementById('userdocuments'), 
+            errorMessageEmpty: 'O CPF é obrigatório.', 
+            errorMessageInvalidCpf: 'CPF inválido.' 
+        },
+        { 
+            element: document.getElementById('usercrp'), 
+            optional: true, 
+            errorMessageEmpty: 'O CRP é obrigatório.', 
+            errorMessageInvalidCrp: 'CRP inválido.' 
+        },
+        { 
+            element: document.getElementById('useremail'), 
+            errorMessageEmpty: 'O email é obrigatório.', 
+            errorMessageInvalidEmail: 'Por favor, insira um email válido.' 
+        },
+        { 
+            element: document.getElementById('userpassword'), 
+            minLength: 8, 
+            errorMessageEmpty: 'A senha é obrigatória.', 
+            errorMessageMinLength: 'A senha deve ter pelo menos 8 caracteres.', 
+            errorMessageWeak: 'A senha deve conter pelo menos um número, uma letra maiúscula e um caractere especial.' 
+        },
+        { 
+            element: document.getElementById('usercpassword'), 
+            errorMessageEmpty: 'A confirmação de senha é obrigatória.', 
+            errorMessageMatch: 'As senhas não coincidem.' 
+        }
+    ];
 
     inputs.forEach(inputData => {
         var input = inputData.element;
-        var minLength = inputData.minLength;
-        var errorMessageEmpty = inputData.errorMessageEmpty;
-        var errorMessageMinLength = inputData.errorMessageMinLength;
-        var errorMessageWeak = inputData.errorMessageWeak;
-        var errorMessageMatch = inputData.errorMessageMatch;
-        var errorMessageInvalidEmail = inputData.errorMessageInvalidEmail;
+        if (!input) return;
 
-        var trimmedValue = input.value.trim();
+        var value = input.value.trim();
+        var warningSpan = input.nextElementSibling;
 
-        if (input.id === 'userdatemenor') {
-            if (trimmedValue === "") {
-                hasError = true;
-                input.style.border = '1px solid red';
-                var warningSpan = input.nextElementSibling;
-                warningSpan.textContent = errorMessageEmpty;
-            } else {
-                if (age < 6 || age > 18) {
-                    hasError = true;
-                    input.style.border = '1px solid red';
-                    var warningSpan = input.nextElementSibling;
-                    warningSpan.textContent = inputData.errorMessageInvalidAge;
-                } else {
-                    input.style.border = '';
-                    var warningSpan = input.nextElementSibling;
-                    warningSpan.textContent = '';
-                }
-            }
-        } else {
-            if (trimmedValue === "") {
-                hasError = true;
-                input.style.border = '1px solid red';
-                var warningSpan = input.nextElementSibling;
-                warningSpan.textContent = errorMessageEmpty;
-            } else {
-                input.style.border = '';
+        input.style.border = '';
+        warningSpan.textContent = '';
 
-                if (minLength && trimmedValue.length < minLength) {
-                    hasError = true;
-                    input.style.border = '1px solid red';
-                    var warningSpan = input.nextElementSibling;
-                    warningSpan.textContent = errorMessageMinLength;
-                } else {
-                    if (input.id === 'useremail' && !isValidEmail(trimmedValue)) {
-                        hasError = true;
-                        input.style.border = '1px solid red';
-                        var warningSpan = input.nextElementSibling;
-                        warningSpan.textContent = errorMessageInvalidEmail;
-                    } else if (input.id === 'userpassword' && !isStrongPassword(trimmedValue)) {
-                        hasError = true;
-                        input.style.border = '1px solid red';
-                        var warningSpan = input.nextElementSibling;
-                        warningSpan.textContent = errorMessageWeak;
-                    } else if (input.id === 'usercpassword' && trimmedValue !== document.getElementById('userpassword').value.trim()) {
-                        hasError = true;
-                        input.style.border = '1px solid red';
-                        var warningSpan = input.nextElementSibling;
-                        warningSpan.textContent = errorMessageMatch;
-                    } else {
-                        var warningSpan = input.nextElementSibling;
-                        warningSpan.textContent = '';
-                    }
-                }
-            }
+        if (value === '') {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = inputData.errorMessageEmpty;
+        } else if (inputData.minLength && value.length < inputData.minLength) {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = inputData.errorMessageMinLength;
+        } else if (input.id === 'userdate' && !isValidAdult(value)) {
+            routeToCadastromenor = true;
+        } else if (input.id === 'userdatemenor' && !isValidMinor(value)) {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = inputData.errorMessageInvalidAge;
+        } else if (input.id === 'useremail' && !isValidEmail(value)) {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = inputData.errorMessageInvalidEmail;
+        } else if (input.id === 'userpassword' && !isStrongPassword(value)) {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = inputData.errorMessageWeak;
+        } else if (input.id === 'usercpassword' && value !== document.getElementById('userpassword').value.trim()) {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = inputData.errorMessageMatch;
+        }
+    });
+
+    cpfInputs.forEach(function (input) {
+        let cpfValue = input.value.trim();
+        let warningSpan = input.nextElementSibling;
+
+        input.style.border = '';
+        warningSpan.textContent = '';
+
+        if (!validarCpf(cpfValue)) {
+            hasError = true;
+            input.style.border = '1px solid red';
+            warningSpan.textContent = 'CPF inválido.';
         }
     });
 
     if (hasError) {
         event.preventDefault();
+    } else if (routeToCadastromenor) {
+        event.preventDefault();
+        window.location.href = '/cadastromenor';
     }
 });
 
-document.getElementById('usercpassword').addEventListener('paste', function(event) {
-    event.preventDefault();
-});
+// Função para verificar se o usuário é maior de 18 anos
+function isValidAdult(birthDate) {
+    var age = calculateAge(birthDate);
+    return age >= 18;
+}
 
+// Função para verificar se o usuário é menor entre 6 e 17 anos
+function isValidMinor(birthDate) {
+    var age = calculateAge(birthDate);
+    return age >= 6 && age <= 17;
+}
+
+// Função para calcular idade
+function calculateAge(birthDate) {
+    var today = new Date();
+    var birth = new Date(birthDate);
+    var age = today.getFullYear() - birth.getFullYear();
+    var monthDiff = today.getMonth() - birth.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
+// Função para validar email
 function isValidEmail(email) {
-    var emailRegex = /^[^\s@]+@[^\s@]+\.(com|hotmail)+$/;
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
+// Função para validar senha forte
 function isStrongPassword(password) {
     var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
     return passwordRegex.test(password);
 }
 
-// Validação de CPF
-if ((input.element.id === 'userdocuments' || input.element.id === 'userresponsaveldocuments') && !validarCpf(value)) {
-    valid = false;
-    warning.textContent = input.errorMessageInvalidCpf;
-}
+// Função para validar CPF
+function validarCpf(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
 
-// Validação de CRP
-if (input.element.id === 'usecrp' && !validarCrp(value)) {
-    valid = false;
-    warning.textContent = input.errorMessageInvalidCNPJ;
+    var soma = 0, resto;
+    for (let i = 1; i <= 9; i++) {
+        soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+    soma = 0;
+    for (let i = 1; i <= 10; i++) {
+        soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    return resto === parseInt(cpf.substring(10, 11));
 }
