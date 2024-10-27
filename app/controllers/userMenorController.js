@@ -1,6 +1,6 @@
-const menorModel = require("../models/menorModel");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const menorModel = require("../models/menorModel");
 var salt = bcrypt.genSaltSync(10);
 
 // Função para formatar a data
@@ -26,23 +26,23 @@ const userMenorController = {
         const dadosForm = {
             NOME_USUARIO: req.body.username,
             SENHA_USUARIO: bcrypt.hashSync(req.body.userpassword, salt),
-            DT_NASC_USUARIO: formatarData(req.body.userdatemenor),  // Formata a data
-            CPF_USUARIO: req.body.userdocuments,
             EMAIL_USUARIO: req.body.useremail,
+            CPF_USUARIO: req.body.userdocuments,
+            DT_NASC_USUARIO: formatarData(req.body.userdatemenor),
             CPF_RESPONSAVEL: req.body.userresponsaveldocuments,
             NOME_RESPONSAVEL: req.body.usernameresponsavel,
             DT_CRIACAO_CONTA_USUARIO: new Date(),
-            DIFERENCIACAO_USUARIO: 'Menor de Idade'
+            DIFERENCIACAO_USUARIO: "Menor de Idade"
         };
 
-        console.log('Dados recebidos:', dadosForm);
+        console.log("Dados recebidos:", dadosForm);
 
         try {
             const existingEmails = await menorModel.findAllEmails();
-            const emailDuplicado = existingEmails.find(email => email === req.body.useremail);
+            const emailDuplicado = existingEmails.find(email => email === req.body.email);
 
             if (emailDuplicado) {
-                console.log('Email duplicado encontrado:', emailDuplicado);
+                console.log("Email duplicado encontrado:", emailDuplicado);
                 return res.render("pages/index", {
                     pagina: "cadastromenor",
                     autenticado: null,
@@ -51,12 +51,22 @@ const userMenorController = {
                 });
             }
 
-            await menorModel.create(dadosForm);
-            console.log("Usuário Menor de Idade cadastrado com sucesso!!");
-            req.session.autenticado = true;
+            const resultado = await menorModel.create(dadosForm);
+            if (!resultado || !resultado.insertId) {
+                throw new Error("Erro ao inserir o novo usuário.");
+            }
+
+            console.log("Usuário menor cadastrado com sucesso!");
+
+            // Guarda todas as informações relevantes na sessão
+            req.session.autenticado = {
+                usuarioNome: req.body.username,
+                usuarioId: resultado.insertId,
+                tipo: "Menor de Idade"
+            };
+            console.log("Sessão de usuário criada:", req.session.autenticado);
 
             return { success: true };
-
         } catch (error) {
             console.log("Erro ao cadastrar menor:", error);
             return res.render("pages/index", {
@@ -68,59 +78,67 @@ const userMenorController = {
         }
     },
 
-    logar: async (req, res) => {
+    logar: async (req) => {
         try {
-            console.log("Função de login chamada");
-            const errors = validationResult(req);
-            console.log("Dados recebidos:", req.body);
-
+            const errors = validationResult(req); // Valida os campos de entrada
+            let errorsList = {}; // Armazena todos os erros
+    
+            // Acumula erros de validação inicial (se houver)
             if (!errors.isEmpty()) {
-                return { success: false, errorsList: errors.array() };
+                errors.array().forEach((error) => {
+                    errorsList[error.param] = error.msg;
+                });
             }
-
+    
             const dadosForm = {
-                DT_NASC_USUARIO: formatarData(req.body.userdatemenor),  // Formata a data no login também
                 CPF_USUARIO: req.body.userdocuments,
-                SENHA_USUARIO: req.body.userpassword
+                SENHA_USUARIO: req.body.userpassword,
+                DT_NASC_USUARIO: formatarData(req.body.userdatemenor),
             };
-
-            console.log("Dados do formulário:", dadosForm);
-
-            let findUserCPF = await menorModel.findUserCPF(dadosForm);
-            if (findUserCPF.length === 1 && bcrypt.compareSync(dadosForm.SENHA_USUARIO, findUserCPF[0].SENHA_USUARIO)) {
-                const dataNascFormatadaBanco = formatarData(findUserCPF[0].DT_NASC_USUARIO);
-                const dataNascFormatadaForm = formatarData(dadosForm.DT_NASC_USUARIO);
-
-                if (dataNascFormatadaBanco === dataNascFormatadaForm) {
-                    console.log("Logou como Menor de Idade!");
-                    req.session.autenticado = true;
-
-                    return {
-                        success: true,
-                        dados: findUserCPF[0]
-                    };
-                } else {
-                    console.log("Data de nascimento não coincide.");
-                    return {
-                        success: false,
-                        errorsList: [{ msg: "Data de nascimento não coincide." }]
-                    };
-                }
+    
+            console.log("Dados recebidos para login:", dadosForm);
+    
+            const findUser = await menorModel.findUserCPF({ CPF_USUARIO: dadosForm.CPF_USUARIO });
+    
+            // Verifica se o CPF foi encontrado
+            if (findUser.length === 0) {
+                errorsList.userdocuments = 'CPF não encontrado.';
             } else {
-                console.log("Credenciais inválidas");
-                return {
-                    success: false,
-                    errors: [{ msg: "Credenciais inválidas" }]
-                };
+                const usuario = findUser[0];
+    
+                // Verifica se a senha é válida
+                const senhaValida = await bcrypt.compare(
+                    dadosForm.SENHA_USUARIO,
+                    usuario.SENHA_USUARIO
+                );
+    
+                if (!senhaValida) {
+                    errorsList.userpassword = 'Senha incorreta.';
+                }
+    
+                // Verifica se a data de nascimento coincide
+                const dataNascBanco = formatarData(usuario.DT_NASC_USUARIO);
+                const dataNascForm = dadosForm.DT_NASC_USUARIO;
+    
+                if (dataNascBanco !== dataNascForm) {
+                    errorsList.userdatemenor = 'Data de nascimento incorreta.';
+                }
             }
-        } catch (e) {
-            console.log("Erro no login menor:", e);
-            return {
-                success: false,
-                errors: [{ msg: "Erro no servidor" }]
-            };
+    
+            // Se houver erros, retorna todos os erros encontrados
+            if (Object.keys(errorsList).length > 0) {
+                console.log('Erros encontrados:', errorsList);
+                return { success: false, errors: errorsList };
+            }
+    
+            console.log("Login bem-sucedido para menor de idade.");
+            return { success: true, usuario: findUser[0] };
+    
+        } catch (error) {
+            console.error("Erro no login menor:", error);
+            return { success: false, errors: { geral: 'Erro no servidor.' } };
         }
     }
-}
+};
 
 module.exports = userMenorController;

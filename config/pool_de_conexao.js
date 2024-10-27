@@ -24,4 +24,6 @@ pool.getConnection()
         console.error('Erro ao conectar ao Banco de Dados:', err.message);
     });
 
+    
+
 module.exports = pool;

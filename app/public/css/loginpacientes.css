@@ -8,6 +8,31 @@ body {
     overflow-y: scroll;
 }
 
+.inputsbox {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Estilo para inputs com erro */
+.input-error {
+    border-color: red;
+    background-color: #ffe6e6;
+}
+
+/* Estilo para mensagens de erro */
+.error-msg {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+    font-weight: bold;
+}
+
+
 .overlay {
     position: fixed;
     top: 0;
@@ -22,8 +47,9 @@ body {
   }
 
 .container {
-    width: 484px;
-    height: 760px;
+    width: fit-content;
+    height: fit-content;
+    padding: 30px 80px;
     border-radius: 35px;
     border: 1px solid #f7f7f7;
     background-color: #f7f7f7;

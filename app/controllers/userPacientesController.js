@@ -62,9 +62,14 @@ const userPacientesController = {
 
     logar: async (req) => {
         try {
-            const errors = validationResult(req);
+            const errors = validationResult(req); // Validação dos inputs
+            let errorsList = {};
+    
+            // Acumular erros de validação inicial
             if (!errors.isEmpty()) {
-                return { success: false, errors: errors.array() };
+                errors.array().forEach((error) => {
+                    errorsList[error.param] = error.msg;
+                });
             }
     
             const dadosForm = {
@@ -73,28 +78,37 @@ const userPacientesController = {
             };
     
             const findUserCPF = await paciente.findUserCPF(dadosForm);
-            if (findUserCPF.length === 1) {
-                const usuario = findUserCPF[0];  // Objeto do usuário encontrado
     
+            // Verifica se o CPF foi encontrado
+            if (findUserCPF.length !== 1) {
+                errorsList.userdocuments = 'CPF não encontrado.';
+            } else {
+                const usuario = findUserCPF[0];
+    
+                // Verifica se a senha é válida
                 const senhaValida = await bcrypt.compare(
                     dadosForm.SENHA_USUARIO,
                     usuario.SENHA_USUARIO
                 );
     
-                if (senhaValida) {
-                    console.log("Paciente logado com sucesso!");
-    
-                    // Retorna o objeto do usuário como parte da resposta
-                    return { success: true, usuario };
-                } else {
-                    return { success: false, errors: [{ msg: "Credenciais inválidas." }] };
+                if (!senhaValida) {
+                    errorsList.userpassword = 'Senha incorreta.';
                 }
-            } else {
-                return { success: false, errors: [{ msg: "Usuário não encontrado." }] };
             }
+    
+            // Se houver erros, retorna todos de uma vez
+            if (Object.keys(errorsList).length > 0) {
+                console.log('Erros encontrados:', errorsList); // Log dos erros
+                return { success: false, errors: errorsList };
+            }
+    
+            // Retorna sucesso e os dados do usuário
+            console.log("Paciente logado com sucesso!");
+            return { success: true, usuario: findUserCPF[0] };
+    
         } catch (error) {
             console.error("Erro no login:", error);
-            return { success: false, errors: [{ msg: "Erro no servidor." }] };
+            return { success: false, errors: { geral: 'Erro no servidor.' } };
         }
     }
 };
