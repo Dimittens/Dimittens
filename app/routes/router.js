@@ -18,17 +18,21 @@ function verificarAutenticacao(req, res, next) {
 
 
 router.get('/', (req, res) => {
-    console.log('Sessão atual:', req.session);  // Log detalhado da sessão
+    console.log('Sessão atual:', req.session); // Log de debug da sessão
 
     const autenticado = req.session.autenticado || null;
     const usuarioNome = autenticado ? autenticado.usuarioNome : 'Visitante';
 
+    // Define que a página é 'homelogged' somente para a rota '/'
+    const pagina = autenticado ? 'homelogged' : 'home';
+
     res.render('pages/index', {
-        pagina: autenticado ? 'homelogged' : 'home',
+        pagina: pagina,
         autenticado: autenticado,
         usuarioNome: usuarioNome,
     });
 });
+
 
 // Rotas Estáticas
 router.get('/headerunlogged', (req, res) => {

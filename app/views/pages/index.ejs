@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <% if (autenticado) { %>
+    <% if (pagina === 'homelogged' && autenticado) { %>
         <%- include("../partial/homelogged") %>
     <% } else { %>
         <%- include("../partial/" + pagina) %>
