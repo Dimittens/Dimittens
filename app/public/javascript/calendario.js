@@ -54,6 +54,7 @@ async function fetchEvents() {
   }
 }
 
+
 function renderCalendar() {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -211,7 +212,6 @@ addEventSubmit.addEventListener("click", async (e) => {
   addEventTo.value = "";
   isEditing = false;
 });
-
 
 async function saveEvent(event, method, url) {
   try {

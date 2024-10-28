@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../../config/pool_de_conexao');
-const { salvarEvento, listarEventos } = require("../controllers/calendarioController");
+const { salvarEvento, listarEventosUsuario } = require("../controllers/calendarioController");
 const userPacientesController = require('../controllers/userPacientesController');
 const userPsicologosController = require('../controllers/userPsicologosController');
 const userMenorController = require('../controllers/userMenorController');
@@ -32,6 +32,7 @@ router.get('/', (req, res) => {
         usuarioNome: usuarioNome,
     });
 });
+
 
 
 // Rotas Estáticas
@@ -476,7 +477,7 @@ router.get('/chat', verificarAutenticacao, async (req, res) => {
     }
 });
 
-// ROTA PARA CALENDÁRIO E CHAT
+// Renderiza a página de calendário
 router.get("/calendario", checkAuthenticatedUser, (req, res) => {
     res.render("pages/index", {
       pagina: "calendario",
@@ -484,35 +485,49 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
     });
   });
   
-  
-  // ROTA PARA SALVAR EVENTOS
+  // Rota para salvar um evento (POST)
   router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
     try {
-      const resultado = await salvarEvento(req);
+      const resultado = await salvarEvento(req, false);
       if (resultado.success) {
         return res.status(201).json(resultado);
       } else {
         return res.status(400).json(resultado);
       }
     } catch (error) {
-      console.error("Erro na rota de calendário:", error);
+      console.error("Erro na rota de salvar evento:", error);
       if (!res.headersSent) {
         return res.status(500).json({ success: false, message: "Erro interno do servidor." });
       }
     }
   });
   
-  // ROTA PARA LISTAR EVENTOS
-  router.get("/eventos", checkAuthenticatedUser, async (req, res) => {
+  // Rota para editar um evento (PUT)
+  router.put("/calendario/editar/:id", checkAuthenticatedUser, async (req, res) => {
     try {
-      const eventos = await listarEventos(req);
+      const resultado = await salvarEvento(req, true);
+      if (resultado.success) {
+        return res.status(200).json(resultado);
+      } else {
+        return res.status(400).json(resultado);
+      }
+    } catch (error) {
+      console.error("Erro ao editar evento:", error);
+      res.status(500).json({ success: false, message: "Erro interno do servidor." });
+    }
+  });
+  
+  // Rota para listar todos os eventos do usuário (GET)
+  router.get("/calendario/listar-sessao", checkAuthenticatedUser, async (req, res) => {
+    try {
+      const usuarioId = req.session.autenticado.usuarioId;
+      const eventos = await listarEventosUsuario(usuarioId);
       res.status(200).json(eventos);
     } catch (error) {
       console.error("Erro ao listar eventos:", error);
       res.status(500).json({ message: "Erro ao listar eventos." });
     }
-  });
-  
+  });  
 
 // Logout
 router.get('/logout', (req, res) => {

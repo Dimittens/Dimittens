@@ -21,7 +21,7 @@
 }
 
 .box-icone-editar {
-  width: 100%;
+  width: fit-content;
   display: flex;
   justify-content: flex-end;
   align-content: center;
@@ -268,11 +268,9 @@ body {
   flex-direction: column;
   border-radius: 20px;
   gap: 5px;
-  padding: 0 20px;
+  padding: 10px 20px;
   padding-left: 50px;
-  color: #fff;
-  background: linear-gradient(90deg, #fff, transparent);
-  opacity: 0.7;
+  color: #f8f6f6;
   cursor: pointer;
 }
 /* even event */
@@ -283,16 +281,30 @@ body {
   background: linear-gradient(90deg, var(--primary-clr), transparent);
   color: white;
 }
+
 .events .event .title {
   display: flex;
   align-items: center;
   pointer-events: none;
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  width: 100%;
+  position: relative;
 }
+
 .events .event .title .event-title {
   font-size: 1rem;
   font-weight: 400;
   margin-left: 20px;
   color: #422040;
+  display: block;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+  width: max-content;
+  margin-right: 5px; /* Espaço entre o texto e o ícone */
+  flex: 1; /* Faz o texto ocupar o máximo de espaço possível */
 }
 
 .events .event .title .event-title:hover {
