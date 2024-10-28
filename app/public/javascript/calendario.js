@@ -98,7 +98,10 @@ function renderCalendar() {
 }
 
 function addListeners() {
+  console.log("addListeners chamado"); // Verificar se foi chamado
+
   const days = document.querySelectorAll(".day");
+
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
       activeDay = Number(e.target.innerHTML);
@@ -109,6 +112,14 @@ function addListeners() {
     });
   });
 
+  eventsContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("fa-pen")) {
+      console.log("Ícone clicado:", e.target.dataset.eventId); // Verificar no console
+      const eventId = e.target.dataset.eventId;
+      editEvent(eventId);
+    }
+  });
+}
   addEventBtn.addEventListener("click", () => {
     isEditing = false;
     addEventWrapper.classList.add("active");
@@ -136,7 +147,7 @@ function addListeners() {
       }
     });
   });
-}
+
 
 function getActiveDay(day) {
   const selectedDay = new Date(year, month, day);
@@ -150,38 +161,53 @@ function updateEvents(day) {
     event.day === day && event.month === month + 1 && event.year === year
   );
 
-  let eventsHTML = "";
-
-  events.forEach((event) => {
-    eventsHTML += `
-      <div class="event">
-        <div class="title">
-          <h3>${event.nota}</h3>
-          <div class="box-icone-editar">
-            <i id="icon-editar" class="fa-solid fa-pen" onclick="editEvent(${event.id})"></i>
-          </div>
+  let eventsHTML = events.map(event => `
+    <div class="event">
+      <div class="title">
+        <span class="event-title">${event.nota}</span>
+        <div class="box-icone-editar">
+          <i class="fa-solid fa-pen" data-event-id="${event.id}"></i>
         </div>
-        <div class="time">${event.horarioInicio} - ${event.horarioFim}</div>
-      </div>`;
-  });
+      </div>
+      <div class="time">${event.horarioInicio} - ${event.horarioFim}</div>
+    </div>
+  `).join("");
 
   eventsContainer.innerHTML = eventsHTML || `<div class="no-event">Sem Eventos</div>`;
+
+  // Adiciona listeners para os ícones de edição após renderizar o HTML
+  const editIcons = eventsContainer.querySelectorAll(".fa-pen");
+  editIcons.forEach(icon => {
+    icon.addEventListener("click", (e) => {
+      const eventId = e.target.dataset.eventId;
+      console.log("Ícone clicado:", eventId); // Verifique se aparece no console
+      editEvent(eventId); // Chama a função de edição
+    });
+  });
 }
 
 
 function editEvent(eventId) {
-  const event = eventsArr.find(e => e.id === eventId);
+  const event = eventsArr.find(e => e.id == eventId);
   if (event) {
     isEditing = true;
     eventToEdit = event;
 
+    // Preenche o formulário de edição com os dados do evento
     addEventNote.value = event.nota;
     addEventFrom.value = event.horarioInicio;
     addEventTo.value = event.horarioFim;
 
+    // Exibe o formulário de edição
     addEventWrapper.classList.add("active");
+  } else {
+    console.error("Evento não encontrado:", eventId);
   }
+  console.log("Evento encontrado para edição:", event);
 }
+
+
+
 
 
 addEventSubmit.addEventListener("click", async (e) => {
