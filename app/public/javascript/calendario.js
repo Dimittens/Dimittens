@@ -159,30 +159,67 @@ function getActiveDay(day) {
   eventDay.innerHTML = dayName.charAt(0).toUpperCase() + dayName.slice(1);
   eventDate.innerHTML = `${day} ${months[month]} ${year}`;
 }
-
 function updateEvents(day) {
   const events = eventsArr.filter(event =>
     event.day === day && event.month === month + 1 && event.year === year
   );
 
-  console.log("Eventos encontrados para o dia:", events);
-
-  let eventsHTML = events.map((event) =>
-    `<div class="event" data-event-id="${event.id}">
+  let eventsHTML = events.map((event) => `
+    <div class="event" data-event-id="${event.id}">
       <div class="title">
         <span class="event-title">${event.nota}</span>
         <div class="box-icone-editar">
-          <i class="fa-solid fa-pen edit-icon" data-event-id="${event.id}"></i>
+          <i class="fa-solid fa-pen edit-icon" id="edit-icon-${event.id}" data-event-id="${event.id}"></i>
         </div>
       </div>
       <div class="time">
         ${event.horarioInicio.slice(0, 5)} - ${event.horarioFim.slice(0, 5)}
       </div>
-    </div>`
-  ).join("");
+    </div>
+  `).join("");
 
   eventsContainer.innerHTML = eventsHTML || `<div class="no-event">Sem Eventos</div>`;
+
+  // Reaplica os listeners para os ícones recém-gerados
+  addEditListeners();
 }
+
+function addEditListeners() {
+  const editIcons = document.querySelectorAll(".edit-icon");
+
+  editIcons.forEach((icon) => {
+    // Remove e substitui o ícone para evitar múltiplos listeners
+    const newIcon = icon.cloneNode(true);
+    icon.replaceWith(newIcon);
+
+    // Adiciona o listener de clique no novo ícone
+    newIcon.addEventListener("click", handleEditClick);
+  });
+}
+
+
+  // Aplica novos listeners nos ícones clonados.
+  document.querySelectorAll(".edit-icon").forEach((icon) => {
+    icon.addEventListener("click", (e) => handleEditClick(e));
+  });
+
+
+  function handleEditClick(e) {
+    const eventId = e.target.dataset.eventId;
+    console.log("Ícone de edição clicado com ID:", eventId);
+  
+    // Encontrar o evento correspondente
+    const event = eventsArr.find(ev => String(ev.id) === String(eventId));
+  
+    if (event) {
+      console.log("Evento encontrado para edição:", event);
+      editEvent(event); // Passar o evento encontrado
+    } else {
+      console.error("Evento não encontrado:", eventId);
+    }
+  }
+  
+  
 
 const editIcons = eventsContainer.querySelectorAll(".fa-pen");
 editIcons.forEach(icon => {
@@ -193,30 +230,27 @@ editIcons.forEach(icon => {
   });
 });
 
-function editEvent(eventId) {
-  console.log("ID recebido para edição:", eventId);
+function editEvent(event) {
+  clearForm(); // Limpa o formulário antes de preencher
 
-  const event = eventsArr.find(e => String(e.id) === String(eventId));
-  if (event) {
-    isEditing = true;
-    eventToEdit = event;
-    activeDay = event.day;
-    addEventNote.value = event.nota;
-    addEventFrom.value = event.horarioInicio.slice(0, 5);
-    addEventTo.value = event.horarioFim.slice(0, 5);
-    addEventWrapper.classList.add("active");
-  } else {
-    console.error("Evento não encontrado:", eventId);
+  if (!event) {
+    console.error("Evento é indefinido:", event);
+    return;
   }
+
+  console.log("Preenchendo o formulário com:", event); // Log para verificar
+
+  isEditing = true;
+  eventToEdit = { ...event }; // Copia o evento para evitar mutação
+
+  // Preencher o formulário com os dados do evento
+  addEventNote.value = event.nota || "";
+  addEventFrom.value = event.horarioInicio ? event.horarioInicio.slice(0, 5) : "";
+  addEventTo.value = event.horarioFim ? event.horarioFim.slice(0, 5) : "";
+
+  addEventWrapper.classList.add("active"); // Exibe o formulário
 }
 
-function clearForm() {
-  addEventNote.value = "";
-  addEventFrom.value = "";
-  addEventTo.value = "";
-  eventToEdit = null;
-  isEditing = false;
-}
 
 addEventSubmit.addEventListener("click", async (e) => {
   e.preventDefault();
@@ -295,14 +329,15 @@ todayBtn.addEventListener("click", () => {
 });
 
 addEventBtn.addEventListener("click", () => {
-  clearForm(); // Garante que o formulário esteja limpo
-  isEditing = false;
-  addEventWrapper.classList.add("active");
+  clearForm(); // Limpa o formulário antes de abrir para adicionar
+  isEditing = false; // Garante que estamos no modo de adicionar
+  addEventWrapper.classList.add("active"); // Exibe o formulário
 });
 
 addEventCloseBtn.addEventListener("click", () => {
-  clearForm(); // Limpa o formulário ao fechar
+  clearForm(); // Limpa tudo ao fechar.
   addEventWrapper.classList.remove("active");
 });
+
 
 initCalendar();
