@@ -39,8 +39,10 @@ async function fetchEvents() {
   try {
     const response = await fetch('/calendario/listar-sessao');
     const data = await response.json();
+    console.log("Dados recebidos do servidor:", data); // Verificar no console
+
     eventsArr = data.map(event => ({
-      id: event.id,
+      id: event.id || '', // Certifique-se de que o ID existe
       day: event.day,
       month: event.month,
       year: event.year,
@@ -48,6 +50,7 @@ async function fetchEvents() {
       horarioInicio: event.horarioInicio,
       horarioFim: event.horarioFim,
     }));
+
     renderCalendar();
   } catch (error) {
     console.error('Erro ao buscar eventos:', error);
@@ -104,9 +107,12 @@ function addListeners() {
 
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
-      activeDay = Number(e.target.innerHTML);
+      activeDay = Number(e.target.textContent); // Captura corretamente o dia
+      console.log("Dia ativo selecionado:", activeDay); // Log para verificar
+
       getActiveDay(activeDay);
       updateEvents(activeDay);
+
       days.forEach((d) => d.classList.remove("active"));
       e.target.classList.add("active");
     });
@@ -120,6 +126,7 @@ function addListeners() {
     }
   });
 }
+
   addEventBtn.addEventListener("click", () => {
     isEditing = false;
     addEventWrapper.classList.add("active");
@@ -161,104 +168,128 @@ function updateEvents(day) {
     event.day === day && event.month === month + 1 && event.year === year
   );
 
+  console.log("Eventos encontrados para o dia:", events);
+
   let eventsHTML = events.map(event => `
-    <div class="event">
+    <div class="event" data-event-id="${event.id}">
       <div class="title">
         <span class="event-title">${event.nota}</span>
         <div class="box-icone-editar">
-          <i class="fa-solid fa-pen" data-event-id="${event.id}"></i>
+          <i class="fa-solid fa-pen edit-icon" data-event-id="${event.id}"></i>
         </div>
       </div>
-      <div class="time">${event.horarioInicio} - ${event.horarioFim}</div>
+      <div class="time">
+        ${event.horarioInicio.slice(0, 5)} - ${event.horarioFim.slice(0, 5)}
+      </div>
     </div>
   `).join("");
 
   eventsContainer.innerHTML = eventsHTML || `<div class="no-event">Sem Eventos</div>`;
+  console.log("HTML gerado:", eventsContainer.innerHTML);
 
-  // Adiciona listeners para os ícones de edição após renderizar o HTML
-  const editIcons = eventsContainer.querySelectorAll(".fa-pen");
-  editIcons.forEach(icon => {
-    icon.addEventListener("click", (e) => {
-      const eventId = e.target.dataset.eventId;
-      console.log("Ícone clicado:", eventId); // Verifique se aparece no console
-      editEvent(eventId); // Chama a função de edição
-    });
+  // Adicionar listeners diretamente para garantir que o ID está correto
+  eventsContainer.querySelectorAll(".edit-icon").forEach(icon => {
+    icon.onclick = (e) => handleEditClick(e); // Listener seguro
   });
+}
+
+function handleEditClick(e) {
+  const eventId = e.target.dataset.eventId;
+  console.log("Ícone de edição clicado com ID:", eventId);
+  editEvent(eventId);
 }
 
 
 function editEvent(eventId) {
-  const event = eventsArr.find(e => e.id == eventId);
+  console.log("ID recebido para edição:", eventId);
+
+  const event = eventsArr.find(e => String(e.id) === String(eventId));
+  console.log("Evento encontrado para edição:", event);
+
   if (event) {
     isEditing = true;
-    eventToEdit = event;
+    eventToEdit = { ...event }; // Clonar para evitar referências erradas
 
-    // Preenche o formulário de edição com os dados do evento
-    addEventNote.value = event.nota;
-    addEventFrom.value = event.horarioInicio;
-    addEventTo.value = event.horarioFim;
+    // Preencher o formulário com os dados corretos
+    addEventNote.value = eventToEdit.nota;
+    addEventFrom.value = eventToEdit.horarioInicio.slice(0, 5);
+    addEventTo.value = eventToEdit.horarioFim.slice(0, 5);
 
-    // Exibe o formulário de edição
+    // Exibir o formulário de edição
     addEventWrapper.classList.add("active");
   } else {
     console.error("Evento não encontrado:", eventId);
   }
-  console.log("Evento encontrado para edição:", event);
 }
-
-
-
-
-
+  
+function clearForm() {
+  addEventNote.value = "";
+  addEventFrom.value = "";
+  addEventTo.value = "";
+  eventToEdit = null; // Remove o evento em edição
+  isEditing = false;  // Reseta o estado de edição
+  activeDay = null;   // Reseta o dia ativo para evitar conflitos
+}
+    
 addEventSubmit.addEventListener("click", async (e) => {
   e.preventDefault();
 
+  // Verifica se o dia foi selecionado
+  if (!activeDay || isNaN(activeDay)) {
+    alert("Por favor, selecione um dia válido no calendário.");
+    return;
+  }
+
+  // Verifica se os outros campos estão preenchidos
   if (!addEventNote.value || !addEventFrom.value || !addEventTo.value) {
     alert("Preencha todos os campos!");
     return;
   }
 
-  const newEvent = {
-    id: isEditing ? eventToEdit.id : null,
+  const updatedEvent = {
+    id: isEditing ? eventToEdit.id : eventsArr.length + 1, // Gera um novo ID se for criação
     day: activeDay,
     month: month + 1,
     year: year,
     nota: addEventNote.value,
-    horarioInicio: addEventFrom.value,
-    horarioFim: addEventTo.value,
+    horarioInicio: `${addEventFrom.value}:00`,
+    horarioFim: `${addEventTo.value}:00`,
   };
 
   const method = isEditing ? "PUT" : "POST";
-  const url = isEditing ? `/calendario/editar/${newEvent.id}` : "/calendario/salvar";
+  const url = isEditing ? `/calendario/editar/${updatedEvent.id}` : "/calendario/salvar";
 
-  await saveEvent(newEvent, method, url);
-  addEventWrapper.classList.remove("active");
-  addEventNote.value = "";
-  addEventFrom.value = "";
-  addEventTo.value = "";
-  isEditing = false;
-});
-
-async function saveEvent(event, method, url) {
   try {
     const response = await fetch(url, {
       method: method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(event),
+      body: JSON.stringify(updatedEvent),
     });
 
     const data = await response.json();
     if (data.success) {
-      alert("Evento salvo com sucesso!");
-      if (!isEditing) eventsArr.push(event);
-      updateEvents(activeDay);
+      alert(isEditing ? "Evento atualizado com sucesso!" : "Evento criado com sucesso!");
+
+      // Atualiza o array de eventos
+      if (isEditing) {
+        const index = eventsArr.findIndex(e => e.id === updatedEvent.id);
+        if (index !== -1) eventsArr[index] = updatedEvent;
+      } else {
+        eventsArr.push(updatedEvent);
+      }
+
+      updateEvents(activeDay); // Re-renderiza os eventos
+
+      clearForm(); // Limpa o formulário
+      addEventWrapper.classList.remove("active"); // Fecha o formulário
     } else {
       alert("Erro ao salvar o evento.");
     }
   } catch (error) {
     console.error("Erro ao salvar evento:", error);
+    alert("Erro interno ao salvar o evento.");
   }
-}
+});
 
 
 prev.addEventListener("click", () => {
@@ -285,5 +316,33 @@ todayBtn.addEventListener("click", () => {
   year = today.getFullYear();
   renderCalendar();
 });
+
+
+addEventCloseBtn.addEventListener("click", () => {
+  clearForm(); // Limpa o formulário
+  addEventWrapper.classList.remove("active"); // Fecha o formulário
+});
+
+addEventBtn.addEventListener("click", () => {
+  clearForm(); // Limpa tudo ao abrir o formulário para adicionar
+  isEditing = false; // Reseta o estado de edição
+  addEventWrapper.classList.add("active");
+});
+
+
+
+document.addEventListener("click", (e) => {
+  const icon = e.target.closest(".edit-icon");
+  if (icon) {
+    const eventId = icon.dataset.eventId;
+    console.log("Ícone de edição clicado com ID:", eventId);
+    editEvent(eventId);
+  }
+});
+
+
+
+
+
 
 initCalendar();

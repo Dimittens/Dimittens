@@ -1,11 +1,19 @@
 const pool = require("../../config/pool_de_conexao");
 
 // Função para salvar evento no banco de dados
+// Função para salvar evento no banco de dados
 exports.salvarEvento = async (req, isEdit = false) => {
   try {
     const { day, month, year, nota, horarioInicio, horarioFim } = req.body;
     const usuarioId = req.session.autenticado.usuarioId;
-    const dataCompleta = `${year}-${month}-${day} ${horarioInicio}`;
+
+    // Verifica se os valores necessários estão presentes
+    if (!day || !month || !year) {
+      throw new Error("Data inválida: dia, mês ou ano ausente.");
+    }
+
+    // Constrói a data completa corretamente
+    const dataCompleta = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${horarioInicio}`;
 
     let query;
     let params;
