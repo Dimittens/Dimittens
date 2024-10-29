@@ -91,6 +91,10 @@ router.get('/headerunlogged', (req, res) => {
   router.get('/perfil', (req, res) => {
     res.render('pages/index', { pagina: 'perfil', autenticado: req.session.autenticado || null });
   });
+
+  router.get('/perfilpsic', (req, res) => {
+    res.render('pages/index', { pagina: 'perfilpsic', autenticado: req.session.autenticado || null });
+  });
   
 // Página Logada
 router.get('/homelogged', verificarAutenticacao, (req, res) => {

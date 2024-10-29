@@ -1,8 +1,14 @@
-* body {
+ body {
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 1800px;
+    height: 850px;
+}
+
+article {
+    margin-top: 100px;
 }
 
 h1 {
@@ -36,17 +42,39 @@ h1 {
     border-radius: 17px;
     box-sizing: border-box;
     padding-left: 15px;
+    padding-right: 15px;
+    font-size: 15px;
 }
 
 .ph {
-    flex-direction: column;
     display: flex;
     align-items: flex-start;
     gap: 65px;
 }
 
 .ph2 {
+    margin-top: 30px;
+}
+
+form {
+    display: flex;
     flex-direction: column;
+}
+
+select {
+    width: 440px;
+    height: 65px;
+    border: 1px solid #422040;
+    background-color: rgba(236, 141, 38, 0);
+    border-radius: 17px;
+    box-sizing: border-box;
+    padding-left: 15px;
+    font-size: 15px;
+    font-family: "Antialiased ", sans-serif;
+}
+
+.abordagem-esp {
+    display: flex;
     display: flex;
     align-items: flex-start;
     gap: 65px;
@@ -68,17 +96,19 @@ h1 {
     display: flex;
     align-items: center;
     gap: 245px;
-
+    width: 940px;
 }
 
 .box-img {
     display: flex;
     align-items: center;
     gap: 200px;
+    margin-top: 50px;
 }
 
 .button {
     display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
@@ -89,7 +119,44 @@ h1 {
 
 }
 
+.tele label {
+    font-family: "Antialiased ", sans-serif;
+    color: #333333;
+    margin-bottom: 5px;
+    width: none;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.abordagem-esp label {
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+.bio label
+{
+font-family: "Antialiased ", sans-serif;
+color: #333333;
+margin-bottom: 5px;
+width: none;
+display: flex;
+text-align: left;
+margin-left: 10px;
+}
+
+.bio textarea {
+    font-family: "Antialiased ", sans-serif;
+    height: 140px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 label {
+    font-size: 20px;
+}
+
+.info label {
+    display: flex;
     font-family: "Antialiased ", sans-serif;
     color: #333333;
     margin-bottom: 5px;
@@ -111,10 +178,11 @@ article {
     flex-direction: column;
 }
 
-.all {
+.bio {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    width: fit-content;
+    margin-top: 30px;
 }
 
 .tele {
@@ -139,4 +207,11 @@ article {
 
 input::placeholder {
     opacity: 1;
+}
+
+form label{
+    display: flex;
+    align-items: center;
+    margin: 0;
+    height: fit-content;
 }

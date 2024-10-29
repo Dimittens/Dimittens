@@ -5,7 +5,6 @@
 <body>
 
     <article>
-        <section class="all">
             <section class="box-img">
                 <section class="edit-img">
                     <section>
@@ -18,18 +17,11 @@
                 </section>
             </section>
             <section class="edit-info">
-                <section class="ph">
                     <section class="info">
                         <label for="email">Email</label>
                         <input type="text" id="email" class="input" placeholder="Email">
                     </section>
-
-                    <section class="bio">
-                        <label for="biog">Biografia</label>
-                        <input type="text" id="biography" class="input" placeholder="Sua biografia">
-                    </section>
-                </section>
-
+                
                     <section class="tele">
                         <label for="tel">Telefone</label>
                         <input type="tel" id="tel" class="input" placeholder="(xx) xxxxx-xxxx" pattern="\(\d{2}\) \d{5}-\d{4}">
@@ -37,22 +29,58 @@
             </section>
 
             <section class="ph2">
-                <section class="last">
-                    <label for="lastname">Último Nome</label>
-                    <input type="text" id="lastname" class="input" placeholder="Último Nome">
+                <section class="abordagem-esp">
+                    <form action="">
+                        <label for="abord">Abordagem</label>
+                        <select name="abordagens" id="abord">
+                            <option value="">Psicologia Comportamental</option>
+                            <option value="">Psicologia Cognitiva</option>
+                            <option value="">Psicologia Humanista</option>
+                            <option value="">Psicanálise</option>
+                            <option value="">Psicologia Gestalt</option>
+                            <option value="">Psicologia Evolutiva</option>
+                            <option value="">Psicologia Social</option>
+                            <option value="">Psicologia Positiva</option>
+                            <option value="">Terapia Cognitivo-Comportamental (TCC)</option>
+                            <option value="">Psicologia Sistêmica</option>
+                            <option value="">Psicologia do Desenvolvimento</option>
+                            <option value="">Psicologia Cultural</option>
+                            <option value="">Neuropsicologia</option>
+                            <option value="">Psicologia Forense</option>
+                            <option value="">Psicologia da Saúde</option>
+                        </select>
+                    </form>
+
+                    <form action="">
+                        <label for="esp">Especialidade</label>
+                        <select name="especialidade" id="esp">
+                            <option value="">Terapia Comportamental / Modificação de Comportamento</option>
+                            <option value="">Terapia Cognitiva / Avaliação Cognitiva</option>
+                            <option value="">Psicoterapia Humanista / Terapia Centrada na Pessoa</option>
+                            <option value="">Psicanálise Clássica / Psicoterapia Psicanalítica</option>
+                            <option value="">Terapia Gestalt / Formação em Psicologia Gestalt</option>
+                            <option value="">Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil</option>
+                            <option value="">Psicologia Comunitária / Consultoria em Dinâmica de Grupo</option>
+                            <option value="">Intervenções de Psicologia Positiva / Coaching de Vida</option>
+                            <option value="">TCC para Transtornos de Ansiedade / TCC para Depressão</option>
+                            <option value="">Terapia Familiar Sistêmica / Mediação Familiar</option>
+                            <option value="">Avaliação e Intervenção no Desenvolvimento Infantil / Psicologia Educacional</option>
+                            <option value="">Psicologia Transcultural / Consultoria Cultural</option>
+                            <option value="">Avaliação Neuropsicológica / Reabilitação Neuropsicológica</option>
+                            <option value="">Avaliação de Competência Legal / Consultoria em Casos Judiciais</option>
+                            <option value="">Intervenções em Saúde Mental / Promoção de Saúde e Bem-Estar</option>
+                        </select>
+                    </form>                   
                 </section>
-                <section class="myexpr">
-                    <label for="myexp">Minha Experiência</label>
-                    <input type="text" id="myexp" class="input" placeholder="Minha Experiência">
+
+                <section class="bio">
+                    <label for="biog">Biografia</label>
+                    <textarea id="biography" class="input" placeholder="Sua biografia"></textarea>
                 </section>
             </section>
         </section>
-        </section>
-
+    
     </article>
-
-    </section>
-
 </body>
 
 </html>
