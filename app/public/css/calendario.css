@@ -28,7 +28,7 @@
   margin-top: 20px;
 }
 
-#icon-editar {
+.fa-pen {
   color: white;
   font-size: 18px;
 }
@@ -271,7 +271,6 @@ body {
   padding: 10px 20px;
   padding-left: 50px;
   color: #f8f6f6;
-  cursor: pointer;
 }
 /* even event */
 .events .event:nth-child(even) {
@@ -310,8 +309,11 @@ body {
 color: #fff;
 }
 .events .event i {
-  color: var(--primary-clr);
-  font-size: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  pointer-events: auto; /* Garante que seja clicável */
+  z-index: 2; /* Coloca o ícone acima de outros elementos */
+  cursor: pointer; /* Mostra o cursor de clique */
 }
 .events .event:hover i {
   color: #fff;
@@ -360,12 +362,14 @@ color: #fff;
   border-radius: 50%;
   background-color: transparent;
   cursor: pointer;
+  z-index: 10;
 }
 .add-event:hover {
   opacity: 0.7;
 }
 .add-event i {
   pointer-events: none;
+  z-index: 10;
 }
 .events .no-event {
   width: 100%;
@@ -388,6 +392,7 @@ color: #fff;
   background-color: #fff;
   transform: translateX(-50%);
   transition: max-height 0.5s ease;
+  z-index: 10;
 }
 .add-event-wrapper.active {
   max-height: 300px;
@@ -405,9 +410,11 @@ color: #fff;
 .add-event-header .close {
   font-size: 1.5rem;
   cursor: pointer;
+  z-index: 10;
 }
 .add-event-header .close:hover {
   color: var(--primary-clr);
+  z-index: 10;
 }
 .add-event-header .title {
   font-size: 1.2rem;
