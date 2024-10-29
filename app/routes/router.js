@@ -39,9 +39,21 @@ router.get('/', (req, res) => {
 router.get('/headerunlogged', (req, res) => {
     res.render('pages/index', { pagina: 'headerunlogged', autenticado: req.session.autenticado || null });
   });
+
+  router.get('/salvospsic', (req, res) => {
+    res.render('pages/index', { pagina: 'salvospsic', autenticado: req.session.autenticado || null });
+  });
+
+  router.get('/precisadeajudapsic', (req, res) => {
+    res.render('pages/index', { pagina: 'precisadeajudapsic', autenticado: req.session.autenticado || null });
+  });
   
   router.get('/faq', (req, res) => {
     res.render('pages/index', { pagina: 'faq', autenticado: req.session.autenticado || null });
+  });
+
+  router.get('/consultaspsic', (req, res) => {
+    res.render('pages/index', { pagina: 'consultaspsic', autenticado: req.session.autenticado || null });
   });
   
   router.get('/psicologos', (req, res) => {

@@ -16,24 +16,15 @@ body {
 .info-1 {
     width: 100%;
     max-width: 360px; /* Largura máxima do artigo */
-    margin-left: 40px;
+    margin-left: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #422040;
     box-shadow: none;
     flex: 1;
+    margin-right: 20px;
 }
-
-.info-2 {
-    flex: 2;
-    width: 1400px;
-    height: 850px;
-    background-color: white;
-    margin-right: 96px;
-    align-items: center;
-}
-
 
 #user {
     font-size: 80px;
@@ -98,14 +89,10 @@ hr {
     background-color: rgba(255, 255, 255, 0.3); /* Cor de fundo quando ativo */
 }
 
-.options #edit::after + .include {
-    display: flex;
-}
-
-.include {
-    display: none;
-}
-
 #opt {
     margin-top: 70px;
+}
+
+.editarperf, .consultpsic, .salvopsic, .needhelp {
+    display: none;
 }
