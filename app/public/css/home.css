@@ -6,6 +6,8 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     overflow-x: hidden;
+    position: absolute;
+    height: 2000px;
 }
 
 #loginOverlay {
