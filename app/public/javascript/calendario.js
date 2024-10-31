@@ -33,6 +33,7 @@ const months = [
 let eventsArr = [];
 
 async function initCalendar() {
+  activeDay = today.getDate();
   await fetchEvents();
   renderCalendar();
 }
@@ -68,8 +69,12 @@ function renderCalendar() {
   const day = firstDay.getDay();
   const nextDays = 7 - lastDay.getDay() - 1;
 
-  date.innerHTML = `${months[month]} ${year}`;
+  // Reseta o activeDay se ele não existir no novo mês
+  if (!activeDay || activeDay > lastDate) {
+    activeDay = 1;
+  }
 
+  date.innerHTML = `${months[month]} ${year}`;
   let days = "";
 
   for (let x = day; x > 0; x--) {
@@ -81,13 +86,12 @@ function renderCalendar() {
       event.day === i && event.month === month + 1 && event.year === year
     );
 
-    if (i === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
-      activeDay = i;
+    if (i === activeDay) { // Define activeDay como o dia inicial selecionado
       getActiveDay(i);
       updateEvents(i);
       days += hasEvent
-        ? `<div class="day today active event">${i}</div>`
-        : `<div class="day today active">${i}</div>`;
+        ? `<div class="day active event">${i}</div>`
+        : `<div class="day active">${i}</div>`;
     } else {
       days += hasEvent
         ? `<div class="day event">${i}</div>`
@@ -100,23 +104,34 @@ function renderCalendar() {
   }
 
   daysContainer.innerHTML = days;
-
-  addListeners(); // Chame addListeners aqui para garantir que navegação funcione
+  addListeners();
 }
 
-
 function addListeners() {
-  console.log("addListeners chamado"); 
-
   const days = document.querySelectorAll(".day");
-  
+
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
-      activeDay = Number(e.target.innerHTML);
-      getActiveDay(activeDay);
-      updateEvents(activeDay);
-      days.forEach((d) => d.classList.remove("active"));
-      e.target.classList.add("active");
+      const target = e.target;
+      const dayNumber = Number(target.innerHTML);
+
+      if (target.classList.contains("prev-date")) {
+        month = month === 0 ? 11 : month - 1;
+        year = month === 11 ? year - 1 : year;
+        activeDay = dayNumber; // Mantém o dia ativo ao mudar o mês
+        renderCalendar();
+      } else if (target.classList.contains("next-date")) {
+        month = month === 11 ? 0 : month + 1;
+        year = month === 0 ? year + 1 : year;
+        activeDay = dayNumber; // Mantém o dia ativo ao mudar o mês
+        renderCalendar();
+      } else {
+        activeDay = dayNumber;
+        getActiveDay(activeDay);
+        updateEvents(activeDay);
+        days.forEach((d) => d.classList.remove("active"));
+        target.classList.add("active");
+      }
     });
   });
 }
@@ -353,11 +368,14 @@ next.addEventListener("click", () => {
 });
 
 todayBtn.addEventListener("click", () => {
-  today = new Date();
+  const today = new Date();
+  activeDay = today.getDate();
   month = today.getMonth();
   year = today.getFullYear();
+  
   renderCalendar();
 });
+
 
 addEventBtn.addEventListener("click", () => {
   clearForm(); // Limpa o formulário antes de abrir para adicionar

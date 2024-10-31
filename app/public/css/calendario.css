@@ -480,11 +480,6 @@ color: #fff;
   border-radius: 4px;
   cursor: pointer;
 }
-.add-event-footer .add-event-btn:hover {
-  background-color: var(--second-clr);
-}
-
-
 /* media queries */
 
 @media screen and (max-width: 1000px) {
