@@ -98,14 +98,16 @@ function renderCalendar() {
   }
 
   daysContainer.innerHTML = days;
-  addListeners();
+
+  addListeners(); // Chame addListeners aqui para garantir que navegação funcione
 }
 
+
 function addListeners() {
-  console.log("addListeners chamado"); // Verificar se foi chamado
+  console.log("addListeners chamado"); 
 
   const days = document.querySelectorAll(".day");
-
+  
   days.forEach((day) => {
     day.addEventListener("click", (e) => {
       activeDay = Number(e.target.innerHTML);
@@ -115,18 +117,13 @@ function addListeners() {
       e.target.classList.add("active");
     });
   });
-
-  eventsContainer.addEventListener("click", (e) => {
-    if (e.target.classList.contains("fa-pen")) {
-      console.log("Ícone clicado:", e.target.dataset.eventId);
-      const eventId = e.target.dataset.eventId;
-      editEvent(eventId);
-    }
-  });
 }
 
 addEventBtn.addEventListener("click", () => {
-  isEditing = false;
+  clearForm();
+  isEditing = false; // Modo de adição
+  document.querySelector(".add-event-wrapper .title").innerText = "Adicionar Evento";
+  document.querySelector(".add-event-btn").innerText = "Adicionar Evento";
   addEventWrapper.classList.add("active");
 });
 
@@ -169,34 +166,50 @@ function updateEvents(day) {
       <div class="title">
         <span class="event-title">${event.nota}</span>
         <div class="box-icone-editar">
-          <i class="fa-solid fa-pen edit-icon" id="edit-icon-${event.id}" data-event-id="${event.id}"></i>
+          <i class="fa-solid fa-pen edit-icon" data-event-id="${event.id}"></i>
+          <i class="fa-solid fa-trash delete-icon" data-event-id="${event.id}"></i>
         </div>
       </div>
       <div class="time">
-        ${event.horarioInicio.slice(0, 5)} - ${event.horarioFim.slice(0, 5)}
+        ${formatTimeWithAMPM(event.horarioInicio.slice(0, 5))} - ${formatTimeWithAMPM(event.horarioFim.slice(0, 5))}
       </div>
     </div>
   `).join("");
 
   eventsContainer.innerHTML = eventsHTML || `<div class="no-event">Sem Eventos</div>`;
 
-  // Reaplica os listeners para os ícones recém-gerados
-  addEditListeners();
+  addEditListeners(); 
+  addDeleteListeners(); 
 }
 
 function addEditListeners() {
-  const editIcons = document.querySelectorAll(".edit-icon");
-
-  editIcons.forEach((icon) => {
-    // Remove e substitui o ícone para evitar múltiplos listeners
-    const newIcon = icon.cloneNode(true);
-    icon.replaceWith(newIcon);
-
-    // Adiciona o listener de clique no novo ícone
-    newIcon.addEventListener("click", handleEditClick);
+  document.querySelectorAll(".edit-icon").forEach((icon) => {
+    icon.addEventListener("click", handleEditClick);
   });
 }
 
+function addDeleteListeners() {
+  document.querySelectorAll(".delete-icon").forEach((icon) => {
+    icon.addEventListener("click", (e) => handleDeleteClick(e));
+  });
+}
+
+function formatTimeWithAMPM(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  const suffix = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12; // Converte para formato 12h e trata meia-noite e meio-dia
+  return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${suffix}`;
+}
+
+
+function handleDeleteClick(e) {
+  const eventId = e.target.dataset.eventId;
+  console.log("Ícone de exclusão clicado para o ID:", eventId);
+
+  if (confirm("Tem certeza de que deseja excluir este evento?")) {
+    deleteEvent(eventId);
+  }
+}
 
   // Aplica novos listeners nos ícones clonados.
   document.querySelectorAll(".edit-icon").forEach((icon) => {
@@ -206,20 +219,14 @@ function addEditListeners() {
 
   function handleEditClick(e) {
     const eventId = e.target.dataset.eventId;
-    console.log("Ícone de edição clicado com ID:", eventId);
-  
-    // Encontrar o evento correspondente
-    const event = eventsArr.find(ev => String(ev.id) === String(eventId));
-  
+    const event = eventsArr.find(event => String(event.id) === String(eventId));
     if (event) {
-      console.log("Evento encontrado para edição:", event);
-      editEvent(event); // Passar o evento encontrado
+      editEvent(event); 
     } else {
       console.error("Evento não encontrado:", eventId);
     }
   }
-  
-  
+    
 
 const editIcons = eventsContainer.querySelectorAll(".fa-pen");
 editIcons.forEach(icon => {
@@ -231,37 +238,31 @@ editIcons.forEach(icon => {
 });
 
 function editEvent(event) {
-  clearForm(); // Limpa o formulário antes de preencher
+  clearForm(); 
+  isEditing = true; 
+  eventToEdit = { ...event }; 
 
-  if (!event) {
-    console.error("Evento é indefinido:", event);
-    return;
-  }
-
-  console.log("Preenchendo o formulário com:", event); // Log para verificar
-
-  isEditing = true;
-  eventToEdit = { ...event }; // Copia o evento para evitar mutação
-
-  // Preencher o formulário com os dados do evento
   addEventNote.value = event.nota || "";
   addEventFrom.value = event.horarioInicio ? event.horarioInicio.slice(0, 5) : "";
   addEventTo.value = event.horarioFim ? event.horarioFim.slice(0, 5) : "";
 
-  addEventWrapper.classList.add("active"); // Exibe o formulário
-}
+  document.querySelector(".add-event-wrapper .title").innerText = "Editar Evento";
+  document.querySelector(".add-event-btn").innerText = "Editar Evento";
 
+  addEventWrapper.classList.add("active"); 
+}
 
 addEventSubmit.addEventListener("click", async (e) => {
   e.preventDefault();
 
+  // Verifique se todos os campos obrigatórios estão preenchidos
   if (!addEventNote.value || !addEventFrom.value || !addEventTo.value) {
     alert("Preencha todos os campos!");
     return;
   }
 
   const updatedEvent = {
-    id: isEditing ? eventToEdit.id : eventsArr.length + 1,
+    id: isEditing ? eventToEdit.id : eventsArr.length + 1, // Usa o ID do evento existente se estiver editando
     day: activeDay,
     month: month + 1,
     year: year,
@@ -270,10 +271,11 @@ addEventSubmit.addEventListener("click", async (e) => {
     horarioFim: `${addEventTo.value}:00`,
   };
 
+  // Define o método e URL com base em isEditing
   const method = isEditing ? "PUT" : "POST";
   const url = isEditing
-    ? `/calendario/editar/${updatedEvent.id}`
-    : "/calendario/salvar";
+    ? `/calendario/editar/${updatedEvent.id}` // URL de atualização com ID do evento
+    : "/calendario/salvar"; // URL de criação
 
   try {
     const response = await fetch(url, {
@@ -286,6 +288,7 @@ addEventSubmit.addEventListener("click", async (e) => {
     if (data.success) {
       alert(isEditing ? "Evento atualizado!" : "Evento criado!");
       if (isEditing) {
+        // Atualiza o evento no array de eventos
         const index = eventsArr.findIndex(e => e.id === updatedEvent.id);
         eventsArr[index] = updatedEvent;
       } else {
@@ -300,6 +303,28 @@ addEventSubmit.addEventListener("click", async (e) => {
   }
 });
 
+async function deleteEvent(eventId) {
+  try {
+    const response = await fetch(`/calendario/excluir/${eventId}`, {
+      method: "DELETE",
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      alert("Evento excluído com sucesso!");
+      
+      // Remover evento do array e atualizar a lista
+      eventsArr = eventsArr.filter(event => event.id !== Number(eventId));
+      updateEvents(activeDay);
+    } else {
+      alert("Erro ao excluir o evento.");
+    }
+  } catch (error) {
+    console.error("Erro ao excluir evento:", error);
+  }
+}
+
 
 function clearForm() {
   addEventNote.value = "";
@@ -308,6 +333,7 @@ function clearForm() {
   eventToEdit = null; // Remove o evento em edição
   isEditing = false;  // Reseta o estado de edição
 }
+
 
 prev.addEventListener("click", () => {
   month = month === 0 ? 11 : month - 1;

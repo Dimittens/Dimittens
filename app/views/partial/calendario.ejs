@@ -10,14 +10,11 @@
     />
     <meta
       name="keywords"
-      content="calendar, events, reminders, javascript, html, css, open source coding"
+      content="calendario de consultas, calendario, transtornos, eventos, calendario com eventos"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="css/calendario.css" />
     <title>Calendario</title>
@@ -58,7 +55,7 @@
         <div class="events"></div>
         <div class="add-event-wrapper">
           <div class="add-event-header">
-            <div class="title">Adicionar Evento</div>
+            <div class="title" id="formTitle">Adicionar Evento</div>
             <i class="fas fa-times close"></i>
           </div>
           <div class="add-event-body">
@@ -81,7 +78,7 @@
             </div>
           </div>
           <div class="add-event-footer">
-            <button class="add-event-btn">Adicionar Evento</button>
+            <button class="add-event-btn" id="formButton">Adicionar Evento</button>
           </div>
         </div>
       </div>

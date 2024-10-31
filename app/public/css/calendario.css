@@ -25,7 +25,8 @@
   display: flex;
   justify-content: flex-end;
   align-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
+  gap: 15px;
 }
 
 .fa-pen {

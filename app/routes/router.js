@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../../config/pool_de_conexao');
-const { salvarEvento, listarEventosUsuario } = require("../controllers/calendarioController");
+const { salvarEvento, listarEventosUsuario, excluirEvento } = require("../controllers/calendarioController");
 const userPacientesController = require('../controllers/userPacientesController');
 const userPsicologosController = require('../controllers/userPsicologosController');
 const userMenorController = require('../controllers/userMenorController');
@@ -548,6 +548,9 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
       res.status(500).json({ message: "Erro ao listar eventos." });
     }
   });  
+
+// ROTA DE EXCLUSÃO DOS EVENTOS
+router.delete("/calendario/excluir/:id", excluirEvento);
 
 // Logout
 router.get('/logout', (req, res) => {
