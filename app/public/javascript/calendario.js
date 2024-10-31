@@ -15,6 +15,8 @@ const calendar = document.querySelector(".calendar"),
   addEventFrom = document.querySelector(".event-time-from"),
   addEventTo = document.querySelector(".event-time-to"),
   addEventSubmit = document.querySelector(".add-event-btn");
+  const dateInput = document.querySelector(".date-input");
+const gotoBtn = document.querySelector(".goto-btn");
 
 let today = new Date();
 let activeDay;
@@ -197,7 +199,7 @@ function addDeleteListeners() {
 function formatTimeWithAMPM(time) {
   const [hours, minutes] = time.split(':').map(Number);
   const suffix = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12; // Converte para formato 12h e trata meia-noite e meio-dia
+  const formattedHours = hours.toString().padStart(2, '0'); // Mantém o formato 24 horas
   return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${suffix}`;
 }
 
@@ -310,18 +312,21 @@ async function deleteEvent(eventId) {
       headers: { 'Content-Type': 'application/json' },
     });
 
+    if (!response.ok) {
+      throw new Error("Erro ao excluir o evento.");
+    }
+
     const data = await response.json();
     if (data.success) {
       alert("Evento excluído com sucesso!");
-      
-      // Remover evento do array e atualizar a lista
       eventsArr = eventsArr.filter(event => event.id !== Number(eventId));
       updateEvents(activeDay);
     } else {
-      alert("Erro ao excluir o evento.");
+      alert(data.message || "Erro ao excluir o evento.");
     }
   } catch (error) {
     console.error("Erro ao excluir evento:", error);
+    alert("Ocorreu um erro ao excluir o evento.");
   }
 }
 
@@ -363,6 +368,39 @@ addEventBtn.addEventListener("click", () => {
 addEventCloseBtn.addEventListener("click", () => {
   clearForm(); // Limpa tudo ao fechar.
   addEventWrapper.classList.remove("active");
+});
+
+// Listener para o botão de busca (vai para data específica)
+gotoBtn.addEventListener("click", () => {
+  const dateValue = dateInput.value.trim();
+
+  // Verifica se a entrada está no formato "mm/yyyy"
+  if (/^(0[1-9]|1[0-2])\/\d{4}$/.test(dateValue)) {
+    const [inputMonth, inputYear] = dateValue.split("/").map(Number);
+
+    // Atualiza o mês e o ano
+    month = inputMonth - 1; // Ajuste para índice do mês (0 a 11)
+    year = inputYear;
+
+    // Renderiza o calendário com a nova data
+    renderCalendar();
+  } else {
+    alert("Por favor, insira a data no formato mm/yyyy.");
+  }
+});
+
+dateInput.addEventListener("input", (e) => {
+  let value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+  
+  // Limita o input a no máximo 6 caracteres
+  if (value.length > 6) value = value.slice(0, 6);
+
+  // Formata automaticamente para mm/yyyy
+  if (value.length >= 3) {
+    value = `${value.slice(0, 2)}/${value.slice(2)}`;
+  }
+  
+  e.target.value = value;
 });
 
 

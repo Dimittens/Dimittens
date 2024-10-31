@@ -72,7 +72,7 @@ exports.excluirEvento = async (req, res) => {
     `;
     const params = [id, usuarioId];
 
-    const result = await pool.query(query, params);
+    const [result] = await pool.query(query, params); // Desestrutura o primeiro elemento
     
     if (result.affectedRows === 1) {
       res.json({ success: true, message: "Evento excluído com sucesso!" });

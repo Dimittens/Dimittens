@@ -4,7 +4,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-    <%- include("../partial/headerunlogged") %>
+       <% if (autenticado) { %>
+              <%- include("../partial/header") %>
+      <% } else { %>
+              <%- include("../partial/headerunlogged") %>
+      <% } %>
     <main class="box">
         <article class="infos-gerais">
                <h1>Tudo sobre a Dimittens</h1>

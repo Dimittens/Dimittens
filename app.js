@@ -77,6 +77,8 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + '-' + file.originalname);  // Nome único para o arquivo
   },
 });
+
+
 const upload = multer({ storage });
 
 // **Rota de upload de arquivos**

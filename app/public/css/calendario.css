@@ -35,13 +35,19 @@
 }
 
 body {
-  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex-direction: column;
   background-color: #e2e1dc;
 }
+
+.header {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+}
+
 .container {
   position: relative;
   width: 100vw;
@@ -49,7 +55,6 @@ body {
   margin: 0 auto;
   color: #fff;
   display: flex;
-
   background-color: #ec8d26;
 }
 .left {
@@ -64,6 +69,7 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  padding-top: 110px;
   color: #878895;
   border-radius: 5px;
   background-color: #fff;
@@ -114,7 +120,7 @@ body {
   padding: 0 20px;
   font-size: 1rem;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 .calendar .days .day {
   width: 14.28%;
@@ -183,7 +189,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 5px;
-  padding: 0 20px;
+  padding: 0 20px 40px 20px;
   margin-bottom: 20px;
   color: #b3b3b3;
 }
@@ -224,7 +230,7 @@ body {
   position: relative;
   width: 40%;
   min-height: 100%;
-  padding: 20px 0;
+  padding: 110px 0 20px 0;
 }
 
 .right .today-date {
@@ -349,8 +355,8 @@ color: #fff;
 }
 .add-event {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
+  bottom: 60px;
+  right: 40px;
   width: 40px;
   height: 40px;
   display: flex;
