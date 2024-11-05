@@ -54,7 +54,7 @@ h1 {
     margin-top: 30px;
 }
 
-form {
+.form {
     display: flex;
     flex-direction: column;
 }
@@ -78,6 +78,11 @@ select {
     gap: 65px;
 }
 
+.abordagemm {
+    display: flex;
+    flex-direction: column;
+}
+
 #delet {
     border: 2px solid #422040;
     background-color: rgba(236, 141, 38, 0);
@@ -93,7 +98,7 @@ select {
 .edit-img {
     display: flex;
     align-items: center;
-    gap: 245px;
+    gap: 465px;
     width: 940px;
 }
 
@@ -108,12 +113,14 @@ select {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: flex-end;
 }
 
 #add {
     width: 225px;
-    background-color: #422040;
-    color: white;
+    border: 2px solid #422040;
+    background-color: rgba(236, 141, 38, 0);
+    color: #422040;
 
 }
 
@@ -129,6 +136,10 @@ select {
 .abordagem-esp label {
     margin-bottom: 5px;
     margin-left: 10px;
+}
+
+.abordagemm label {
+    text-align: left;
 }
 
 .bio label
@@ -174,13 +185,19 @@ article {
     align-items: center;
     display: flex;
     flex-direction: column;
+    margin-top: 0;
+}
+
+.biogra {
+    display: flex;
+    flex-direction: column;
 }
 
 .bio {
     display: flex;
-    flex-direction: column;
     width: fit-content;
     margin-top: 30px;
+    gap: 60px;
 }
 
 .tele {
@@ -207,9 +224,26 @@ input::placeholder {
     opacity: 1;
 }
 
-form label{
+.form label{
     display: flex;
     align-items: center;
     margin: 0;
     height: fit-content;
+}
+
+.salvarr {
+    width: 440px;
+    align-content: flex-end;
+    text-align: end;
+}
+
+#salve {
+    border: 2px solid #422040;
+    background-color: rgba(236, 141, 38, 0);
+    color: #422040;
+}
+
+#salve:hover, #add:hover, #delet:hover {
+    background-color: #422040;
+    color: white;
 }

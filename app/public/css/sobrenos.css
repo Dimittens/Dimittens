@@ -172,6 +172,7 @@ p {
 .p-shrpoint {
     font-size: 15px;
     text-align: center;
+    color: #422040;
 }
 
 .shrpoint-tit {
@@ -203,7 +204,7 @@ p {
 }
 
 .sharepoint a {
-    color: #ec8d26;
+    color: #dfa5d9;
     text-decoration: none;
     font-weight: 700;
 }

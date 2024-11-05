@@ -96,3 +96,7 @@ hr {
 .editarperf, .consultpsic, .salvopsic, .needhelp {
     display: none;
 }
+
+.info-2 {
+    margin-top: 0;
+}
