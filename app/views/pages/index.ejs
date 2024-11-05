@@ -13,10 +13,14 @@
 
 <body>
     <% if (pagina === 'homelogged' && autenticado) { %>
-        <%- include("../partial/homelogged") %>
+        <% if (autenticado.tipo.toLowerCase() === 'psicologo') { %>
+            <%- include("../partial/dashboardpsicologo") %>
+        <% } else { %>
+            <%- include("../partial/homelogged") %>
+        <% } %>
     <% } else { %>
         <%- include("../partial/" + pagina) %>
-    <% } %>
-</body>
+    <% } %>    
+    </body>
 
 </html>

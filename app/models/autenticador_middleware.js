@@ -15,6 +15,23 @@ checkAuthenticatedUser = (req, res, next) => {
     }
 };
 
+// Middleware específico para verificar se o usuário é psicólogo
+checkAuthenticatedPsicologo = (req, res, next) => {
+    if (!req.session.autenticado) {
+      // Redireciona para o login de psicólogos se o usuário não estiver autenticado
+      return res.redirect("/loginpsicologos");
+    }
+  
+    // Verifica se o tipo de usuário é "psicologo" (com case insensitive)
+    if (req.session.autenticado.tipo.toLowerCase() !== "psicologo") {
+      console.log("Acesso negado. Usuário não é psicólogo.");
+      return res.redirect("/loginpsicologos"); // Redireciona para o login de psicólogos
+    }
+  
+    // Prossegue para a rota desejada se o usuário for um psicólogo autenticado
+    next();
+};
+
 // Middleware para limpar a sessão
 clearSession = (req, res) => {
     console.log("Sessão antes de limpar:", req.session);
@@ -69,6 +86,7 @@ clearSession = (req, res) => {
             req.session.autenticado = {
                 usuarioNome: usuario.NOME_USUARIO,
                 usuarioId: usuario.ID_USUARIO,
+                
                 tipo: usuario.DIFERENCIACAO_USUARIO,
             };
 
@@ -96,6 +114,7 @@ clearSession = (req, res) => {
 // Exportando os middlewares
 module.exports = {
     checkAuthenticatedUser,
+    checkAuthenticatedPsicologo,
     clearSession,
     recordAuthenticatedUser,
 };

@@ -4,17 +4,9 @@ const pool = require('../../config/pool_de_conexao');
 const { salvarEvento, listarEventosUsuario, excluirEvento } = require("../controllers/calendarioController");
 const userPacientesController = require('../controllers/userPacientesController');
 const userPsicologosController = require('../controllers/userPsicologosController');
+const { marcarDisponivel, removerDisponivel } = require("../controllers/dashboardPsicologoController");
 const userMenorController = require('../controllers/userMenorController');
-const { checkAuthenticatedUser } = require("../models/autenticador_middleware");
-
-
-// Middleware para verificar autenticação
-function verificarAutenticacao(req, res, next) {
-    if (req.session.autenticado) {
-        return next();
-    }
-    res.redirect('/loginpacientes');
-}
+const { checkAuthenticatedUser, checkAuthenticatedPsicologo } = require("../models/autenticador_middleware");
 
 
 router.get('/', (req, res) => {
@@ -109,7 +101,7 @@ router.get('/headerunlogged', (req, res) => {
   });
   
 // Página Logada
-router.get('/homelogged', verificarAutenticacao, (req, res) => {
+router.get('/homelogged', checkAuthenticatedUser, (req, res) => {
     res.render('pages/index', {
         pagina: 'homelogged',
         autenticado: req.session.autenticado,
@@ -463,7 +455,7 @@ router.post('/logindependentes', async (req, res) => {
 });
 
 // Chat Protegido
-router.get('/chat', verificarAutenticacao, async (req, res) => {
+router.get('/chat', checkAuthenticatedUser, async (req, res) => {
     try {
         const sessoesChatAtivas = await pool.query(`
             SELECT DISTINCT
@@ -552,19 +544,18 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
 // ROTA DE EXCLUSÃO DOS EVENTOS
 router.delete("/calendario/excluir/:id", excluirEvento);
 
-// Logout
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Erro ao destruir a sessão:', err);
-            res.status(500).redirect('/');
-        } else {
-            res.clearCookie('user_session');
-            res.redirect('/');
-        }
+// Renderiza a página do Dashboard Psicólogos
+router.get("/dashboardpsicologo", checkAuthenticatedPsicologo, (req, res) => {
+    res.render("pages/index", {
+      pagina: "dashboardpsicologo",
+      autenticado: req.session.autenticado,
     });
-});
+  });
 
+// Rota para marcar um dia como disponível
+router.post('/dashboardpsicologo/marcar-disponivel', marcarDisponivel);
 
+// Rota para remover um dia disponível
+router.post('/dashboardpsicologo/remover-disponivel', removerDisponivel);
 
 module.exports = router;

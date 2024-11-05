@@ -12,18 +12,16 @@ const psicologoModel = {
                 "DT_NASC_USUARIO, " +
                 "CPF_USUARIO, "  +
                 "CRP_USUARIO, "  +
-                "PSICOLOGO_ID_PSICOLOGO, " +
                 "DIFERENCIACAO_USUARIO " +
                 "FROM USUARIO WHERE DIFERENCIACAO_USUARIO = 'Psicologo'"
             );
-
             return results;
         } catch (error) {
             console.log("Erro ao encontrar os psicólogos", error);
             return error;
         }
     },
-
+    
     findAllEmails: async () => {
         try {
             const [results] = await pool.query(

@@ -73,7 +73,7 @@ const userPsicologosController = {
             req.session.autenticado = {
                 usuarioNome: req.body.username,
                 usuarioId: resultado.insertId,
-                UsuarioCRP: req.body.usercrp,
+                usuarioCRP: req.body.usercrp,
                 tipo: "Psicologo"
             };
             console.log("Sessão de usuário criada:", req.session.autenticado);
@@ -91,10 +91,9 @@ const userPsicologosController = {
     },
     logar: async (req) => {
         try {
-            const errors = validationResult(req); // Validação inicial
+            const errors = validationResult(req);
             let errorsList = {};
     
-            // Acumular todos os erros de validação inicial
             if (!errors.isEmpty()) {
                 errors.array().forEach((error) => {
                     errorsList[error.param] = error.msg;
@@ -109,18 +108,15 @@ const userPsicologosController = {
     
             const findUserCPF = await psicologo.findUserCPF(dadosForm);
     
-            // Verificação do CPF (mesmo se já houver erros)
             if (findUserCPF.length !== 1) {
                 errorsList.userdocuments = 'CPF não encontrado.';
             } else {
                 const psicologoData = findUserCPF[0];
     
-                // Verificação do CRP
                 if (psicologoData.CRP_USUARIO !== req.body.usercrp) {
                     errorsList.usercrp = 'CRP incorreto.';
                 }
     
-                // Verificação da senha
                 const senhaCorreta = await bcrypt.compare(
                     req.body.userpassword,
                     psicologoData.SENHA_USUARIO
@@ -131,20 +127,29 @@ const userPsicologosController = {
                 }
             }
     
-            // Retorna todos os erros encontrados
             if (Object.keys(errorsList).length > 0) {
-                console.log('Erros encontrados:', errorsList); // Log dos erros
+                console.log('Erros encontrados:', errorsList);
                 return { success: false, errors: errorsList };
             }
     
-            // Se não houver erros, retorna sucesso
+            console.log("Dados do Psicólogo retornados:", findUserCPF[0]); // Log para confirmar CRP
+    
+            req.session.autenticado = {
+                usuarioNome: findUserCPF[0].NOME_USUARIO,
+                usuarioId: findUserCPF[0].ID_USUARIO,
+                usuarioCRP: findUserCPF[0].CRP_USUARIO,  // Certifique-se de que o CRP está sendo configurado
+                tipo: 'Psicologo'
+            };
+    
+            console.log("Sessão configurada no login:", req.session.autenticado); // Verificar conteúdo da sessão
+    
             return { success: true, dados: findUserCPF[0] };
     
         } catch (error) {
             console.error('Erro no login:', error);
             return { success: false, errors: { geral: 'Erro no servidor.' } };
         }
-    }
+    }    
 };
 
 module.exports = userPsicologosController;
