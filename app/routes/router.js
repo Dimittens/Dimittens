@@ -4,7 +4,7 @@ const pool = require('../../config/pool_de_conexao');
 const { salvarEvento, listarEventosUsuario, excluirEvento } = require("../controllers/calendarioController");
 const userPacientesController = require('../controllers/userPacientesController');
 const userPsicologosController = require('../controllers/userPsicologosController');
-const { marcarDisponivel, removerDisponivel } = require("../controllers/dashboardPsicologoController");
+const { marcarDisponivel,getDiasDisponiveis, removerDisponivel } = require("../controllers/dashboardPsicologoController");
 const userMenorController = require('../controllers/userMenorController');
 const { checkAuthenticatedUser, checkAuthenticatedPsicologo } = require("../models/autenticador_middleware");
 
@@ -551,6 +551,9 @@ router.get("/dashboardpsicologo", checkAuthenticatedPsicologo, (req, res) => {
       autenticado: req.session.autenticado,
     });
   });
+
+  // Rota para obter os dias disponíveis
+router.get('/dashboardpsicologo/dias-disponiveis', getDiasDisponiveis);
 
 // Rota para marcar um dia como disponível
 router.post('/dashboardpsicologo/marcar-disponivel', marcarDisponivel);
