@@ -1,0 +1,1 @@
+var pool = require("../../config/pool_de_conexao");

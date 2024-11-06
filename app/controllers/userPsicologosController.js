@@ -149,7 +149,7 @@ const userPsicologosController = {
             console.error('Erro no login:', error);
             return { success: false, errors: { geral: 'Erro no servidor.' } };
         }
-    }    
+    }
 };
 
 module.exports = userPsicologosController;
