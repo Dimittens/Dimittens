@@ -4,7 +4,7 @@ const pool = require('../../config/pool_de_conexao');
 const { salvarEvento, listarEventosUsuario, excluirEvento } = require("../controllers/calendarioController");
 const userPacientesController = require('../controllers/userPacientesController');
 const userPsicologosController = require('../controllers/userPsicologosController');
-const { marcarDisponivel,getDiasDisponiveis, removerDisponivel } = require("../controllers/dashboardPsicologoController");
+const { marcarDisponivel, getDiasDisponiveis, removerDisponiveis } = require("../controllers/dashboardPsicologoController");
 const userMenorController = require('../controllers/userMenorController');
 const { checkAuthenticatedUser, checkAuthenticatedPsicologo } = require("../models/autenticador_middleware");
 
@@ -559,6 +559,6 @@ router.get('/dashboardpsicologo/dias-disponiveis', getDiasDisponiveis);
 router.post('/dashboardpsicologo/marcar-disponivel', marcarDisponivel);
 
 // Rota para remover um dia disponível
-router.post('/dashboardpsicologo/remover-disponivel', removerDisponivel);
+router.post('/dashboardpsicologo/remover-disponiveis', removerDisponiveis);
 
 module.exports = router;
