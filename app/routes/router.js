@@ -561,9 +561,8 @@ router.post('/dashboardpsicologo/marcar-disponivel', marcarDisponivel);
 // Rota para remover um dia disponível
 router.post('/dashboardpsicologo/remover-disponiveis', removerDisponiveis);
 
-
-router.post('/editeseuperfilpsic',async function (req, res) {
-    editarPerfilController.cadastrar(req, res);
-  })
+// Rota para editar perfil de usuário
+const PsicologoController = require('../controllers/PsicologoController');
+router.post('/editeseuperfilpsic', PsicologoController.editarPerfil);
 
 module.exports = router;
