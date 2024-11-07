@@ -562,7 +562,7 @@ router.post('/dashboardpsicologo/marcar-disponivel', marcarDisponivel);
 router.post('/dashboardpsicologo/remover-disponiveis', removerDisponiveis);
 
 // Rota para editar perfil de usuário
-const PsicologoController = require('../controllers/PsicologoController');
+const PsicologoController = require('../controllers/editarPerfilController');
 router.post('/editeseuperfilpsic', PsicologoController.editarPerfil);
 
 module.exports = router;
