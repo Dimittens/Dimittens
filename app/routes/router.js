@@ -564,5 +564,19 @@ router.post('/dashboardpsicologo/remover-disponiveis', removerDisponiveis);
 // Rota para editar perfil de usuário
 const PsicologoController = require('../controllers/editarPerfilController');
 router.post('/editeseuperfilpsic', PsicologoController.editarPerfil);
+router.get('/editeseuperfilpsic', PsicologoController.editarPerfilPage);
+
+// Logout
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erro ao destruir a sessão:', err);
+            res.status(500).redirect('/');
+        } else {
+            res.clearCookie('user_session');
+            res.redirect('/');
+        }
+    });
+});
 
 module.exports = router;

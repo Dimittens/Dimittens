@@ -21,12 +21,12 @@
                 <section class="edit-info">
                         <section class="info">
                             <label for="email">Email</label>
-                            <input type="text" id="email" class="input" placeholder="Email" value="<%= valores.email_psic %>" name="emailpsic">
+                            <input type="text" id="email" class="input" placeholder="Email"  name="emailpsic">
                         </section>
         
                         <section class="tele">
                             <label for="tel">Telefone</label>
-                            <input type="tel" id="tel" class="input" placeholder="(xx) xxxxx-xxxx" value="<% valores.num_psic %>" pattern="\(\d{2}\) \d{5}-\d{4}">
+                            <input type="tel" id="tel" class="input" name="tel" placeholder="(xx) xxxxx-xxxx" pattern="\(\d{2}\) \d{5}-\d{4}">
                         </section>
                 </section>
                 <section class="ph2">
@@ -78,7 +78,7 @@
                     <section class="bio">
                         <section class="biogra">
                             <label for="biog">Biografia</label>
-                            <textarea id="biog" class="input" placeholder="Sua biografia" value="<% valores.bio_psic %>" name="biografiapsic"></textarea>
+                            <textarea id="biog" class="input" placeholder="Sua biografia" name="biografiapsic"></textarea>
                         </section>
                         <section class="salvarr">
                             <input type="submit" class="submit" id="salve" value="Salvar"></input>
