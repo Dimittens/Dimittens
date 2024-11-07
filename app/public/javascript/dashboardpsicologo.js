@@ -30,8 +30,11 @@ const months = [
 
 // Função para inicializar o calendário
 function initCalendar() {
+  activeDay = today.getDate();  // Define o dia atual como ativo
   renderCalendar();
+  getActiveDay(activeDay);  // Atualiza a exibição da data atual
 }
+
 
 // Renderiza o calendário e aplica a visualização dos dias disponíveis e selecionados
 function renderCalendar() {
@@ -57,7 +60,8 @@ function renderCalendar() {
     const isSelected = selectedDays.includes(i);
     days += `<div class="day ${i === activeDay ? 'active' : ''} ${isAvailable ? 'available' : ''} ${isSelected ? 'selected' : ''}">${i}</div>`;
   }
-
+  
+  
   // Dias do próximo mês
   for (let j = 1; j <= nextDays; j++) {
     days += `<div class="day next-date">${j}</div>`;
@@ -67,7 +71,6 @@ function renderCalendar() {
   addListeners();
 }
 
-// Carrega dias disponíveis ao iniciar a página
 async function loadAvailableDays() {
   try {
     const response = await fetch('/dashboardpsicologo/dias-disponiveis');
@@ -75,8 +78,7 @@ async function loadAvailableDays() {
 
     if (data.success) {
       availableDays = data.diasDisponiveis;
-      console.log("Dias disponíveis carregados:", availableDays); // Verificar dados recebidos
-      renderCalendar();
+      renderCalendar();  // Re-renderiza o calendário com os dias disponíveis
     }
   } catch (error) {
     console.error("Erro ao carregar dias disponíveis:", error);
@@ -92,29 +94,36 @@ function updateMarkAvailableButton() {
   }
 }
 
+function getActiveDay(day) {
+  const selectedDay = new Date(year, month, day);
+  const dayName = selectedDay.toLocaleDateString("pt-BR", { weekday: "long" });
+  eventDay.innerHTML = dayName.charAt(0).toUpperCase() + dayName.slice(1); // Exibe o dia da semana
+  eventDate.innerHTML = `${day} ${months[month]} ${year}`;  // Exibe o dia, mês e ano
+}
+
 
 function toggleDaySelection(dayElement, dayNumber) {
   if (selectedDays.includes(dayNumber)) {
-    selectedDays = selectedDays.filter(day => day !== dayNumber); // Remove da seleção
-    dayElement.classList.remove("selected");
+    // Remove o dia da seleção
+    selectedDays = selectedDays.filter(day => day !== dayNumber);
+    dayElement.classList.remove("selected");  // Remove a classe CSS
   } else {
-    selectedDays.push(dayNumber); // Adiciona à seleção
-    dayElement.classList.add("selected");
+    // Adiciona o dia à seleção
+    selectedDays.push(dayNumber);
+    dayElement.classList.add("selected");  // Adiciona a classe CSS
   }
 }
 
 // Alterna entre modos de seleção para marcar e remover dias
-markAvailableBtn.addEventListener("click", async () => {
+markAvailableBtn.addEventListener("click", () => {
   if (selectingDays) {
-    if (selectedDays.length === 0) {
-      alert("Nenhum dia selecionado para marcar.");
-      return;
-    }
-    confirmDaySelection(); 
+    confirmSelection();
+    markAvailableBtn.textContent = "Disponibilizar consulta";
+    selectingDays = false;
   } else {
+    mode = 'add';
     selectingDays = true;
-    markAvailableBtn.textContent = "Confirmar marcação";
-    enableDaySelection("mark"); // Habilita a seleção de dias para marcação
+    markAvailableBtn.textContent = "Confirmar Marcação";
   }
 });
 
@@ -144,8 +153,6 @@ async function confirmCancelSelection() {
   alert("Cancelamento de dias selecionados concluído com sucesso."); // Confirmação
   loadAvailableDays(); // Atualiza o calendário
 }
-
-// Função para salvar dias disponíveis
 async function saveAvailableDays(days, month) {
   try {
     const response = await fetch('/dashboardpsicologo/marcar-disponivel', {
@@ -159,6 +166,7 @@ async function saveAvailableDays(days, month) {
     console.error("Erro ao salvar dias disponíveis:", error);
   }
 }
+
 // Alterna para o modo de remover dias
 function enableRemoveMode() {
   selectingDays = true;
@@ -168,7 +176,6 @@ function enableRemoveMode() {
   renderCalendar();
 }
 
-// Função para remover dias disponíveis
 async function removeAvailableDays(days, month) {
   try {
     const response = await fetch('/dashboardpsicologo/remover-disponiveis', {
@@ -191,34 +198,20 @@ function addListeners() {
       const target = e.target;
       const dayNumber = Number(target.innerHTML);
 
-      // Navegação permitida quando a função de seleção de marcação está desativada
-      if (!selectingDays) {
-        if (target.classList.contains("prev-date")) {
-          month = month === 0 ? 11 : month - 1;
-          year = month === 11 ? year - 1 : year;
-          activeDay = dayNumber;
-          renderCalendar();
-          getActiveDay(activeDay); // Atualiza `today-date`
-        } else if (target.classList.contains("next-date")) {
-          month = month === 11 ? 0 : month + 1;
-          year = month === 0 ? year + 1 : year;
-          activeDay = dayNumber;
-          renderCalendar();
-          getActiveDay(activeDay); // Atualiza `today-date`
-        } else {
-          activeDay = dayNumber;
-          getActiveDay(activeDay); // Atualiza `today-date`
-          days.forEach((d) => d.classList.remove("active"));
-          target.classList.add("active");
-        }
-      } else if (target.classList.contains("prev-date") || target.classList.contains("next-date")) {
+      // Permite a seleção apenas de dias do mês atual
+      if (!target.classList.contains("prev-date") && !target.classList.contains("next-date")) {
+        activeDay = dayNumber;  // Atualiza o dia ativo
+        getActiveDay(activeDay);  // Atualiza a exibição do dia
+
+        days.forEach((d) => d.classList.remove("active"));  // Remove 'active' dos outros dias
+        target.classList.add("active");  // Marca o novo dia como 'active'
+      } else {
         alert("Finalize a seleção de dias do mês atual antes de navegar para outro mês.");
       }
     });
   });
 }
 
-// Função para confirmar a seleção dos dias e salvar ou remover
 async function confirmSelection() {
   const activeMonth = month + 1;
   if (selectedDays.length > 0) {
@@ -229,7 +222,8 @@ async function confirmSelection() {
       await removeAvailableDays(selectedDays, activeMonth);
       alert(`Disponibilidade dos dias ${selectedDays.join(", ")} removida.`);
     }
-    loadAvailableDays();
+    selectedDays = []; // Limpa a seleção após a confirmação
+    loadAvailableDays(); // Recarrega os dias disponíveis atualizados
   }
 }
 
@@ -305,23 +299,16 @@ next.addEventListener("click", () => {
 });
 
 cancelSelectionBtn.addEventListener("click", () => {
-  if (removingDays) {
-    if (selectedDays.length === 0) {
-      alert("Nenhum dia selecionado para cancelar.");
-      return;
-    }
-    confirmCancelSelection(); // Confirma o cancelamento dos dias selecionados
+  if (selectingDays) {
+    confirmSelection();
+    cancelSelectionBtn.textContent = "Cancelar";
+    selectingDays = false;
   } else {
-    if (availableDays.length === 0) {
-      alert("Nenhum dia marcado como disponível para cancelar.");
-      return;
-    }
-    removingDays = true;
-    cancelSelectionBtn.textContent = "Confirmar cancelamento";
-    enableDaySelection("cancel"); // Habilita a seleção dos dias a serem removidos
+    mode = 'remove';
+    selectingDays = true;
+    cancelSelectionBtn.textContent = "Confirmar Remoção";
   }
 });
-
 function confirmCancelSelection() {
   if (selectedDays.length === 0) {
     alert("Nenhum dia selecionado para cancelar.");
