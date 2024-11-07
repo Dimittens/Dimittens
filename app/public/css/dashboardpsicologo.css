@@ -128,16 +128,16 @@ body {
 
 
 .day.available {
-    background-color: #8FBC8F; /* Cor verde suave */
-    color: #ffffff; /* Texto branco */
-    border-radius: 50%; /* Deixa os dias arredondados */
-  }
-
-  .day.selected {
-    background-color: #4c63af; /* Verde */
-    color: #fff;
+    background-color: #8FBC8F !important; /* Cor verde suave */
+    color: #ffffff !important; /* Texto branco */
+    border-radius: 50% !important;
   }
   
+  .day.selected {
+    background-color: #4c63af !important; /* Verde */
+    color: #fff !important;
+  }
+    
 
 .calendar .days .prev-date,
 .calendar .days .next-date {
