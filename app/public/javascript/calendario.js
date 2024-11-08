@@ -115,14 +115,22 @@ function addListeners() {
       const target = e.target;
       const dayNumber = Number(target.innerHTML);
 
-      // Permite a seleção apenas de dias do mês atual
-      if (!target.classList.contains("prev-date") && !target.classList.contains("next-date")) {
-        if (selectingDays) {
-          toggleDaySelection(target, dayNumber);  // Passa o elemento do dia e o número do dia
-        } else {
-          activeDay = dayNumber;
-          getActiveDay(activeDay);  // Atualiza a exibição da data atual
-        }
+      if (target.classList.contains("prev-date")) {
+        month = month === 0 ? 11 : month - 1;
+        year = month === 11 ? year - 1 : year;
+        activeDay = dayNumber; // Mantém o dia ativo ao mudar o mês
+        renderCalendar();
+      } else if (target.classList.contains("next-date")) {
+        month = month === 11 ? 0 : month + 1;
+        year = month === 0 ? year + 1 : year;
+        activeDay = dayNumber; // Mantém o dia ativo ao mudar o mês
+        renderCalendar();
+      } else {
+        activeDay = dayNumber;
+        getActiveDay(activeDay);
+        updateEvents(activeDay);
+        days.forEach((d) => d.classList.remove("active"));
+        target.classList.add("active");
       }
     });
   });
