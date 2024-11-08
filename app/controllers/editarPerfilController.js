@@ -1,16 +1,6 @@
 const editarPerfilModel = require("../models/editarPerfilModel");
 
-function validarTelefone(telefone) {
-    const telefoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
-    return telefoneRegex.test(telefone);
-}
-
-function validarBiografia(biografia) {
-    return biografia.length <= 300;
-}
-
 const editarPerfilController = {
-    // Renderiza a página de edição de perfil com os dados atuais
     editarPerfilPage: async (req, res) => {
         const idUsuario = req.session?.autenticado?.usuarioId;
 
@@ -27,23 +17,12 @@ const editarPerfilController = {
         }
     },
 
-    // Atualiza os dados do perfil quando o formulário for submetido
     editarPerfil: async (req, res) => {
-        const { emailpsic, tel, abordagem, especialidade, biografiapsic } = req.body;
+        const { emailpsic, tel, abordagem, especialidade, biografiapsic, publico } = req.body;
         const idUsuario = req.session?.autenticado?.usuarioId;
 
         if (!idUsuario) {
             return res.status(400).json({ error: 'Usuário não autenticado' });
-        }
-
-        // Validação do telefone
-        if (!validarTelefone(tel)) {
-            return res.status(400).json({ error: 'Número de telefone inválido. Use o formato (xx) xxxxx-xxxx' });
-        }
-
-        // Validação da biografia
-        if (!validarBiografia(biografiapsic)) {
-            return res.status(400).json({ error: 'A biografia deve ter no máximo 300 caracteres' });
         }
 
         const data = {
@@ -52,6 +31,7 @@ const editarPerfilController = {
             ABORDAGEM_ABRANGENTE_PSICOLOGO: abordagem,
             ESPECIALIDADE_PSICOLOGO: especialidade,
             BIOGRAFIA_PSICOLOGO: biografiapsic,
+            PUBLICO_ALVO_PSICOLOGO: publico,
             idUsuario
         };
 
