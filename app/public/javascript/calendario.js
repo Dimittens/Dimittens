@@ -118,17 +118,22 @@ function addListeners() {
       if (target.classList.contains("prev-date")) {
         month = month === 0 ? 11 : month - 1;
         year = month === 11 ? year - 1 : year;
-        activeDay = dayNumber; // Mantém o dia ativo ao mudar o mês
-        renderCalendar();
+        activeDay = dayNumber;
+        renderCalendar(); // Re-renderiza o calendário
       } else if (target.classList.contains("next-date")) {
         month = month === 11 ? 0 : month + 1;
         year = month === 0 ? year + 1 : year;
-        activeDay = dayNumber; // Mantém o dia ativo ao mudar o mês
-        renderCalendar();
-      } else {
         activeDay = dayNumber;
+        renderCalendar(); // Re-renderiza o calendário
+      } else {
+        // Atualiza activeDay com o número do dia clicado
+        activeDay = dayNumber;
+
+        // Chama getActiveDay para atualizar a div today-date e destacar o dia
         getActiveDay(activeDay);
         updateEvents(activeDay);
+
+        // Remove a classe "active" de todos os dias e adiciona ao dia atual
         days.forEach((d) => d.classList.remove("active"));
         target.classList.add("active");
       }
