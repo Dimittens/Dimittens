@@ -36,19 +36,18 @@ const editarPerfilModel = {
                 `SELECT ID_USUARIO FROM PSICOLOGO WHERE ID_USUARIO = ?`,
                 [idUsuario]
             );
-            console.log("tot psicologo")
-           console.log(existingPsicologo.length)
+
             if (existingPsicologo.length === 0) {
                 await pool.query(
                     `INSERT INTO PSICOLOGO (ID_USUARIO, TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO)
-                    VALUES (?, ?, ?, ?, ?)`,
+                    VALUES (?, ?, ?, ?, ?, ?)`,
                     [idUsuario, TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO]
-
                 );
+                
             } else {
                 await pool.query(
                     `UPDATE PSICOLOGO 
-                    SET TEL_PSICOLOGO = ?, ABORDAGEM_ABRANGENTE_PSICOLOGO = ?, ESPECIALIDADE_PSICOLOGO = ?, BIOGRAFIA_PSICOLOGO = ?, PUBLICO_ALVO_PSICOLOGO = ?, 
+                    SET TEL_PSICOLOGO = ?, ABORDAGEM_ABRANGENTE_PSICOLOGO = ?, ESPECIALIDADE_PSICOLOGO = ?, BIOGRAFIA_PSICOLOGO = ?, PUBLICO_ALVO_PSICOLOGO = ?
                     WHERE ID_USUARIO = ?`,
                     [TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO, idUsuario]
                 );

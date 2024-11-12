@@ -10,6 +10,13 @@ const editarPerfilController = {
 
         try {
             const valores = await editarPerfilModel.getProfileData(idUsuario);
+            
+            // Verifica se a consulta retornou resultados
+            if (!valores) {
+                return res.status(404).json({ error: 'Perfil não encontrado' });
+            }
+
+            console.log("Dados do perfil:", valores);  // Verifique os dados no console
             res.render("partial/editeseuperfilpsic", { valores });
         } catch (error) {
             console.error("Erro ao carregar perfil:", error);

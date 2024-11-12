@@ -1,64 +1,64 @@
-<title>perfil-1</title>
-<link rel="stylesheet" href="css/edite-seu-perfil-psic.css">
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>perfil-1</title>
+    <link rel="stylesheet" href="css/edite-seu-perfil-psic.css">
 </head>
-
 <body>
-
-   
-        <article>
-            <form action="/editeseuperfilpsic" method="post">
-                <section class="box-img">
-                    <section class="edit-img">
-                        <section>
-                            <img src="imagens/user-perfil.svg">
-                        </section>
-                        <section class="button">
-                            <input class="submit" type="submit" id="add" value="Adicionar foto"></input>
-                            <input class="submit" id="delet" type="submit" value="Deletar foto"></input>
-                        </section>
+    <article>
+        <form action="/editeseuperfilpsic" method="post">
+            <section class="box-img">
+                <section class="edit-img">
+                    <section>
+                        <img src="imagens/user-perfil.svg">
+                    </section>
+                    <section class="button">
+                        <input class="submit" type="submit" id="add" value="Adicionar foto">
+                        <input class="submit" id="delet" type="submit" value="Deletar foto">
                     </section>
                 </section>
-                <section class="edit-info">
-                        <section class="info">
-                            <label for="email">Email</label>
-                            <input type="text" id="email" class="input" placeholder="Email"  name="emailpsic">
-                        </section>
-        
-                        <section class="tele">
-                            <label for="tel">Telefone</label>
-                            <input type="tel" id="tel" class="input" name="tel" placeholder="(xx) xxxxx-xxxx" pattern="\(\d{2}\) \d{5}-\d{4}">
-                        </section>
+            </section>
+            <section class="edit-info">
+                <section class="info">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" class="input" name="emailpsic" placeholder="Email"> 
                 </section>
-                <section class="ph2">
-                    <section class="abordagem-esp">
-                       <section class="abordagemm">
-                                <label for="abord">Abordagem</label>
-                                <select name="abordagem" id="abord">
-                                    <option value="Psicologia Comportamental">Psicologia Comportamental</option>
-                                    <option value="Psicologia Cognitiva">Psicologia Cognitiva</option>
-                                    <option value="Psicologia Humanista">Psicologia Humanista</option>
-                                    <option value="Psicanálise">Psicanálise</option>
-                                    <option value="Psicologia Gestalt">Psicologia Gestalt</option>
-                                    <option value="Psicologia Evolutiva">Psicologia Evolutiva</option>
-                                    <option value="Psicologia Social">Psicologia Social</option>
-                                    <option value="Psicologia Positiva">Psicologia Positiva</option>
-                                    <option value="Terapia Cognitivo-Comportamental (TCC)">Terapia Cognitivo-Comportamental (TCC)</option>
-                                    <option value="Psicologia Sistêmica">Psicologia Sistêmica</option>
-                                    <option value="Psicologia do Desenvolvimento">Psicologia do Desenvolvimento</option>
-                                    <option value="Psicologia Cultural">Psicologia Cultural</option>
-                                    <option value="Neuropsicologia">Neuropsicologia</option>
-                                    <option value="Psicologia Forense">Psicologia Forense</option>
-                                    <option value="Psicologia da Saúde">Psicologia da Saúde</option>
-                                </select>
-                       </section>
-                     
-                        
-                            <section class="abordagemm">
-                                <label for="esp">Especialidade</label>
-                                <select name="especialidade" id="esp">
-                                    <option value="Terapia Comportamental / Modificação de Comportamento">Terapia Comportamental / Modificação de Comportamento</option>
-                                    <option value="Terapia Cognitiva / Avaliação Cognitiva">Terapia Cognitiva / Avaliação Cognitiva</option>
-                                    <option value="Psicoterapia Humanista / Terapia Centrada na Pessoa">Psicoterapia Humanista / Terapia Centrada na Pessoa</option>
+
+                <section class="tele">
+                    <label for="tel">Telefone</label>
+                    <input type="tel" id="tel" class="input" name="tel" placeholder="(xx) xxxxx-xxxx" pattern="\(\d{2}\) \d{5}-\d{4}">
+                </section>
+            </section>
+            <section class="ph2">
+                <section class="abordagem-esp">
+                    <section class="abordagemm">
+                        <label for="abord">Abordagem</label>
+                        <select name="abordagem" id="abord">
+                            <option value="Psicologia Comportamental">Psicologia Comportamental</option> 
+                            <option value="Psicologia Cognitiva">Psicologia Cognitiva</option>
+                            <option value="Psicologia Humanista">Psicologia Humanista</option>
+                            <option value="Psicanálise">Psicanálise</option>
+                            <option value="Psicologia Gestalt">Psicologia Gestalt</option>
+                            <option value="Psicologia Evolutiva">Psicologia Evolutiva</option>
+                            <option value="Psicologia Social">Psicologia Social</option>
+                            <option value="Psicologia Positiva">Psicologia Positiva</option>
+                            <option value="Psicologia Sistêmica">Psicologia Sistêmica</option>
+                            <option value="Psicologia do Desenvolvimento">Psicologia do Desenvolvimento</option>
+                            <option value="Psicologia Cultural">Psicologia Cultural</option>
+                            <option value="Neuropsicologia">Neuropsicologia</option>
+                            <option value="Psicologia Forense">Psicologia Forense</option>
+                            <option value="Psicologia da Saúde">Psicologia da Saúde</option>
+                        </select>
+                    </section>
+                    
+                    <section class="abordagemm">
+                        <label for="esp">Especialidade</label>
+                        <select name="especialidade" id="esp">
+                            <option value="Terapia Comportamental / Modificação de Comportamento">Terapia Comportamental / Modificação de Comportamento</option>
+                            <option value="Terapia Cognitiva / Avaliação Cognitiva">Terapia Cognitiva / Avaliação Cognitiva</option>
+                            <option value="Psicoterapia Humanista / Terapia Centrada na Pessoa">Psicoterapia Humanista / Terapia Centrada na Pessoa</option>
                                     <option value="Psicanálise Clássica / Psicoterapia Psicanalítica">Psicanálise Clássica / Psicoterapia Psicanalítica</option>
                                     <option value="Terapia Gestalt / Formação em Psicologia Gestalt">Terapia Gestalt / Formação em Psicologia Gestalt</option>
                                     <option value="Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil">Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil</option>
@@ -71,32 +71,28 @@
                                     <option value="Avaliação Neuropsicológica / Reabilitação Neuropsicológica">Avaliação Neuropsicológica / Reabilitação Neuropsicológica</option>
                                     <option value="Avaliação de Competência Legal / Consultoria em Casos Judiciais">Avaliação de Competência Legal / Consultoria em Casos Judiciais</option>
                                     <option value="Intervenções em Saúde Mental / Promoção de Saúde e Bem-Estar">Intervenções em Saúde Mental / Promoção de Saúde e Bem-Estar</option>
-                                </select>
-                            </section>
-                    
-                    </section>
-                    <section class="bio">
-                        <section class="biogra">
-                            <label for="biog">Biografia</label>
-                            <textarea id="biog" class="input" placeholder="Sua biografia" name="biografiapsic"></textarea>
-                        </section>
-
-                        <section class="salvarr">
-                            <label for="pub">Especialidade</label>
-                        <select name="publico" id="pub">
-                            <option value="menor">Menor de idade</option>
-                            <option value="adulto">Adulto</option>
-                            <option value="idoso">Idoso</option>
                         </select>
-                            <input type="submit" class="submit" id="salve" value="Salvar"></input>
-                        </section>
                     </section>
-        
                 </section>
-            </form>
-        
-        </article>
-    
-</body>
+                
+                <section class="bio">
+                    <section class="biogra">
+                        <label for="biog">Biografia</label>
+                        <textarea id="biog" class="input" name="biografiapsic" placeholder="Sua biografia"></textarea>
+                    </section>
 
+                    <section class="salvarr">
+                        <label for="pub">Especialidade</label>
+                        <select name="publico" id="pub">
+                            <option value="Criança">Menor de idade</option>
+                            <option value="Adulto">Adulto</option>
+                            <option value="Idoso">Idoso</option>
+                        </select>
+                        <input type="submit" class="submit" id="salve" value="Salvar">
+                    </section>
+                </section>
+            </section>
+        </form>
+    </article>
+</body>
 </html>
