@@ -91,7 +91,7 @@ select {
 
 .edit-info {
     display: flex;
-    gap: 60px;
+    gap: 65px;
     margin-top: 50px;
 }
 
@@ -155,7 +155,7 @@ margin-left: 10px;
 
 .bio textarea {
     font-family: "Antialiased ", sans-serif;
-    height: 140px;
+    height: 220px;
     padding-top: 15px;
     padding-bottom: 15px;
 }
@@ -197,7 +197,7 @@ article {
     display: flex;
     width: fit-content;
     margin-top: 30px;
-    gap: 60px;
+    gap: 65px;
 }
 
 .tele {
@@ -233,8 +233,15 @@ input::placeholder {
 
 .salvarr {
     width: 440px;
-    align-content: flex-end;
+    align-content: center;
     text-align: end;
+    gap: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+#pub {
+    align-self: flex-start;
 }
 
 #salve {
@@ -246,4 +253,22 @@ input::placeholder {
 #salve:hover, #add:hover, #delet:hover {
     background-color: #422040;
     color: white;
+}
+
+#profile_pic {
+    display: none;
+}
+
+.picture { 
+    color: white;
+}
+
+.picture__image {
+    width: 200px;
+    height: 200px;
+    border-radius: 360px;
+    background-color: #422040;
+    display: block;
+    cursor: pointer;
+    align-content: center;
 }

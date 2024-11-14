@@ -8,15 +8,14 @@
 </head>
 <body>
     <article>
-        <form action="/editeseuperfilpsic" method="post">
+        <form action="/editeseuperfilpsic" method="post" enctype="multipart/form-data">
             <section class="box-img">
                 <section class="edit-img">
                     <section>
-                        <img src="imagens/user-perfil.svg">
-                    </section>
-                    <section class="button">
-                        <input class="submit" type="submit" id="add" value="Adicionar foto">
-                        <input class="submit" id="delet" type="submit" value="Deletar foto">
+                        <label class="picture" for="profile_pic" tabIndex="0">
+                            <span class="picture__image">Escolher foto</span>
+                          </label>
+                        <input type="file" name="profile_pic" id="profile_pic">
                     </section>
                 </section>
             </section>
@@ -82,13 +81,15 @@
                     </section>
 
                     <section class="salvarr">
-                        <label for="pub">Especialidade</label>
-                        <select name="publico" id="pub">
-                            <option value="Criança">Menor de idade</option>
-                            <option value="Adulto">Adulto</option>
-                            <option value="Idoso">Idoso</option>
-                        </select>
-                        <input type="submit" class="submit" id="salve" value="Salvar">
+                        <section>
+                            <label for="pub">Público-Alvo</label>
+                            <select name="publico" id="pub">
+                                <option value="Criança">Menor de idade</option>
+                                <option value="Adulto">Adulto</option>
+                                <option value="Idoso">Idoso</option>
+                            </select>
+                        </section>
+                        <section><input type="submit" class="submit" id="salve" value="Salvar"></section>
                     </section>
                 </section>
             </section>
