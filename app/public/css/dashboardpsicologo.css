@@ -134,9 +134,25 @@ body {
   }
   
   .day.selected {
-    background-color: #4c63af !important; /* Verde */
-    color: #fff !important;
+    background-color: #8FBC8F !important; /* Fundo verde para marcar */
+    color: white !important;
   }
+  
+  .day.remove {
+    background-color: #FF6347 !important; /* Fundo vermelho para remover */
+    color: white !important;
+  }
+
+  .day.highlighted {
+    background-color: #b0f4b6; /* Verde claro para destacar visualmente */
+    border: 1px solid #52b788;
+  }
+  
+  .day.highlighted-remove {
+    background-color: #f4b0b0; /* Vermelho claro para remoção */
+    border: 1px solid #b75252;
+  }
+  
     
 
 .calendar .days .prev-date,

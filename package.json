@@ -24,7 +24,8 @@
     "mysql2": "^3.11.3",
     "socket.io": "^4.8.0",
     "uid2": "^1.0.0",
-    "websocket": "^1.0.35"
+    "websocket": "^1.0.35",
+    "ws": "^8.18.0"
   },
   "author": "",
   "license": "ISC",
