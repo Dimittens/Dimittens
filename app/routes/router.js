@@ -6,7 +6,7 @@ const userPacientesController = require('../controllers/userPacientesController'
 const userPsicologosController = require('../controllers/userPsicologosController');
 const { marcarDisponivel, getDiasDisponiveis, removerDisponiveis } = require("../controllers/dashboardPsicologoController");
 const userMenorController = require('../controllers/userMenorController');
-const { checkAuthenticatedUser, checkAuthenticatedPsicologo } = require("../models/autenticador_middleware");
+const { verificarAutenticacao, checkAuthenticatedPsicologo } = require("../models/autenticador_middleware");
 
 
 router.get('/', (req, res) => {
@@ -101,7 +101,7 @@ router.get('/headerunlogged', (req, res) => {
   });
   
 // Página Logada
-router.get('/homelogged', checkAuthenticatedUser, (req, res) => {
+router.get('/homelogged', verificarAutenticacao, (req, res) => {
     res.render('pages/index', {
         pagina: 'homelogged',
         autenticado: req.session.autenticado,
@@ -453,13 +453,29 @@ router.post('/logindependentes', async (req, res) => {
         });
     }
 });
+async function verificarPsicologo(req, res, next) {
+  const usuarioId = req.session.autenticado.usuarioId;
+
+  try {
+      const [result] = await pool.query(`SELECT DIFERENCIACAO_USUARIO FROM usuario WHERE ID_USUARIO = ?`, [usuarioId]);
+
+      if (result.length > 0 && result[0].DIFERENCIACAO_USUARIO === 'Psicologo') {
+          next(); // O usuário é um psicólogo, prossegue para a rota
+      } else {
+          res.status(403).send("Acesso negado. Apenas psicólogos podem acessar este formulário.");
+      }
+  } catch (error) {
+      console.error("Erro ao verificar psicólogo:", error);
+      res.status(500).send("Erro ao verificar acesso.");
+  }
+}
 
 // Chat Protegido
-router.get('/formularioconsulta', checkAuthenticatedUser,verificarPsicologo, (req, res) => {
+router.get('/formularioconsulta', verificarAutenticacao,verificarPsicologo, (req, res) => {
     const psicologoId = req.session.autenticado.usuarioId; // Pega o ID do psicólogo logado
     res.render('pages/index', { pagina: "formularioconsulta", psicologoId }); // Renderiza a view com o ID do psicólogo
   });
-  router.post('/api/agendar-consulta', checkAuthenticatedUser, verificarPsicologo, async (req, res) => {
+  router.post('/api/agendar-consulta', verificarAutenticacao, verificarPsicologo, async (req, res) => {
     const usuarioId = req.session.autenticado.usuarioId; // ID do psicólogo que está criando a consulta
     const { cpfUsuario, dataHoraConsulta, preferenciasRemotas, valorConsulta, tempoConsulta } = req.body;
   
@@ -580,7 +596,7 @@ router.get('/formularioconsulta', checkAuthenticatedUser,verificarPsicologo, (re
   
   // Correção da inicialização do WebSocket
   // 1. Primeiro, corrija a rota para sessão do chat
-  router.get('/sessao-chat/:consultaId', checkAuthenticatedUser, async (req, res) => {
+  router.get('/sessao-chat/:consultaId', verificarAutenticacao, async (req, res) => {
     try {
         const consultaId = req.params.consultaId;
         const usuarioId = req.session.autenticado.usuarioId;
@@ -675,7 +691,7 @@ router.get('/formularioconsulta', checkAuthenticatedUser,verificarPsicologo, (re
     }
   });
   // Rota para banir/desbanir usuário
-  router.post('/dashboard-monitoramento/banir', checkAuthenticatedUser, verificarAdmin, async (req, res) => {
+  router.post('/dashboard-monitoramento/banir', verificarAutenticacao, verificarAdmin, async (req, res) => {
     const { idUsuario, acao } = req.body;
   
     try {
@@ -755,7 +771,7 @@ router.get('/formularioconsulta', checkAuthenticatedUser,verificarPsicologo, (re
   });
 
   // Rota principal do dashboard
-router.get('/dashboard-monitoramento', checkAuthenticatedUser, verificarAdmin, async (req, res) => {
+router.get('/dashboard-monitoramento', verificarAutenticacao, verificarAdmin, async (req, res) => {
     try {
       // Estatísticas gerais
       const stats = await getStats();
@@ -841,6 +857,13 @@ router.get('/dashboard-monitoramento', checkAuthenticatedUser, verificarAdmin, a
       });
     }
   });
+  const rotasEstaticas = [
+    'headerunlogged', 'faq', 'psicologos', 'interesses', 'transtornos', 
+    'sobrenos', 'perfil-comunidade', 'redirecionamentosuporte', 'comunidade', 
+    'criarpostagem', 'criarcomunidade', 'carroseltranstornos', 'comentarios', 
+    'rodape', 'passoapasso', 'passoapassopsico', 'editeseuperfil', 'perfil', 
+    'consultas', 'atividademensal', 'popuppsicologos'
+  ];
   
   rotasEstaticas.forEach((pagina) => {
     router.get(`/${pagina}`, (req, res) => {
@@ -850,7 +873,7 @@ router.get('/dashboard-monitoramento', checkAuthenticatedUser, verificarAdmin, a
   
   
 // Renderiza a página de calendário
-router.get("/calendario", checkAuthenticatedUser, (req, res) => {
+router.get("/calendario", verificarAutenticacao, (req, res) => {
     res.render("pages/index", {
       pagina: "calendario",
       autenticado: req.session.autenticado,
@@ -858,7 +881,7 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
   });
   
   // Rota para salvar um evento (POST)
-  router.post("/calendario/salvar", checkAuthenticatedUser, async (req, res) => {
+  router.post("/calendario/salvar", verificarAutenticacao, async (req, res) => {
     try {
       const resultado = await salvarEvento(req, false);
       if (resultado.success) {
@@ -875,7 +898,7 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
   });
   
   // Rota para editar um evento (PUT)
-  router.put("/calendario/editar/:id", checkAuthenticatedUser, async (req, res) => {
+  router.put("/calendario/editar/:id", verificarAutenticacao, async (req, res) => {
     try {
       const resultado = await salvarEvento(req, true);
       if (resultado.success) {
@@ -890,7 +913,7 @@ router.get("/calendario", checkAuthenticatedUser, (req, res) => {
   });
   
   // Rota para listar todos os eventos do usuário (GET)
-  router.get("/calendario/listar-sessao", checkAuthenticatedUser, async (req, res) => {
+  router.get("/calendario/listar-sessao", verificarAutenticacao, async (req, res) => {
     try {
       const usuarioId = req.session.autenticado.usuarioId;
       const eventos = await listarEventosUsuario(usuarioId);

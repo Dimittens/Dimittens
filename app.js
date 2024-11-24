@@ -7,9 +7,11 @@ const multer = require('multer');
 const path = require('path');
 const pool = require('./config/pool_de_conexao'); // Conexão com o banco de dados
 require('dotenv').config(); // Carregar variáveis de ambiente
-const wss = new WebSocket.Server({ server });
 const app = express();
+const rotas = require('./app/routes/router');
+// Associa o router ao caminho /chat
 const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 const port = 3000;
 // Configuração do MySQLStore para sessões
 const activeConnections = new Map();
@@ -27,8 +29,17 @@ let sessionStore = new MySQLStore(
   pool
 );
 
+function verificarAutenticacao(req, res, next) {
+  if (req.session?.autenticado) {
+    return next(); // Usuário autenticado, continue
+  } else {
+    return res.redirect('/loginpacientes'); // Redirecione para a página de login
+  }
+}
+
 
 // **Configuração do middleware de sessão**
+// Configuração do middleware de sessão
 app.use(
   session({
     key: 'user_session',
@@ -44,11 +55,35 @@ app.use(
   })
 );
 
+// Middleware global para inicializar `req.session.autenticado`
+app.use((req, res, next) => {
+  if (!req.session.autenticado) {
+    req.session.autenticado = null;
+  }
+  next();
+});
+
+// Rotas
+app.use('/', rotas);
+
 // **Middleware global para variáveis nas views**
 app.use((req, res, next) => {
   const autenticado = req.session.autenticado || false;
   res.locals.autenticado = autenticado;
   res.locals.usuarioNome = autenticado ? autenticado.usuarioNome : null;
+  next();
+});
+
+function verificarAutenticacao(req, res, next) {
+  if (req.session?.autenticado) {
+    return next(); // Usuário autenticado, continue
+  } else {
+    return res.redirect('/loginpacientes'); // Redirecione para a página de login
+  }
+}
+
+app.use((req, res, next) => {
+  res.locals.usuarioNome = req.session.autenticado ? req.session.autenticado.usuarioNome : null;
   next();
 });
 
@@ -72,7 +107,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/denunciar', async (req, res) => {
   const { nomeDenunciante, nomeDenunciado, motivoDenuncia, textoDenuncia } = req.body;
-  const usuarioId = req.session.autenticado.usuarioId; // ID do usuário logado (denunciante)
+  const usuarioId = req.session?.autenticado?.usuarioId; // Verifica se `req.session` e `autenticado` existem
+if (!usuarioId) {
+  return res.status(403).json({ error: 'Usuário não autenticado' });
+}
+
 
   try {
       await pool.query(`
@@ -89,14 +128,14 @@ app.post('/api/denunciar', async (req, res) => {
 });
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, 'uploads/') // Certifique-se de que esta pasta existe
+      cb(null, 'uploads/'); // Certifique-se de que esta pasta existe
   },
   filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, uniqueSuffix + '-' + file.originalname)
-  }
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, uniqueSuffix + '-' + file.originalname);
+  },
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // Filtro para aceitar apenas imagens e documentos
 const fileFilter = (req, file, cb) => {
@@ -140,7 +179,7 @@ app.post('/api/banir', async (req, res) => {
 });
 
 // Atualizar as rotas do chat
-app.get('/chat', checkAuthenticatedUser, async (req, res) => {
+app.get('/chat', verificarAutenticacao, async (req, res) => {
   try {
       const [sessoesChatAtivas] = await pool.query(`
           SELECT DISTINCT

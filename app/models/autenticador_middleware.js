@@ -3,7 +3,7 @@ const paciente = require("./pacienteModel.js");
 const bcrypt = require("bcryptjs");
 
 // Middleware para verificar se o usuário está autenticado
-checkAuthenticatedUser = (req, res, next) => {
+verificarAutenticacao = (req, res, next) => {
     if (req.session && req.session.autenticado) {
         console.log("Usuário autenticado:", req.session.autenticado);
         res.locals.usuarioNome = req.session.autenticado.usuarioNome; // Disponível para as views
@@ -112,7 +112,7 @@ clearSession = (req, res) => {
 
 // Exportando os middlewares
 module.exports = {
-    checkAuthenticatedUser,
+    verificarAutenticacao,
     checkAuthenticatedPsicologo,
     clearSession,
     recordAuthenticatedUser,

@@ -10,13 +10,11 @@ const editarPerfilController = {
 
         try {
             const valores = await editarPerfilModel.getProfileData(idUsuario);
-            
-            // Verifica se a consulta retornou resultados
+
             if (!valores) {
                 return res.status(404).json({ error: 'Perfil não encontrado' });
             }
 
-            console.log("Dados do perfil:", valores);  // Verifique os dados no console
             res.render("partial/editeseuperfilpsic", { valores });
         } catch (error) {
             console.error("Erro ao carregar perfil:", error);
@@ -32,13 +30,19 @@ const editarPerfilController = {
             return res.status(400).json({ error: 'Usuário não autenticado' });
         }
 
+        let imagemPerfil = null;
+        if (req.file) {
+            imagemPerfil = `/uploads/${req.file.filename}`;
+        }
+
         const data = {
             EMAIL_USUARIO: emailpsic,
-            TEL_PSICOLOGO: tel,
-            ABORDAGEM_ABRANGENTE_PSICOLOGO: abordagem,
-            ESPECIALIDADE_PSICOLOGO: especialidade,
-            BIOGRAFIA_PSICOLOGO: biografiapsic,
-            PUBLICO_ALVO_PSICOLOGO: publico,
+            TEL_USUARIO: tel,
+            ABORDAGEM_ABRANGENTE_USUARIO: abordagem,
+            ESPECIALIDADE_USUARIO: especialidade,
+            BIOGRAFIA_USUARIO: biografiapsic,
+            PUBLICO_ALVO_USUARIO: publico,
+            IMAGEM_PERFIL: imagemPerfil,
             idUsuario
         };
 
@@ -46,7 +50,7 @@ const editarPerfilController = {
             const success = await editarPerfilModel.updateProfile(data);
 
             if (success) {
-                res.redirect("/perfilpsic");
+                res.redirect('/perfilpsic');
             } else {
                 res.status(500).json({ error: 'Erro ao atualizar perfil' });
             }
