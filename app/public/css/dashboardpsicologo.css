@@ -10,6 +10,40 @@
     font-family: "Poppins", sans-serif;
 }
 
+.mark-available-btn {
+background-color: white;
+color: #422040;
+border: none;
+border-radius: 15px;
+padding: 15px;
+width: fit-content;
+height: fit-content;
+cursor: pointer;
+font-weight: 600;
+}
+
+.cancel-selection-btn {
+    background-color: white;
+    color: #422040;
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.buttons-consulta {
+    display: flex;
+    height: 80%;
+    align-items: flex-end;
+    margin-right: 30px;
+    gap: 20px;
+    justify-content: flex-end;
+    width: 120%;
+}
+
 /* nice scroll bar */
 ::-webkit-scrollbar {
     width: 5px;

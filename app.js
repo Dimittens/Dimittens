@@ -29,15 +29,6 @@ let sessionStore = new MySQLStore(
   pool
 );
 
-function verificarAutenticacao(req, res, next) {
-  if (req.session?.autenticado) {
-    return next(); // Usuário autenticado, continue
-  } else {
-    return res.redirect('/loginpacientes'); // Redirecione para a página de login
-  }
-}
-
-
 // **Configuração do middleware de sessão**
 // Configuração do middleware de sessão
 app.use(
@@ -55,31 +46,24 @@ app.use(
   })
 );
 
-// Middleware global para inicializar `req.session.autenticado`
 app.use((req, res, next) => {
   if (!req.session.autenticado) {
-    req.session.autenticado = null;
+    req.session.autenticado = null; // Inicializa como null caso não esteja definido
   }
+  res.locals.autenticado = req.session.autenticado;
+  res.locals.usuarioNome = req.session.autenticado?.usuarioNome || null;
   next();
 });
-
-// Rotas
+// **Parsing do corpo das requisições**
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/', rotas);
-
-// **Middleware global para variáveis nas views**
-app.use((req, res, next) => {
-  const autenticado = req.session.autenticado || false;
-  res.locals.autenticado = autenticado;
-  res.locals.usuarioNome = autenticado ? autenticado.usuarioNome : null;
-  next();
-});
 
 function verificarAutenticacao(req, res, next) {
   if (req.session?.autenticado) {
     return next(); // Usuário autenticado, continue
-  } else {
-    return res.redirect('/loginpacientes'); // Redirecione para a página de login
   }
+  res.redirect('/loginpacientes'); // Redirecione para a página de login
 }
 
 app.use((req, res, next) => {
@@ -99,18 +83,12 @@ app.use(express.static(path.join(__dirname, 'app/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'app/views'));
 
-// **Parsing do corpo das requisições**
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
-
 app.post('/api/denunciar', async (req, res) => {
   const { nomeDenunciante, nomeDenunciado, motivoDenuncia, textoDenuncia } = req.body;
-  const usuarioId = req.session?.autenticado?.usuarioId; // Verifica se `req.session` e `autenticado` existem
-if (!usuarioId) {
-  return res.status(403).json({ error: 'Usuário não autenticado' });
-}
+  const usuarioId = req.session?.autenticado?.usuarioId;
+  if (!usuarioId) {
+    return res.status(403).json({ error: 'Usuário não autenticado.' });
+  }  
 
 
   try {
@@ -181,42 +159,43 @@ app.post('/api/banir', async (req, res) => {
 // Atualizar as rotas do chat
 app.get('/chat', verificarAutenticacao, async (req, res) => {
   try {
-      const [sessoesChatAtivas] = await pool.query(`
-          SELECT DISTINCT
-              c.ID_CONSULTAS as consultaId,
-              u.NOME_USUARIO as psicologoNome,
-              u.AVATAR_USUARIO as psicologoAvatar,
-              (SELECT MENSAGEM_CHAT 
-               FROM chat 
-               WHERE ID_CONSULTA = c.ID_CONSULTAS 
-               ORDER BY DATA_HORA_CHAT DESC 
-               LIMIT 1) as ultimaMensagem,
-              c.DATAHORA_CONSULTAS as ultimaAtualizacao
-          FROM consultas c
-          JOIN usuario u ON (
-              CASE 
-                  WHEN c.USUARIO_ID_USUARIO = ? THEN c.PSICOLOGO_ID_PSICOLOGO = u.ID_USUARIO
-                  ELSE c.USUARIO_ID_USUARIO = u.ID_USUARIO
-              END
-          )
-          WHERE (c.USUARIO_ID_USUARIO = ? OR c.PSICOLOGO_ID_PSICOLOGO = ?)
-          AND c.STATUS_CONSULTAS = 'Agendada'
-      `, [req.session.autenticado.usuarioId, req.session.autenticado.usuarioId, req.session.autenticado.usuarioId]);
+    const [sessoesChatAtivas] = await pool.query(`
+      SELECT DISTINCT
+          c.ID_CONSULTAS as consultaId,
+          u.NOME_USUARIO as psicologoNome,
+          u.AVATAR_USUARIO as psicologoAvatar,
+          (SELECT MENSAGEM_CHAT 
+           FROM chat 
+           WHERE ID_CONSULTA = c.ID_CONSULTAS 
+           ORDER BY DATA_HORA_CHAT DESC 
+           LIMIT 1) as ultimaMensagem,
+          c.DATAHORA_CONSULTAS as ultimaAtualizacao
+      FROM consultas c
+      JOIN usuario u ON (
+          CASE 
+              WHEN c.USUARIO_ID_USUARIO = ? THEN c.PSICOLOGO_ID_PSICOLOGO = u.ID_USUARIO
+              ELSE c.USUARIO_ID_USUARIO = u.ID_USUARIO
+          END
+      )
+      WHERE (c.USUARIO_ID_USUARIO = ? OR c.PSICOLOGO_ID_PSICOLOGO = ?)
+      AND c.STATUS_CONSULTAS = 'Agendada'
+    `, [req.session?.autenticado?.usuarioId, req.session?.autenticado?.usuarioId, req.session?.autenticado?.usuarioId]);
 
-      res.render('pages/index', {
-          pagina: 'chat',
-          autenticado: req.session.autenticado,
-          sessoesChatAtivas: sessoesChatAtivas
-      });
+    res.render('pages/index', {
+      pagina: 'chat',
+      autenticado: req.session.autenticado,
+      sessoesChatAtivas,
+    });
   } catch (error) {
-      console.error('Erro ao carregar chat:', error);
-      res.status(500).render('pages/index', {
-          pagina: 'chat',
-          autenticado: req.session.autenticado,
-          error: 'Erro ao carregar sessões de chat'
-      });
+    console.error('Erro ao carregar chat:', error);
+    res.status(500).render('pages/index', {
+      pagina: 'chat',
+      autenticado: req.session.autenticado,
+      error: 'Erro ao carregar sessões de chat.',
+    });
   }
 });
+
 app.get('/api/usuario/cpf/:cpf', async (req, res) => {
   const cpf = req.params.cpf; // Pega o CPF dos parâmetros da URL
   
@@ -241,7 +220,12 @@ app.get('/api/usuario/cpf/:cpf', async (req, res) => {
   }
 });
 app.post('/api/consultas', async (req, res) => {
-  const { dataHora, status, preferencias, valor, tempo, anotacoes, usuarioId, psicologoId } = req.body;
+  const usuarioId = req.session?.autenticado?.usuarioId; // Garante que usuarioId seja acessado com segurança
+  if (!usuarioId) {
+    return res.status(403).json({ error: 'Usuário não autenticado.' });
+  }
+
+  const { dataHora, status, preferencias, valor, tempo, anotacoes, psicologoId } = req.body;
 
   try {
     await pool.query(`
@@ -255,9 +239,10 @@ app.post('/api/consultas', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Erro ao inserir consulta:', error);
-    res.status(500).json({ success: false, message: 'Erro ao agendar consulta' });
+    res.status(500).json({ success: false, message: 'Erro ao agendar consulta.' });
   }
 });
+
 // WebSocket - Configuração de mensagens
 wss.on('connection', (ws, req) => {
   console.log('Nova conexão WebSocket estabelecida');
