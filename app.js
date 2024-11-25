@@ -6,7 +6,13 @@ const WebSocket = require('ws');
 const multer = require('multer');
 const path = require('path');
 const pool = require('./config/pool_de_conexao'); // Conexão com o banco de dados
+const communityRoutes = require('./app/routes/router');
+const postRoutes = require('./app/routes/router');
+const commentRoutes = require('./app/routes/router');
+
 require('dotenv').config(); // Carregar variáveis de ambiente
+//const routerConsultas = require('./app/routes/consultas'); // Certifique-se de que o caminho está correto
+//const routerPlanos = require('./app/routes/planos'); 
 const app = express();
 const rotas = require('./app/routes/router');
 // Associa o router ao caminho /chat
@@ -28,7 +34,16 @@ let sessionStore = new MySQLStore(
   },
   pool
 );
+app.get('/chat', (req, res) => {
+  const usuarioId = req.session?.userId || "defaultUserId"; // Substitua com a lógica correta
+  res.render('partial/chat', { usuarioId });
+});
 
+app.use('/api/communities', communityRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes);
+//app.use('/consultas', routerConsultas);
+//app.use('/planos', routerPlanos);
 // **Configuração do middleware de sessão**
 // Configuração do middleware de sessão
 app.use(
@@ -104,6 +119,11 @@ app.post('/api/denunciar', async (req, res) => {
       res.status(500).json({ error: 'Erro ao registrar a denúncia.' });
   }
 });
+// **Parsing do corpo das requisições**
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// **Configuração do Multer para upload de arquivos**
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
       cb(null, 'uploads/'); // Certifique-se de que esta pasta existe
@@ -195,7 +215,15 @@ app.get('/chat', verificarAutenticacao, async (req, res) => {
     });
   }
 });
-
+app.use((req, res, next) => {
+  if (req.session && req.session.message) {
+    res.locals.message = req.session.message; // Transfere para o escopo local das views
+    delete req.session.message; // Remove para evitar mensagens persistentes
+  } else {
+    res.locals.message = null; // Define como nulo se não existir
+  }
+  next();
+});
 app.get('/api/usuario/cpf/:cpf', async (req, res) => {
   const cpf = req.params.cpf; // Pega o CPF dos parâmetros da URL
   

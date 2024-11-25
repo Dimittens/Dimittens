@@ -8,8 +8,8 @@ const calendar = document.querySelector(".calendar"),
   eventDay = document.querySelector(".event-day"),
   eventDate = document.querySelector(".event-date"),
   dateInput = document.querySelector(".date-input"),
-  gotoBtn = document.querySelector(".goto-btn");
-  markAvailableBtn = document.querySelector(".mark-available-btn");
+  gotoBtn = document.querySelector(".goto-btn"),
+  markAvailableBtn = document.querySelector(".mark-available-btn"),
   cancelSelectionBtn = document.querySelector(".cancel-selection-btn");
 
 let today = new Date();
@@ -38,7 +38,6 @@ function initCalendar() {
   getActiveDay(activeDay);
   loadAvailableDays();
 }
-
 
 
 // Renderiza o calendário e aplica a visualização dos dias disponíveis e selecionados
@@ -295,13 +294,12 @@ async function saveAvailableDays(days, month) {
       body: JSON.stringify({ days, month })
     });
     const data = await response.json();
-    console.log("Resposta do backend ao salvar:", data);  // Log da resposta do backend
+    console.log("Resposta do backend ao salvar:", data);
     if (!data.success) throw new Error(data.message);
   } catch (error) {
     console.error("Erro ao salvar dias disponíveis:", error);
   }
 }
-
 
 async function removeAvailableDays(days, month) {
   try {
@@ -312,7 +310,7 @@ async function removeAvailableDays(days, month) {
       body: JSON.stringify({ days, month })
     });
     const data = await response.json();
-    console.log("Resposta do backend ao remover:", data);  // Log da resposta do backend
+    console.log("Resposta do backend ao remover:", data);
     if (!data.success) throw new Error(data.message);
   } catch (error) {
     console.error("Erro ao remover dias disponíveis:", error);
@@ -377,30 +375,23 @@ function getActiveDay(day) {
   eventDate.innerHTML = `${day} ${months[month]} ${year}`;
 }
 
-
-// Botão para voltar ao mês e dia atuais
 todayBtn.addEventListener("click", () => {
   const today = new Date();
   activeDay = today.getDate();
   month = today.getMonth();
   year = today.getFullYear();
-  
   renderCalendar();
 });
 
-// Botão para ir a uma data específica
 gotoBtn.addEventListener("click", () => {
   const dateValue = dateInput.value.trim();
 
-  // Verifica se a entrada está no formato "mm/yyyy"
   if (/^(0[1-9]|1[0-2])\/\d{4}$/.test(dateValue)) {
     const [inputMonth, inputYear] = dateValue.split("/").map(Number);
 
-    // Atualiza o mês e o ano
-    month = inputMonth - 1; // Ajuste para índice do mês (0 a 11)
+    month = inputMonth - 1;
     year = inputYear;
 
-    // Renderiza o calendário com a nova data
     renderCalendar();
   } else {
     alert("Por favor, insira a data no formato mm/yyyy.");
@@ -408,16 +399,11 @@ gotoBtn.addEventListener("click", () => {
 });
 
 dateInput.addEventListener("input", (e) => {
-  let value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-  
-  // Limita o input a no máximo 6 caracteres
+  let value = e.target.value.replace(/\D/g, "");
   if (value.length > 6) value = value.slice(0, 6);
-
-  // Formata automaticamente para mm/yyyy
   if (value.length >= 3) {
     value = `${value.slice(0, 2)}/${value.slice(2)}`;
   }
-  
   e.target.value = value;
 });
 

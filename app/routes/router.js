@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const mercadopago = require('mercadopago');
 const pool = require('../../config/pool_de_conexao');
 const { salvarEvento, listarEventosUsuario, excluirEvento } = require("../controllers/calendarioController");
 const userPacientesController = require('../controllers/userPacientesController');
@@ -7,6 +9,16 @@ const userPsicologosController = require('../controllers/userPsicologosControlle
 const { marcarDisponivel, getDiasDisponiveis, removerDisponiveis } = require("../controllers/dashboardPsicologoController");
 const userMenorController = require('../controllers/userMenorController');
 const { verificarAutenticacao, checkAuthenticatedPsicologo } = require("../models/autenticador_middleware");
+const { comprarPlano, verificarAssinatura } = require('../controllers/planosController');
+const { pagarConsulta } = require('../controllers/consultasController');
+const { handleWebhook } = require('../controllers/webhookController');
+const { PaymentAPI } = require('../services/mercadoPagoConfig');
+const communityController = require('../controllers/communityController');
+const postController = require('../controllers/postController');
+const commentController = require('../controllers/commentController');
+const likeController = require('../controllers/likeController');
+const favoriteController = require('../controllers/favoriteController');
+const reportController = require('../controllers/reportController');
 
 
 router.get('/', (req, res) => {
@@ -26,6 +38,10 @@ router.get('/', (req, res) => {
 });
 
 
+const upload = multer({
+    dest: 'uploads/',
+    limits: { fileSize: 2 * 1024 * 1024 }, // Limite de 2MB
+});
 
 // Rotas Estáticas
 router.get('/headerunlogged', (req, res) => {
@@ -102,7 +118,14 @@ router.get('/headerunlogged', (req, res) => {
   router.get('/perfilpsic', (req, res) => {
     res.render('pages/index', { pagina: 'perfilpsic', autenticado: req.session.autenticado || null });
   });
-  
+
+router.post('/like', likeController.toggleLike);
+router.get('/like/:tipo/:conteudoId', likeController.getLikesCount);
+router.post('/like', favoriteController.toggleFavorite);
+router.get('/like', favoriteController.listFavorites);
+router.post('/report', reportController.createReport);
+router.get('/report', reportController.listReports);
+
 // Página Logada
 router.get('/homelogged', verificarAutenticacao, (req, res) => {
     res.render('pages/index', {
@@ -126,8 +149,130 @@ router.get('/cadastropacientes', (req, res) => {
         }
     });
 });
+router.post('/comprar', comprarPlano);
+router.post('/pagar', pagarConsulta);
+router.get('/assinatura/verificar', verificarAssinatura);
+router.post('/webhook', handleWebhook); // Adicione o webhook aqui
+router.get('/usuario/tipo', (req, res) => {
+    if (!req.session || !req.session.autenticado) {
+        return res.status(401).json({ error: 'Usuário não autenticado.' });
+    }
+
+    res.json({ tipo: req.session.autenticado.tipo });
+});
+router.post('/api/pagamentos/plano/:periodo', async (req, res) => {
+    const { periodo } = req.params;
+    const { email } = req.body;
+    console.log('Token de acesso Mercado Pago:', process.env.MERCADO_PAGO_ACCESS_TOKEN);
+    if (!email) {
+      return res.status(400).json({ error: 'E-mail é obrigatório para o pagamento.' });
+    }
+  
+    const planos = {
+      mensal: { PRECO: 60, PERIODOS_PLANOS: 'mensal' },
+      trimestral: { PRECO: 45, PERIODOS_PLANOS: 'trimestral' },
+      anual: { PRECO: 30, PERIODOS_PLANOS: 'anual' },
+    };
+  
+    const plano = planos[periodo];
+    if (!plano) {
+      return res.status(400).json({ error: 'Plano inválido' });
+    }
+  
+    try {
+      const body = {
+        transaction_amount: plano.PRECO,
+        description: `Plano ${plano.PERIODOS_PLANOS}`,
+        payment_method_id: 'pix',
+        payer: { email },
+      };
+  
+      const response = await PaymentAPI.create({ body });
+      const paymentUrl = response.point_of_interaction.transaction_data.ticket_url;
+      res.json({ url: paymentUrl });
+    } catch (error) {
+      console.error('Erro ao criar pagamento:', error);
+      res.status(500).json({ error: 'Erro ao criar pagamento' });
+    }
+  });
+  
+
+router.get('/community', communityController.listCommunities); // Página com lista de comunidades
+router.post('/community', communityController.createCommunity); // Criar uma comunidade
+router.get('/community/:id', communityController.getCommunityDetails); // Página específica de uma comunidade
+
+// Rotas de Postagens
+router.get('/community/:communityId/posts', async (req, res) => {
+    const { communityId } = req.params;
+
+    if (!communityId) {
+        return res.redirect('/community'); // Redireciona para a lista de comunidades
+    }
+
+    try {
+        const [posts] = await pool.query('SELECT * FROM POSTAGEM WHERE COMUNIDADE_ID = ?', [communityId]);
+
+        if (posts.length === 0) {
+            return res.render('partial/post', { posts: [], communityId }); // Renderiza página sem postagens
+        }
+
+        res.render('partial/post', { posts, communityId }); // Renderiza página com postagens
+    } catch (error) {
+        console.error('Erro ao listar postagens:', error);
+        res.status(500).send('Erro ao listar postagens.');
+    }
+});
 
 
+
+
+router.get('/community/:communityId/posts/new', postController.newPostForm);
+router.get('/community/:communityId/posts/:postId', postController.getPostDetails); // Detalhes de uma postagem
+router.get('/community/:communityId/posts', postController.listPosts);
+
+router.delete('/community/:communityId/posts/:postId/comments/:commentId', commentController.deleteComment); // Excluir comentário
+router.post('/community/:communityId/posts', upload.single('image'), postController.createPost);
+router.post('/community/:communityId/posts/:postId/comments', commentController.addComment);
+router.post('/comments/:commentId/like', commentController.likeComment);
+router.post('/comments/:commentId/dislike', commentController.dislikeComment);
+
+// Rotas de Likes
+router.post('/community/:communityId/posts/:postId/like', likeController.toggleLike); // Dar/Remover like em postagens
+router.get('/community/:communityId/posts/:postId/like', likeController.getLikesCount); // Obter contagem de likes
+
+// Rotas de Denúncias
+router.post('/community/:communityId/posts/:postId/report', reportController.createReport); // Reportar postagem ou comentário
+
+router.get('/community/:communityId/posts', async (req, res) => {
+    const { communityId } = req.params;
+
+    if (!communityId) {
+        return res.redirect('/community'); // Redireciona para a lista de comunidades
+    }
+
+    try {
+        const [posts] = await pool.query('SELECT * FROM POSTAGEM WHERE COMUNIDADE_ID = ?', [communityId]);
+        res.render('partial/post', { posts, communityId });
+    } catch (error) {
+        console.error('Erro ao listar postagens:', error);
+        res.status(500).send('Erro ao listar postagens.');
+    }
+});
+
+router.post('/post', upload.single('image'), postController.createPost);
+router.get('/post/:id', postController.getPostDetails);
+router.post('/coment', commentController.addComment);
+router.delete('/coment/:id', commentController.deleteComment);
+
+// Função para ativar o plano no banco de dados
+async function ativarPlano(userId, plano) {
+    const duracaoMeses = plano === 'mensal' ? 1 : plano === 'trimestral' ? 3 : 12;
+
+    await pool.query(
+        'INSERT INTO ASSINATURA (USUARIO_ID_USUARIO, PLANO, DATA_INICIO, DATA_FIM, STATUS) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL ? MONTH), "Ativo")',
+        [userId, plano, duracaoMeses]
+    );
+}
 router.post('/cadastropacientes', async (req, res) => {
     try {
         const resultado = await userPacientesController.cadastrar(req);
