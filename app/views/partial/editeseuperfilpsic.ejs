@@ -3,93 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>perfil-1</title>
-    <link rel="stylesheet" href="css/edite-seu-perfil-psic.css">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="/css/edite-seu-perfil-psic.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-    <article>
-        <form action="/editeseuperfilpsic" method="post" enctype="multipart/form-data">
-            <!-- Foto de perfil -->
-            <section class="box-img">
-                <label class="picture" for="profile_pic" tabindex="0">
-                    <span class="picture__image">
-                        <% if (valores.IMAGEM_PERFIL) { %>
-                            <img src="<%= valores.IMAGEM_PERFIL %>" alt="Foto de perfil" class="profile-img">
-                        <% } else { %>
-                            Escolher foto
-                        <% } %>
-                    </span>
-                </label>
-                <input type="file" name="profile_pic" id="profile_pic" style="display: none;">
-            </section>
-        
-            <!-- Campos de edição -->
-            <section class="edit-info">
-                <!-- Email -->
-                <section class="info">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" name="emailpsic" value="<%= valores.email_psic %>" readonly>
-                    <span class="edit-icon" onclick="enableEdit('email')">✏️</span>
-                </section>
-        
-                <!-- Telefone -->
-                <section class="tele">
-                    <label for="tel">Telefone</label>
-                    <input type="tel" id="tel" name="tel" value="<%= valores.num_psic %>" readonly>
-                    <span class="edit-icon" onclick="enableEdit('tel')">✏️</span>
-                </section>
-            </section>
-        
-            <section class="ph2">
-                <!-- Abordagem -->
-                <section class="abordagemm">
-                    <label for="abord">Abordagem</label>
-                    <select name="abordagem" id="abord" disabled>
-                        <option value="<%= valores.abordagem_psic %>" selected><%= valores.abordagem_psic %></option>
-                        <option value="Psicologia Comportamental">Psicologia Comportamental</option>
-                        <option value="Psicanálise">Psicanálise</option>
-                        <!-- Outras opções -->
-                    </select>
-                    <span class="edit-icon" onclick="enableEdit('abord')">✏️</span>
-                </section>
-        
+    <div class="container">
+        <form action="/editarperfil" method="POST" enctype="multipart/form-data" class="form-editar-perfil">
+            <!-- Circulo de Foto -->
+            <div class="picture" id="picture">
+                <% if (valores.IMAGEM_PERFIL) { %>
+                    <img id="preview" src="<%= valores.IMAGEM_PERFIL %>" alt="Foto de Perfil" />
+                    <div class="edit-icon">
+                        <label for="profile_pic">
+                            <i class="fas fa-pencil-alt"></i>
+                        </label>
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewImage(event)" />
+                    </div>
+                <% } else { %>
+                    <div class="add-photo">
+                        <label for="profile_pic">
+                            <i class="fas fa-plus"></i>
+                        </label>
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewImage(event)" />
+                    </div>
+                <% } %>
+            </div>
+            <p class="foto-texto">Foto de Perfil</p>
+    
+            <div class="row">
+                <!-- Nome e Email -->
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" value="<%= valores.NOME_USUARIO %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" value="<%= valores.EMAIL_USUARIO %>" required />
+                </div>
+    
+                <!-- Telefone e CRP -->
+                <div class="form-group">
+                    <label for="tel">Telefone:</label>
+                    <input type="tel" id="tel" name="tel" value="<%= valores.TEL_USUARIO %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="crp">CRP:</label>
+                    <input type="text" id="crp" name="crp" value="<%= valores.CRP_USUARIO %>" required />
+                </div>
+    
+                <!-- Horários e Valor da Consulta -->
+                <div class="horarios-container">
+                    <div class="horario-wrapper">
+                        <label for="horario">Horário:</label>
+                        <input type="time" id="horario" name="horario" />
+                    </div>
+                    <button type="button" id="add-horario" class="btn-plus">+</button>
+                </div>
+                <div id="horarios-adicionados" class="horarios-adicionados">
+                    <% if (valores.HORARIOS && valores.HORARIOS.length > 0) { %>
+                        <% valores.HORARIOS.forEach(function(horario) { %>
+                            <div class="horario-item">
+                                <span><%= horario %></span>
+                                <button type="button" class="remove-horario">&times;</button>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+                    
+                <!-- URL do Google Meet -->
+                <div class="form-group">
+                    <label for="url">URL do Google Meet:</label>
+                    <input type="url" id="url" name="url" value="<%= valores.URL_GOOGLE_MEET %>" pattern="https://meet.google.com/.*" placeholder="https://meet.google.com/..." required />
+                </div>
+
+                <!-- Biografia -->
+                <div class="form-group biografia">
+                    <label for="biografiapsic">Biografia:</label>
+                    <textarea id="biografiapsic" name="biografiapsic"><%= valores.BIOGRAFIA_USUARIO %></textarea>
+                </div>
+    
                 <!-- Especialidade -->
-                <section class="abordagemm">
-                    <label for="esp">Especialidade</label>
-                    <select name="especialidade" id="esp" disabled>
-                        <option value="<%= valores.especialidade_psic %>" selected><%= valores.especialidade_psic %></option>
-                        <option value="Terapia Cognitiva">Terapia Cognitiva</option>
-                        <!-- Outras opções -->
+                <div class="form-group">
+                    <label for="especialidade">Especialidade:</label>
+                    <select id="especialidade" name="especialidade">
+                        <option value="Ansiedade" <% if (valores.ESPECIALIDADE_USUARIO === "Ansiedade") { %> selected <% } %>>Ansiedade</option>
+                        <option value="Depressão" <% if (valores.ESPECIALIDADE_USUARIO === "Depressão") { %> selected <% } %>>Depressão</option>
                     </select>
-                    <span class="edit-icon" onclick="enableEdit('esp')">✏️</span>
-                </section>
-            </section>
+                </div>
         
-            <!-- Biografia -->
-            <section class="bio">
-                <label for="biog">Biografia</label>
-                <textarea id="biog" name="biografiapsic" readonly maxlength="300"><%= valores.bio_psic %></textarea>
-                <span class="edit-icon" onclick="enableEdit('biog')">✏️</span>
-            </section>
-        
+                <!-- Senha Atual e Nova Senha -->
+                <div class="senha-wrapper">
+                    <div class="form-group senha-atual">
+                        <label for="senhaAtual">Senha Atual:</label>
+                        <input type="password" id="senhaAtual" name="senhaAtual" required />
+                    </div>
+                    <div class="form-group nova-senha">
+                        <label for="novaSenha">Nova Senha:</label>
+                        <input type="password" id="novaSenha" name="novaSenha" required />
+                    </div>
+                </div>
+            </div>
+    
             <!-- Botão Salvar -->
-            <section>
-                <input type="submit" class="submit" value="Salvar">
-            </section>
+            <div class="footer">
+                <button type="submit" class="btn-salvar">Salvar</button>
+            </div>
         </form>
-    </article>
-    <script>
-        function enableEdit(fieldId) {
-    const field = document.getElementById(fieldId);
-    if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') {
-        field.readOnly = false;
-        field.style.backgroundColor = '#fff';
-        field.focus();
-    } else if (field.tagName === 'SELECT') {
-        field.disabled = false;
-        field.style.backgroundColor = '#fff';
+    </div>
+
+    <% console.log("Valores renderizados:", valores); %>
+    
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById('preview');
+                const picture = document.getElementById('picture');
+                if (!preview) {
+                    const img = document.createElement('img');
+                    img.id = 'preview';
+                    img.src = e.target.result;
+                    picture.innerHTML = '';
+                    picture.appendChild(img);
+                } else {
+                    preview.src = e.target.result;
+                }
+
+                const editIcon = document.createElement('div');
+                editIcon.className = 'edit-icon';
+                editIcon.innerHTML = `
+                    <label for="profile_pic">
+                        <i class="fas fa-pencil-alt"></i>
+                    </label>
+                    <input type="file" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewImage(event)" />
+                `;
+                picture.appendChild(editIcon);
+            };
+            reader.readAsDataURL(file);
+        }
     }
-}
-    </script>
+</script>
 </body>
 </html>

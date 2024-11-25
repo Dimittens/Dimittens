@@ -64,8 +64,11 @@ router.get('/headerunlogged', (req, res) => {
     res.render('pages/index', { pagina: 'sobrenos', autenticado: req.session.autenticado || null });
   });
 
-  router.get('/editeseuperfilpsic', (req, res) => {
-    res.render('pages/index', { pagina: 'editeseuperfilpsic', autenticado: req.session.autenticado || null });
+  router.get('/editeseuperfilpsic', checkAuthenticatedPsicologo, (req, res) => {
+    res.render('pages/index', { 
+      pagina: 'editeseuperfilpsic',
+       autenticado: req.session.autenticado,
+      })
   });
   
   router.get('/perfil-comunidade', (req, res) => {

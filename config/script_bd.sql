@@ -1,6 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `b7nmairb8dsvar1ji739` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `b7nmairb8dsvar1ji739`;
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: hv-mtl2-020.clvrcld.net    Database: b7nmairb8dsvar1ji739
 -- ------------------------------------------------------
@@ -31,7 +29,6 @@ CREATE TABLE `AGENDAMENTO` (
   PRIMARY KEY (`idAGENDAMENTO`),
   KEY `fk_AGENDAMENTO_USUARIO1_idx` (`USUARIO_ID_USUARIO`),
   KEY `fk_AGENDAMENTO_PSICOLOGO1_idx` (`PSICOLOGO_ID_PSICOLOGO`),
-  CONSTRAINT `fk_AGENDAMENTO_PSICOLOGO1` FOREIGN KEY (`PSICOLOGO_ID_PSICOLOGO`) REFERENCES `PSICOLOGO` (`ID_PSICOLOGO`),
   CONSTRAINT `fk_AGENDAMENTO_USUARIO1` FOREIGN KEY (`USUARIO_ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -118,7 +115,7 @@ CREATE TABLE `CALENDARIO` (
   PRIMARY KEY (`ID_EVENTO`),
   KEY `fk_CALENDARIO_USUARIO` (`ID_USUARIO`),
   CONSTRAINT `fk_CALENDARIO_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +124,7 @@ CREATE TABLE `CALENDARIO` (
 
 LOCK TABLES `CALENDARIO` WRITE;
 /*!40000 ALTER TABLE `CALENDARIO` DISABLE KEYS */;
-INSERT INTO `CALENDARIO` VALUES ('2024-10-30 12:00:00','teste 2',53,'12:00:00','13:00:00',5),('2024-10-30 10:00:00','teste horas',53,'10:00:00','22:00:00',10),('2024-10-30 11:59:00','teste dois horas',53,'11:59:00','12:00:00',11),('2024-10-31 14:00:00','Ler livros',54,'14:00:00','15:30:00',19),('2024-10-30 14:00:00','teste scroll',53,'14:00:00','15:00:00',23),('2024-10-30 14:00:00','teste scroll',53,'14:00:00','23:00:00',24),('2024-10-30 12:00:00','teste scroll',53,'12:00:00','13:00:00',25),('2024-10-30 14:00:00','teste scroll',53,'14:00:00','14:15:00',26),('2024-10-30 22:00:00','teste',53,'22:00:00','23:00:00',28);
+INSERT INTO `CALENDARIO` VALUES ('2024-10-30 12:00:00','teste 2',53,'12:00:00','13:00:00',5),('2024-10-30 10:00:00','teste horas',53,'10:00:00','22:00:00',10),('2024-10-30 11:59:00','teste dois horas',53,'11:59:00','12:00:00',11),('2024-10-31 14:00:00','Ler livros',54,'14:00:00','15:30:00',19),('2024-10-30 14:00:00','teste scroll',53,'14:00:00','15:00:00',23),('2024-10-30 14:00:00','teste scroll',53,'14:00:00','23:00:00',24),('2024-10-30 12:00:00','teste scroll',53,'12:00:00','13:00:00',25),('2024-10-30 14:00:00','teste scroll',53,'14:00:00','14:15:00',26),('2024-10-30 22:00:00','teste',53,'22:00:00','23:00:00',28),('2024-11-08 22:00:00','teste',53,'22:00:00','22:30:00',30);
 /*!40000 ALTER TABLE `CALENDARIO` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,7 +248,7 @@ CREATE TABLE `DASHBOARDPSICOLOGO` (
 
 LOCK TABLES `DASHBOARDPSICOLOGO` WRITE;
 /*!40000 ALTER TABLE `DASHBOARDPSICOLOGO` DISABLE KEYS */;
-INSERT INTO `DASHBOARDPSICOLOGO` VALUES (49,57,NULL,'13,14,15,16,6,7,8,9',11);
+INSERT INTO `DASHBOARDPSICOLOGO` VALUES (49,57,NULL,'23,30,26,5,28,22,25,27,29,20,4,3,10,24,2,1,6,12,21,7',11);
 /*!40000 ALTER TABLE `DASHBOARDPSICOLOGO` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -352,21 +349,21 @@ DROP TABLE IF EXISTS `PSICOLOGO`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `PSICOLOGO` (
-  `ID_PSICOLOGO` int NOT NULL,
+  `ID_PSICOLOGO` int NOT NULL AUTO_INCREMENT,
   `ESPECIALIDADE_PSICOLOGO` enum('Terapia Comportamental / Modificação de Comportamento','Terapia Cognitiva / Avaliação Cognitiva','Psicoterapia Humanista / Terapia Centrada na Pessoa','Psicanálise Clássica / Psicoterapia Psicanalítica','Terapia Gestalt / Formação em Psicologia Gestalt','Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil','Psicologia Comunitária / Consultoria em Dinâmica de Grupo','Intervenções de Psicologia Positiva / Coaching de Vida','TCC para Transtornos de Ansiedade / TCC para Depressão','Terapia Familiar Sistêmica / Mediação Familiar','Avaliação e Intervenção no Desenvolvimento Infantil / Psicologia Educacional','Psicologia Transcultural / Consultoria Cultural','Avaliação Neuropsicológica / Reabilitação Neuropsicológica','Avaliação de Competência Legal / Consultoria em Casos Judiciais','Intervenções em Saúde Mental / Promoção de Saúde e Bem-Estar') NOT NULL,
-  `PUBLICO_ALVO_PSICOLOGO` enum('Adulto','Criança','Idoso') NOT NULL,
-  `BIOGRAFIA_PSICOLOGO` mediumtext NOT NULL,
-  `DISPONIBILIDADE_HORARIO_PSICOLOGO` date NOT NULL,
-  `VALOR_CONSULTA_PSICOLOGO` decimal(10,2) NOT NULL,
-  `TOPICOS_ABRANGENTES_PSICOLOGO` varchar(200) NOT NULL,
+  `PUBLICO_ALVO_PSICOLOGO` enum('Adulto','Criança','Idoso') DEFAULT NULL,
+  `BIOGRAFIA_PSICOLOGO` mediumtext,
+  `DISPONIBILIDADE_HORARIO_PSICOLOGO` date DEFAULT NULL,
+  `VALOR_CONSULTA_PSICOLOGO` decimal(10,2) DEFAULT NULL,
+  `TOPICOS_ABRANGENTES_PSICOLOGO` varchar(200) DEFAULT NULL,
   `ABORDAGEM_ABRANGENTE_PSICOLOGO` enum('Psicologia Comportamental','Psicologia Cognitiva','Psicologia Humanista','Psicanálise','Psicologia Gestalt','Psicologia Evolutiva','Psicologia Social','Psicologia Positiva','Terapia Cognitivo-Comportamental (TCC)','Psicologia Sistêmica','Psicologia do Desenvolvimento','Psicologia Cultural','Neuropsicologia','Psicologia Forense','Psicologia da Saúde') NOT NULL,
-  `PERMISSAO_ANOTACAO_USUARIO_PSICOLOGO` enum('Autorizado, Recusado') NOT NULL,
+  `PERMISSAO_ANOTACAO_USUARIO_PSICOLOGO` enum('Autorizado, Recusado') DEFAULT NULL,
   `TEL_PSICOLOGO` varchar(15) DEFAULT NULL,
   `ID_USUARIO` int DEFAULT NULL,
   PRIMARY KEY (`ID_PSICOLOGO`),
   KEY `FK_USUARIO` (`ID_USUARIO`),
   CONSTRAINT `FK_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,6 +372,7 @@ CREATE TABLE `PSICOLOGO` (
 
 LOCK TABLES `PSICOLOGO` WRITE;
 /*!40000 ALTER TABLE `PSICOLOGO` DISABLE KEYS */;
+INSERT INTO `PSICOLOGO` VALUES (1,'Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil',NULL,'oloco meo',NULL,NULL,NULL,'Psicologia Sistêmica',NULL,'(13) 99447-9090',63),(2,'TCC para Transtornos de Ansiedade / TCC para Depressão','Adulto','eu sou fera',NULL,NULL,NULL,'Psicologia Gestalt',NULL,'(85) 99234-3345',66);
 /*!40000 ALTER TABLE `PSICOLOGO` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -437,6 +435,7 @@ CREATE TABLE `USUARIO` (
   `CRP_USUARIO` varchar(9) DEFAULT NULL,
   `CPF_RESPONSAVEL` varchar(14) DEFAULT NULL,
   `NOME_RESPONSAVEL` varchar(100) DEFAULT NULL,
+  `IMAGEM_PERFIL` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID_USUARIO`),
   UNIQUE KEY `email` (`EMAIL_USUARIO`),
   UNIQUE KEY `CPF_USUARIO_UNIQUE` (`CPF_USUARIO`),
@@ -444,7 +443,7 @@ CREATE TABLE `USUARIO` (
   UNIQUE KEY `CPF_RESPONSAVEL` (`CPF_RESPONSAVEL`),
   KEY `fk_USUARIO_USUARIO_ADMINISTRADOR1_idx` (`USUARIO_ADMINISTRADOR_ID_USUARIO_ADM`),
   CONSTRAINT `fk_USUARIO_USUARIO_ADMINISTRADOR1` FOREIGN KEY (`USUARIO_ADMINISTRADOR_ID_USUARIO_ADM`) REFERENCES `USUARIO_ADMINISTRADOR` (`ID_USUARIO_ADM`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -453,7 +452,7 @@ CREATE TABLE `USUARIO` (
 
 LOCK TABLES `USUARIO` WRITE;
 /*!40000 ALTER TABLE `USUARIO` DISABLE KEYS */;
-INSERT INTO `USUARIO` VALUES (53,'Juan Riquelme','juan@gmail.com','$2a$10$E8H8IOR3BaIw02rRhNohweZarKlgBIuvG9F8oPgxdwwvKwVzrm7VC','2001-03-02','2024-10-27 19:44:22','383.234.950-25','Comum',NULL,NULL,NULL,NULL),(54,'Fernando Oliveira','fernando@gmail.com','$2a$10$Iu5PG61ZKSWZwzEEXpvQ.O2lGXTzc20rj4KXjB7HkaVAX0TvC5Xgy','2004-12-11','2024-10-27 22:51:17','263.927.630-15','Comum',NULL,NULL,NULL,NULL),(55,'Hiago Augusto Pereira','hiago@gmail.com','$2a$10$5OzmxIUSvcldicVvcrSP7.o6sE96qevN1KbnDASiSuEFEV9FIyeyK','2006-07-09','2024-10-29 08:51:14','237.317.410-32','Comum',NULL,NULL,NULL,NULL),(56,'505.342.768-22','cat@gmail.com','$2a$10$YeV3D/BvSeCEZw2CaWoPV.eMtTyO2u00hXJ3eZlGRGpvAgKaXsEv.','2006-10-09','2024-10-29 09:00:04','505.342.768-22','Comum',NULL,NULL,NULL,NULL),(57,'Karina','karina@gmail.com','$2a$10$rzEt3kCwRIre0avWu0aYCeUjI9nZ.bXU46V.549OtzhyBg396njhu','2001-03-02','2024-10-31 19:05:31','524.861.400-77','Psicologo',NULL,'06/192150',NULL,NULL),(63,'Pedro Viana Santos','pepaooo@gmail.com','$2a$10$HGfHcCStldqxszcUpF.W/OF4KqIpTF.CkQAWSGT4Fg4VO/6C7/mU2','2000-08-01','2024-11-07 11:21:19','565.830.338-95','Psicologo',NULL,'71/824444',NULL,NULL);
+INSERT INTO `USUARIO` VALUES (53,'Juan Riquelme','juan@gmail.com','$2a$10$E8H8IOR3BaIw02rRhNohweZarKlgBIuvG9F8oPgxdwwvKwVzrm7VC','2001-03-02','2024-10-27 19:44:22','383.234.950-25','Comum',NULL,NULL,NULL,NULL,NULL),(54,'Fernando Oliveira','fernando@gmail.com','$2a$10$Iu5PG61ZKSWZwzEEXpvQ.O2lGXTzc20rj4KXjB7HkaVAX0TvC5Xgy','2004-12-11','2024-10-27 22:51:17','263.927.630-15','Comum',NULL,NULL,NULL,NULL,NULL),(55,'Hiago Augusto Pereira','hiago@gmail.com','$2a$10$5OzmxIUSvcldicVvcrSP7.o6sE96qevN1KbnDASiSuEFEV9FIyeyK','2006-07-09','2024-10-29 08:51:14','237.317.410-32','Comum',NULL,NULL,NULL,NULL,NULL),(56,'505.342.768-22','cat@gmail.com','$2a$10$YeV3D/BvSeCEZw2CaWoPV.eMtTyO2u00hXJ3eZlGRGpvAgKaXsEv.','2006-10-09','2024-10-29 09:00:04','505.342.768-22','Comum',NULL,NULL,NULL,NULL,NULL),(57,'Karina','karina@gmail.com','$2a$10$rzEt3kCwRIre0avWu0aYCeUjI9nZ.bXU46V.549OtzhyBg396njhu','2001-03-02','2024-10-31 19:05:31','524.861.400-77','Psicologo',NULL,'06/192150',NULL,NULL,NULL),(63,'Pedro Viana Santos','','$2a$10$HGfHcCStldqxszcUpF.W/OF4KqIpTF.CkQAWSGT4Fg4VO/6C7/mU2','2000-08-01','2024-11-07 11:21:19','565.830.338-95','Psicologo',NULL,'71/824444',NULL,NULL,NULL),(65,'Elizabeth Aparecida','blablabla@gmail.com','$2a$10$4h.OcpvNqTGJhajouWh3WuBdgt8bMB3Y9KNimAtLfbNgQ4AjPA0O2','2005-09-10','2024-11-08 09:27:23','182.702.008-32','Comum',NULL,NULL,NULL,NULL,NULL),(66,'Guilherme Souza','neymessi@gmail.com','$2a$10$CcrihIWgJwRoKXT2Ewt/TO/NIa0IcytJmSrAs2FXUYLHb/ebFxPSq','2000-02-01','2024-11-11 21:13:22','611.071.228-05','Psicologo',NULL,'44/775844',NULL,NULL,NULL),(67,'josefinopintoi','teste@teste.com','$2a$10$a7NEuh521cfuOjNAqmrcTuTIoQeEWr1UdaQljLiswNTs2iusvvpkS','1992-02-23','2024-11-18 00:36:01','123.456.789-09','Comum',NULL,NULL,NULL,NULL,NULL),(68,'tester','crrobg2006@gmail.com','$2a$10$sTpCCWVR2kg6/ht/uOW/FOgZ/zJ6hzeuPnuI4CLaNTjpDsgqxM5YS','1992-02-23','2024-11-24 01:19:04','159.648.027-02','Comum',NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `USUARIO` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -509,13 +508,9 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('KaGjCNBOBoVqvcbd-yo-ZRI5o14RBLBl',1730993788,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-07T15:06:16.965Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":{\"usuarioNome\":\"Pedro Viana Santos\",\"usuarioId\":63,\"tipo\":\"Psicologo\"}}'),('rX1693QG-n-3ecYF1MyWz26YZzgPOQQ2',1730993516,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-07T15:07:25.203Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":{\"usuarioNome\":\"Karina\",\"usuarioId\":57,\"tipo\":\"Psicologo\"}}');
+INSERT INTO `sessions` VALUES ('2jKRzmQU-MH_rgR06p17HOMaMGx1ysGr',1732508767,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-25T04:26:06.698Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":null}'),('Iga3l5HPtKvoELaWJM25YKRSq3AOvCAK',1732508272,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-25T03:55:15.010Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":null}'),('OSK5x7MdHZydfVJs1i019198lSd0aD3x',1732509761,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-25T04:26:07.158Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":null}'),('UgDSrQ6dPtqsxnS4hIoDEGlYnuTfJHiH',1732509719,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-25T04:29:19.788Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":null}'),('fw4ajl3A0Fv8ky-Un3H3xnvk-vsYCwNb',1732508764,'{\"cookie\":{\"originalMaxAge\":1800000,\"expires\":\"2024-11-25T04:26:03.640Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"autenticado\":null}');
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'b7nmairb8dsvar1ji739'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -526,4 +521,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-07 12:09:31
+-- Dump completed on 2024-11-25  1:17:45
