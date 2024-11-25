@@ -8,8 +8,8 @@ const calendar = document.querySelector(".calendar"),
   eventDay = document.querySelector(".event-day"),
   eventDate = document.querySelector(".event-date"),
   dateInput = document.querySelector(".date-input"),
-  gotoBtn = document.querySelector(".goto-btn");
-  markAvailableBtn = document.querySelector(".mark-available-btn");
+  gotoBtn = document.querySelector(".goto-btn"),
+  markAvailableBtn = document.querySelector(".mark-available-btn"),
   cancelSelectionBtn = document.querySelector(".cancel-selection-btn");
 
 let today = new Date();
@@ -22,7 +22,6 @@ let selectedDays = [];
 let mode = 'add';
 let removingDays = false;
 
-
 const months = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
@@ -30,12 +29,11 @@ const months = [
 
 // Função para inicializar o calendário
 function initCalendar() {
-  console.log("Inicializando calendário");  // Adicione este log
+  console.log("Inicializando calendário");
   activeDay = today.getDate();
   renderCalendar();
   getActiveDay(activeDay);
 }
-
 
 // Renderiza o calendário e aplica a visualização dos dias disponíveis e selecionados
 function renderCalendar() {
@@ -61,13 +59,6 @@ function renderCalendar() {
     const isAvailable = availableDays.some(d => d.mes === month + 1 && d.dias.includes(i));
     const isSelected = selectedDays.includes(i);
     days += `<div class="day ${i === activeDay ? 'active' : ''} ${isAvailable ? 'available' : ''} ${isSelected ? 'selected' : ''}">${i}</div>`;
-    
-    if (isAvailable) {
-      console.log("Aplicando classe 'available' no dia:", i);
-    }
-    if (isSelected) {
-      console.log("Aplicando classe 'selected' no dia:", i);
-    }
   }
 
   for (let j = 1; j <= nextDays; j++) {
@@ -78,39 +69,36 @@ function renderCalendar() {
   addListeners();
 }
 
-
 // Configura os event listeners para os botões
 markAvailableBtn.addEventListener("click", handleMarkButtonClick);
 cancelSelectionBtn.addEventListener("click", handleCancelButtonClick);
 
 async function loadAvailableDays() {
   try {
-    console.log("Carregando dias disponíveis do backend");  // Log para verificar a carga de dias
+    console.log("Carregando dias disponíveis do backend");
     const response = await fetch('/dashboardpsicologo/dias-disponiveis');
     const data = await response.json();
 
     if (data.success) {
       availableDays = data.diasDisponiveis;
-      console.log("Dias carregados:", availableDays);  // Log para verificar dias carregados
+      console.log("Dias carregados:", availableDays);
       renderCalendar();
     }
   } catch (error) {
     console.error("Erro ao carregar dias disponíveis:", error);
   }
 }
+
 function handleMarkButtonClick() {
   if (selectingDays && mode === 'add') {
     console.log("Confirmando a marcação dos dias no banco...");
-    confirmSelection();  // Confirma a seleção dos dias no banco de dados
-    resetSelection();  // Restaura o estado inicial dos botões
-    alert("Dias selecionados foram marcados com sucesso!");
+    confirmSelection();
   } else {
-    // Ativa o modo de seleção para marcar
     mode = 'add';
     selectingDays = true;
-    selectedDays = []; // Garante que a seleção está vazia
-    markAvailableBtn.textContent = "Confirmar Marcação"; // Atualiza o texto do botão para salvar
-    cancelSelectionBtn.disabled = true; // Desabilita o botão "Cancelar" durante a seleção
+    selectedDays = [];
+    markAvailableBtn.textContent = "Confirmar Marcação";
+    cancelSelectionBtn.disabled = true;
     console.log("Modo de marcação ativado. Aguardando seleção de dias.");
   }
 }
@@ -118,48 +106,33 @@ function handleMarkButtonClick() {
 function handleCancelButtonClick() {
   if (selectingDays && mode === 'remove') {
     console.log("Confirmando a remoção dos dias no banco...");
-    confirmSelection();  // Confirma a remoção dos dias no banco de dados
-    resetSelection();  // Restaura o estado inicial dos botões
-    alert("Dias selecionados foram removidos com sucesso!");
+    confirmSelection();
   } else {
-    // Ativa o modo de seleção para remover
     mode = 'remove';
     selectingDays = true;
-    selectedDays = []; // Garante que a seleção está vazia
-    cancelSelectionBtn.textContent = "Confirmar Remoção"; // Atualiza o texto do botão para salvar
-    markAvailableBtn.disabled = true; // Desabilita o botão "Marcar Disponível" durante a remoção
+    selectedDays = [];
+    cancelSelectionBtn.textContent = "Confirmar Remoção";
+    markAvailableBtn.disabled = true;
     console.log("Modo de remoção ativado. Aguardando seleção de dias.");
   }
 }
 
-// Atualiza o estado do botão com base no modo de seleção
-function updateMarkAvailableButton() {
-  if (selectingDays) {
-    markAvailableBtn.textContent = mode === 'add' ? "Confirmar Marcação" : "Confirmar Remoção";
-  } else {
-    markAvailableBtn.textContent = "Marcar Disponível";
-  }
-}
-
 function toggleDaySelection(dayElement, dayNumber) {
-  // Verifica se a seleção está ativa
   if (!selectingDays) {
     console.log("A seleção não está ativa. Ignorando clique.");
     return;
   }
 
-  // Ignora dias que não pertencem ao mês atual
   if (dayElement.classList.contains("prev-date") || dayElement.classList.contains("next-date")) {
     alert("Selecione apenas dias do mês atual.");
     return;
   }
 
-  // Lógica de seleção baseada no modo atual (adicionar ou remover)
   console.log(`Modo: ${mode}, Dia Selecionado: ${dayNumber}`);
   if (mode === 'add') {
     if (!selectedDays.includes(dayNumber)) {
       selectedDays.push(dayNumber);
-      dayElement.classList.add("selected"); // Aplica a classe de seleção visual
+      dayElement.classList.add("selected");
       console.log("Dia adicionado para marcação:", dayNumber);
     } else {
       selectedDays = selectedDays.filter(day => day !== dayNumber);
@@ -184,89 +157,6 @@ function toggleDaySelection(dayElement, dayNumber) {
   }
 }
 
-// Alterna entre modos de seleção para marcar e remover dias
-markAvailableBtn.addEventListener("click", () => {
-  if (selectingDays && mode === 'add') {
-    confirmSelection();  // Confirma a marcação
-    resetSelection();
-  } else {
-    mode = 'add';
-    selectingDays = true;
-    markAvailableBtn.textContent = "Confirmar Marcação";
-  }
-});
-
-async function confirmDaySelection() {
-  if (selectedDays.length === 0) {
-    alert("Nenhum dia selecionado para marcar como disponível.");
-    return;
-  }
-  await saveAvailableDays(selectedDays, month + 1);
-  selectingDays = false;
-  selectedDays = [];
-  markAvailableBtn.textContent = "Disponibilizar consulta";
-  alert("Dias selecionados marcados com sucesso!");
-  loadAvailableDays();
-}
-
-async function confirmCancelSelection() {
-  if (selectedDays.length === 0) {
-    alert("Nenhum dia selecionado para cancelar.");
-    return;
-  }
-
-  await removeAvailableDays(selectedDays, month + 1); // Ajuste para múltiplos dias
-  removingDays = false;
-  selectedDays = []; // Limpa a seleção
-  cancelSelectionBtn.textContent = "Cancelar"; // Restaura o botão
-  alert("Cancelamento de dias selecionados concluído com sucesso."); // Confirmação
-  loadAvailableDays(); // Atualiza o calendário
-}
-async function saveAvailableDays(days, month) {
-  try {
-    console.log("Enviando dias para salvar:", days, month);
-    const response = await fetch('/dashboardpsicologo/marcar-disponivel', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ days, month })
-    });
-    const data = await response.json();
-    console.log("Resposta do backend ao salvar:", data);  // Log da resposta do backend
-    if (!data.success) throw new Error(data.message);
-  } catch (error) {
-    console.error("Erro ao salvar dias disponíveis:", error);
-  }
-}
-
-
-async function removeAvailableDays(days, month) {
-  try {
-    console.log("Enviando dias para remover:", days, month);
-    const response = await fetch('/dashboardpsicologo/remover-disponiveis', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ days, month })
-    });
-    const data = await response.json();
-    console.log("Resposta do backend ao remover:", data);  // Log da resposta do backend
-    if (!data.success) throw new Error(data.message);
-  } catch (error) {
-    console.error("Erro ao remover dias disponíveis:", error);
-  }
-}
-
-
-
-// Alterna para o modo de remover dias
-function enableRemoveMode() {
-  selectingDays = true;
-  selectedDays = [];
-  mode = 'remove';
-  markAvailableBtn.textContent = "Confirmar Remoção";
-  renderCalendar();
-}
-
-// addListeners - Garantindo que o activeDay é atualizado ao clicar
 function addListeners() {
   const days = document.querySelectorAll(".day");
 
@@ -275,25 +165,25 @@ function addListeners() {
       const target = e.target;
       const dayNumber = Number(target.innerHTML);
 
-      if (target.classList.contains("prev-date")) {
-        month = month === 0 ? 11 : month - 1;
-        year = month === 11 ? year - 1 : year;
-        activeDay = dayNumber;
-        renderCalendar(); // Re-renderiza para o novo mês
-      } else if (target.classList.contains("next-date")) {
-        month = month === 11 ? 0 : month + 1;
-        year = month === 0 ? year + 1 : year;
-        activeDay = dayNumber;
-        renderCalendar(); // Re-renderiza para o novo mês
+      if (selectingDays) {
+        toggleDaySelection(target, dayNumber);
       } else {
-        // Define o activeDay como o dia clicado e chama getActiveDay para atualizar a interface
-        activeDay = dayNumber;
-        getActiveDay(activeDay); // Atualiza o dia ativo exibido
-        updateEvents(activeDay); // Exibe eventos do dia ativo
-
-        // Limpa a classe "active" dos outros dias e destaca o dia atual
-        days.forEach((d) => d.classList.remove("active"));
-        target.classList.add("active");
+        if (target.classList.contains("prev-date")) {
+          month = month === 0 ? 11 : month - 1;
+          year = month === 11 ? year - 1 : year;
+          activeDay = dayNumber;
+          renderCalendar();
+        } else if (target.classList.contains("next-date")) {
+          month = month === 11 ? 0 : month + 1;
+          year = month === 0 ? year + 1 : year;
+          activeDay = dayNumber;
+          renderCalendar();
+        } else {
+          activeDay = dayNumber;
+          getActiveDay(activeDay);
+          days.forEach((d) => d.classList.remove("active"));
+          target.classList.add("active");
+        }
       }
     });
   });
@@ -304,15 +194,60 @@ async function confirmSelection() {
   if (selectedDays.length > 0) {
     if (mode === 'add') {
       await saveAvailableDays(selectedDays, activeMonth);
+      alert("Dias selecionados foram marcados com sucesso!");
     } else if (mode === 'remove') {
       await removeAvailableDays(selectedDays, activeMonth);
+      alert("Dias selecionados foram removidos com sucesso!");
     }
   } else {
     alert("Nenhum dia selecionado.");
   }
-  resetSelection(); // Limpa a seleção e atualiza a interface
+  resetSelection();
+  loadAvailableDays();
 }
 
+async function saveAvailableDays(days, month) {
+  try {
+    console.log("Enviando dias para salvar:", days, month);
+    const response = await fetch('/dashboardpsicologo/marcar-disponivel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ days, month })
+    });
+    const data = await response.json();
+    console.log("Resposta do backend ao salvar:", data);
+    if (!data.success) throw new Error(data.message);
+  } catch (error) {
+    console.error("Erro ao salvar dias disponíveis:", error);
+  }
+}
+
+async function removeAvailableDays(days, month) {
+  try {
+    console.log("Enviando dias para remover:", days, month);
+    const response = await fetch('/dashboardpsicologo/remover-disponiveis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ days, month })
+    });
+    const data = await response.json();
+    console.log("Resposta do backend ao remover:", data);
+    if (!data.success) throw new Error(data.message);
+  } catch (error) {
+    console.error("Erro ao remover dias disponíveis:", error);
+  }
+}
+
+function resetSelection() {
+  selectingDays = false;
+  selectedDays = [];
+  mode = null;
+  markAvailableBtn.textContent = "Marcar Disponível";
+  cancelSelectionBtn.textContent = "Cancelar";
+  markAvailableBtn.disabled = false;
+  cancelSelectionBtn.disabled = false;
+  renderCalendar();
+}
 
 function getActiveDay(day) {
   const selectedDay = new Date(year, month, day);
@@ -321,30 +256,23 @@ function getActiveDay(day) {
   eventDate.innerHTML = `${day} ${months[month]} ${year}`;
 }
 
-
-// Botão para voltar ao mês e dia atuais
 todayBtn.addEventListener("click", () => {
   const today = new Date();
   activeDay = today.getDate();
   month = today.getMonth();
   year = today.getFullYear();
-  
   renderCalendar();
 });
 
-// Botão para ir a uma data específica
 gotoBtn.addEventListener("click", () => {
   const dateValue = dateInput.value.trim();
 
-  // Verifica se a entrada está no formato "mm/yyyy"
   if (/^(0[1-9]|1[0-2])\/\d{4}$/.test(dateValue)) {
     const [inputMonth, inputYear] = dateValue.split("/").map(Number);
 
-    // Atualiza o mês e o ano
-    month = inputMonth - 1; // Ajuste para índice do mês (0 a 11)
+    month = inputMonth - 1;
     year = inputYear;
 
-    // Renderiza o calendário com a nova data
     renderCalendar();
   } else {
     alert("Por favor, insira a data no formato mm/yyyy.");
@@ -352,16 +280,11 @@ gotoBtn.addEventListener("click", () => {
 });
 
 dateInput.addEventListener("input", (e) => {
-  let value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-  
-  // Limita o input a no máximo 6 caracteres
+  let value = e.target.value.replace(/\D/g, "");
   if (value.length > 6) value = value.slice(0, 6);
-
-  // Formata automaticamente para mm/yyyy
   if (value.length >= 3) {
     value = `${value.slice(0, 2)}/${value.slice(2)}`;
   }
-  
   e.target.value = value;
 });
 
@@ -385,67 +308,6 @@ next.addEventListener("click", () => {
   renderCalendar();
 });
 
-cancelSelectionBtn.addEventListener("click", () => {
-  if (selectingDays && mode === 'remove') {
-    confirmSelection();  // Confirma a remoção
-    resetSelection();
-  } else {
-    mode = 'remove';
-    selectingDays = true;
-    cancelSelectionBtn.textContent = "Confirmar Remoção";
-  }
-});
-
-function confirmCancelSelection() {
-  if (selectedDays.length === 0) {
-    alert("Nenhum dia selecionado para cancelar.");
-    return;
-  }
-
-  selectedDays.forEach(async (day) => {
-    await removeAvailableDays(day, month + 1);
-  });
-
-  removingDays = false;
-  selectedDays = []; // Limpa a seleção
-  cancelSelectionBtn.textContent = "Cancelar"; // Restaura o botão
-  alert("Cancelamento de dias selecionados concluído com sucesso."); // Confirmação
-  loadAvailableDays(); // Atualiza o calendário
-}
-
-function enableDaySelection(mode) {
-  const days = document.querySelectorAll(".day");
-  days.forEach((dayElement) => {
-    const dayNumber = Number(dayElement.innerHTML);
-    const isAvailable = availableDays.some(d => d.mes === month + 1 && d.dias.includes(dayNumber));
-
-    dayElement.addEventListener("click", () => {
-      if (mode === "mark") {
-        if (!dayElement.classList.contains("prev-date") && !dayElement.classList.contains("next-date")) {
-          toggleDaySelection(dayElement, dayNumber);
-        } else {
-          alert("Selecione apenas dias do mês atual.");
-        }
-      } else if (mode === "cancel" && isAvailable) {
-        toggleDaySelection(dayElement, dayNumber);
-      } else if (mode === "cancel") {
-        alert("Este dia não possui disponibilidade para cancelar.");
-      }
-    });
-  });
-}
-
-function resetSelection() {
-  selectingDays = false;
-  selectedDays = [];
-  mode = null;
-  markAvailableBtn.textContent = "Marcar Disponível";
-  cancelSelectionBtn.textContent = "Cancelar";
-  markAvailableBtn.disabled = false;
-  cancelSelectionBtn.disabled = false;
-  renderCalendar(); // Atualiza a interface
-}
-
 // Inicializa o calendário e carrega dias disponíveis
 initCalendar();
-loadAvailableDays(); // Carrega os dias disponíveis ao carregar a página
+loadAvailableDays();

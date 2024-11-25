@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,6 +10,7 @@
 <body>
     <main>
         <article class="box-planos">
+            <!-- Plano Mensal -->
             <section class="planos">
                 <section class="box-top">
                     <h1>Plano Mensal</h1>
@@ -18,41 +18,22 @@
                         <span>R$</span>
                         <h2>60</h2>
                     </section>
-                    <p class="p-tempo">Todo mês <br>
-                        Válido por 1 mês</p>
+                    <p class="p-tempo">Todo mês <br> Válido por 1 mês</p>
                 </section>
                 <section class="box-beneficios">
                     <ul class="items-lista">
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Acesso sem anúncios</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Criação de comunidades</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Criação de publicações</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Perfil verificado e selo exclusivo</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Maior relevância em comentários</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Cupons de 5% de desconto</li>
-                        </section>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Acesso sem anúncios</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Criação de comunidades</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Criação de publicações</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Perfil verificado e selo exclusivo</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Maior relevância em comentários</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Cupons de 5% de desconto</li>
                     </ul>
-
-                    <input type="button" value="Comprar" class="input-comprar" data-plano="mensal" data-valor="60">
+                    <input type="button" value="Comprar" class="input-comprar" onclick="comprarPlano('mensal')">
                 </section>
             </section>
 
+            <!-- Plano Trimestral -->
             <section class="planos">
                 <section class="box-top">
                     <h1>Plano Trimestral</h1>
@@ -60,41 +41,22 @@
                         <span>R$</span>
                         <h2>45</h2>
                     </section>
-                    <p>Todo mês <br>
-                        Válido por 3 meses</p>
+                    <p>Todo mês <br> Válido por 3 meses</p>
                 </section>
                 <section class="box-beneficios">
                     <ul class="items-lista">
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Acesso sem anúncios</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Criação de comunidades</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Criação de publicações</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Perfil verificado e selo exclusivo</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Maior relevância em comentários</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Cupons de 5% de desconto</li>
-                        </section>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Acesso sem anúncios</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Criação de comunidades</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Criação de publicações</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Perfil verificado e selo exclusivo</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Maior relevância em comentários</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Cupons de 5% de desconto</li>
                     </ul>
-
-                    <input type="button" value="Comprar" class="input-comprar" data-plano="trimestral" data-valor="45">
+                    <input type="button" value="Comprar" class="input-comprar" onclick="comprarPlano('trimestral')">
                 </section>
             </section>
 
+            <!-- Plano Anual -->
             <section class="planos">
                 <section class="promo-box">
                     <section class="promo">
@@ -107,80 +69,52 @@
                         <span>R$</span>
                         <h2>30</h2>
                     </section>
-                    <p>Todo mês <br>
-                        Válido por 12 meses</p>
+                    <p>Todo mês <br> Válido por 12 meses</p>
                 </section>
                 <section class="box-beneficios">
                     <ul class="items-lista">
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Acesso sem anúncios</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Criação de comunidades</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Criação de publicações</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Perfil verificado e selo exclusivo</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Maior relevância em comentários</li>
-                        </section>
-                        <section class="items-beneficios">
-                            <i class="fa-solid fa-check"></i>
-                            <li>Cupons de 5% de desconto</li>
-                        </section>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Acesso sem anúncios</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Criação de comunidades</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Criação de publicações</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Perfil verificado e selo exclusivo</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Maior relevância em comentários</li>
+                        <li class="items-beneficios"><i class="fa-solid fa-check"></i> Cupons de 5% de desconto</li>
                     </ul>
-
-                    <input type="button" value="Comprar" class="input-comprar" data-plano="anual" data-valor="30">
+                    <input type="button" value="Comprar" class="input-comprar" onclick="comprarPlano('anual')">
                 </section>
             </section>
-
         </article>
     </main>
-
-    <script>
-        document.querySelectorAll('.input-comprar').forEach(button => {
-            button.addEventListener('click', async () => {
-                const plano = button.getAttribute('data-plano');
-                const valor = button.getAttribute('data-valor');
-                
-                const transactionData = {
-                    token: 'seu_token_aqui', // O token do cartão de crédito que você vai obter através do Mercado Pago
-                    payment_method_id: 'cartao', // Ou outro método de pagamento, você pode implementar lógica para isso
-                    transaction_amount: parseFloat(valor), // O valor da transação
-                    description: `Assinatura do plano ${plano}`,
-                    installments: 1, // Número de parcelas
-                    email: 'email_do_cliente@example.com' // Email do comprador, você pode substituir pelo valor do input do usuário
-                };
-
-                try {
-                    const response = await fetch('http://localhost:5000/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(transactionData)
-                    });
-
-                    const data = await response.json();
-                    if (data.body && data.body.init_point) {
-                        // Redireciona o usuário para o link de pagamento do Mercado Pago
-                        window.location.href = data.body.init_point;
-                    } else {
-                        alert('Erro ao processar pagamento: ' + (data.error || 'Unknown error'));
-                    }
-                } catch (error) {
-                    alert('Erro na comunicação com o servidor: ' + error.message);
-                }
-            });
-        });
+    req.session?.userId
+    <!-- JavaScript para Processamento de Pagamento -->
+    <script>async function comprarPlano(periodo) {
+        const email = prompt('Por favor, insira seu e-mail para receber os detalhes do pagamento:');
+        
+        if (!email) {
+          alert('Você precisa inserir um e-mail válido.');
+          return;
+        }
+      
+        try {
+          const response = await fetch(`/api/pagamentos/plano/${periodo}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }), // Envia o e-mail
+          });
+      
+          const result = await response.json();
+          
+          if (result.url) {
+            window.location.href = result.url; // Redireciona para a URL do QR Code
+          } else {
+            alert('Erro ao processar pagamento.');
+          }
+        } catch (error) {
+          console.error('Erro ao criar pagamento:', error);
+          alert('Erro ao processar pagamento.');
+        }
+      }
+      
     </script>
 </body>
 </html>

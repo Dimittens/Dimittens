@@ -7,7 +7,13 @@ const multer = require('multer');
 const path = require('path');
 const pool = require('./config/pool_de_conexao'); // Conexão com o banco de dados
 const router = require('./app/routes/router'); // Importação das rotas
+const communityRoutes = require('./app/routes/router');
+const postRoutes = require('./app/routes/router');
+const commentRoutes = require('./app/routes/router');
+
 require('dotenv').config(); // Carregar variáveis de ambiente
+//const routerConsultas = require('./app/routes/consultas'); // Certifique-se de que o caminho está correto
+//const routerPlanos = require('./app/routes/planos'); 
 
 const app = express();
 const server = http.createServer(app);
@@ -25,8 +31,16 @@ let sessionStore = new MySQLStore(
   },
   pool
 );
+app.get('/chat', (req, res) => {
+  const usuarioId = req.session?.userId || "defaultUserId"; // Substitua com a lógica correta
+  res.render('partial/chat', { usuarioId });
+});
 
-
+app.use('/api/communities', communityRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes);
+//app.use('/consultas', routerConsultas);
+//app.use('/planos', routerPlanos);
 // **Configuração do middleware de sessão**
 app.use(
   session({
@@ -64,8 +78,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'app/views'));
 
 // **Parsing do corpo das requisições**
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // **Configuração do Multer para upload de arquivos**
 const storage = multer.diskStorage({
@@ -118,7 +132,15 @@ app.post('/api/upload', upload.single('arquivo'), async (req, res) => {
     res.status(500).json({ error: 'Erro ao salvar arquivo' });
   }
 });
-
+app.use((req, res, next) => {
+  if (req.session && req.session.message) {
+    res.locals.message = req.session.message; // Transfere para o escopo local das views
+    delete req.session.message; // Remove para evitar mensagens persistentes
+  } else {
+    res.locals.message = null; // Define como nulo se não existir
+  }
+  next();
+});
 // **Servir arquivos da pasta 'uploads'**
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
