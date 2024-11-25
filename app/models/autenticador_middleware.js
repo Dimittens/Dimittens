@@ -3,7 +3,7 @@ const paciente = require("./pacienteModel.js");
 const bcrypt = require("bcryptjs");
 
 // Middleware para verificar se o usuário está autenticado
-checkAuthenticatedUser = (req, res, next) => {
+verificarAutenticacao = (req, res, next) => {
     if (req.session && req.session.autenticado) {
         console.log("Usuário autenticado:", req.session.autenticado);
         res.locals.usuarioNome = req.session.autenticado.usuarioNome; // Disponível para as views
@@ -17,15 +17,16 @@ checkAuthenticatedUser = (req, res, next) => {
 
 // Middleware para verificar se o usuário é um psicólogo autenticado com CRP
 checkAuthenticatedPsicologo = (req, res, next) => {
-    if (!req.session.autenticado || req.session.autenticado.tipo.toLowerCase() !== "psicologo") {
-        console.log("Acesso negado. Usuário não é psicólogo ou sessão inválida.");
-        return res.redirect("/loginpsicologos"); // Redireciona para login se não for psicólogo
+    // Verifica se a sessão do usuário está autenticada
+    if (!req.session.autenticado) {
+        console.log("Acesso negado. Sessão inválida.");
+        return res.redirect("/loginpsicologos"); // Redireciona para login se não autenticado
     }
 
-    // Verifica se o CRP está presente na sessão
-    if (!req.session.autenticado.usuarioCRP) {
-        console.log("CRP do psicólogo ausente na sessão.");
-        return res.redirect("/loginpsicologos"); // Redireciona se CRP estiver ausente
+    // Verifica se o tipo do usuário na sessão é "psicologo"
+    if (req.session.autenticado.tipo?.toLowerCase() !== "psicologo") {
+        console.log("Acesso negado. Usuário não é psicólogo.");
+        return res.redirect("/loginpsicologos"); // Redireciona se o tipo não for "psicologo"
     }
 
     // Prossegue para a rota desejada se o usuário for um psicólogo autenticado
@@ -112,7 +113,7 @@ clearSession = (req, res) => {
 
 // Exportando os middlewares
 module.exports = {
-    checkAuthenticatedUser,
+    verificarAutenticacao,
     checkAuthenticatedPsicologo,
     clearSession,
     recordAuthenticatedUser,

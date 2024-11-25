@@ -3,97 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>perfil-1</title>
-    <link rel="stylesheet" href="css/edite-seu-perfil-psic.css">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="/css/edite-seu-perfil-psic.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-    <article>
-        <form action="/editeseuperfilpsic" method="post" enctype="multipart/form-data">
-            <section class="box-img">
-                <section class="edit-img">
-                    <section>
-                        <label class="picture" for="profile_pic" tabIndex="0">
-                            <span class="picture__image">Escolher foto</span>
-                          </label>
-                        <input type="file" name="profile_pic" id="profile_pic">
-                    </section>
-                </section>
-            </section>
-            <section class="edit-info">
-                <section class="info">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" class="input" name="emailpsic" placeholder="Email"> 
-                </section>
-
-                <section class="tele">
-                    <label for="tel">Telefone</label>
-                    <input type="tel" id="tel" class="input" name="tel" placeholder="(xx) xxxxx-xxxx" pattern="\(\d{2}\) \d{5}-\d{4}">
-                </section>
-            </section>
-            <section class="ph2">
-                <section class="abordagem-esp">
-                    <section class="abordagemm">
-                        <label for="abord">Abordagem</label>
-                        <select name="abordagem" id="abord">
-                            <option value="Psicologia Comportamental">Psicologia Comportamental</option> 
-                            <option value="Psicologia Cognitiva">Psicologia Cognitiva</option>
-                            <option value="Psicologia Humanista">Psicologia Humanista</option>
-                            <option value="Psicanálise">Psicanálise</option>
-                            <option value="Psicologia Gestalt">Psicologia Gestalt</option>
-                            <option value="Psicologia Evolutiva">Psicologia Evolutiva</option>
-                            <option value="Psicologia Social">Psicologia Social</option>
-                            <option value="Psicologia Positiva">Psicologia Positiva</option>
-                            <option value="Psicologia Sistêmica">Psicologia Sistêmica</option>
-                            <option value="Psicologia do Desenvolvimento">Psicologia do Desenvolvimento</option>
-                            <option value="Psicologia Cultural">Psicologia Cultural</option>
-                            <option value="Neuropsicologia">Neuropsicologia</option>
-                            <option value="Psicologia Forense">Psicologia Forense</option>
-                            <option value="Psicologia da Saúde">Psicologia da Saúde</option>
-                        </select>
-                    </section>
+    <div class="container">
+        <form action="/editarperfil" method="POST" enctype="multipart/form-data" class="form-editar-perfil">
+            <!-- Circulo de Foto -->
+            <div class="picture" id="picture">
+                <% if (valores.IMAGEM_PERFIL) { %>
+                    <img id="preview" src="<%= valores.IMAGEM_PERFIL %>" alt="Foto de Perfil" />
+                    <div class="edit-icon">
+                        <label for="profile_pic">
+                            <i class="fas fa-pencil-alt"></i>
+                        </label>
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewImage(event)" />
+                    </div>
+                <% } else { %>
+                    <div class="add-photo">
+                        <label for="profile_pic">
+                            <i class="fas fa-plus"></i>
+                        </label>
+                        <input type="file" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewImage(event)" />
+                    </div>
+                <% } %>
+            </div>
+            <p class="foto-texto">Foto de Perfil</p>
+    
+            <div class="row">
+                <!-- Nome e Email -->
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" value="<%= valores.NOME_USUARIO %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" value="<%= valores.EMAIL_USUARIO %>" required />
+                </div>
+    
+                <!-- Telefone e CRP -->
+                <div class="form-group">
+                    <label for="tel">Telefone:</label>
+                    <input type="tel" id="tel" name="tel" value="<%= valores.TEL_USUARIO %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="crp">CRP:</label>
+                    <input type="text" id="crp" name="crp" value="<%= valores.CRP_USUARIO %>" required />
+                </div>
+    
+                <!-- Horários e Valor da Consulta -->
+                <div class="horarios-container">
+                    <div class="horario-wrapper">
+                        <label for="horario">Horário:</label>
+                        <input type="time" id="horario" name="horario" />
+                    </div>
+                    <button type="button" id="add-horario" class="btn-plus">+</button>
+                </div>
+                <div id="horarios-adicionados" class="horarios-adicionados">
+                    <% if (valores.HORARIOS && valores.HORARIOS.length > 0) { %>
+                        <% valores.HORARIOS.forEach(function(horario) { %>
+                            <div class="horario-item">
+                                <span><%= horario %></span>
+                                <button type="button" class="remove-horario">&times;</button>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
                     
-                    <section class="abordagemm">
-                        <label for="esp">Especialidade</label>
-                        <select name="especialidade" id="esp">
-                            <option value="Terapia Comportamental / Modificação de Comportamento">Terapia Comportamental / Modificação de Comportamento</option>
-                            <option value="Terapia Cognitiva / Avaliação Cognitiva">Terapia Cognitiva / Avaliação Cognitiva</option>
-                            <option value="Psicoterapia Humanista / Terapia Centrada na Pessoa">Psicoterapia Humanista / Terapia Centrada na Pessoa</option>
-                                    <option value="Psicanálise Clássica / Psicoterapia Psicanalítica">Psicanálise Clássica / Psicoterapia Psicanalítica</option>
-                                    <option value="Terapia Gestalt / Formação em Psicologia Gestalt">Terapia Gestalt / Formação em Psicologia Gestalt</option>
-                                    <option value="Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil">Psicologia do Desenvolvimento / Avaliação do Desenvolvimento Infantil</option>
-                                    <option value="Psicologia Comunitária / Consultoria em Dinâmica de Grupo">Psicologia Comunitária / Consultoria em Dinâmica de Grupo</option>
-                                    <option value="Intervenções de Psicologia Positiva / Coaching de Vida">Intervenções de Psicologia Positiva / Coaching de Vida</option>
-                                    <option value="TCC para Transtornos de Ansiedade / TCC para Depressão">TCC para Transtornos de Ansiedade / TCC para Depressão</option>
-                                    <option value="Terapia Familiar Sistêmica / Mediação Familiar">Terapia Familiar Sistêmica / Mediação Familiar</option>
-                                    <option value="Avaliação e Intervenção no Desenvolvimento Infantil / Psicologia Educacional">Avaliação e Intervenção no Desenvolvimento Infantil / Psicologia Educacional</option>
-                                    <option value="Psicologia Transcultural / Consultoria Cultural">Psicologia Transcultural / Consultoria Cultural</option>
-                                    <option value="Avaliação Neuropsicológica / Reabilitação Neuropsicológica">Avaliação Neuropsicológica / Reabilitação Neuropsicológica</option>
-                                    <option value="Avaliação de Competência Legal / Consultoria em Casos Judiciais">Avaliação de Competência Legal / Consultoria em Casos Judiciais</option>
-                                    <option value="Intervenções em Saúde Mental / Promoção de Saúde e Bem-Estar">Intervenções em Saúde Mental / Promoção de Saúde e Bem-Estar</option>
-                        </select>
-                    </section>
-                </section>
-                
-                <section class="bio">
-                    <section class="biogra">
-                        <label for="biog">Biografia</label>
-                        <textarea id="biog" class="input" name="biografiapsic" placeholder="Sua biografia"></textarea>
-                    </section>
+                <!-- URL do Google Meet -->
+                <div class="form-group">
+                    <label for="url">URL do Google Meet:</label>
+                    <input type="url" id="url" name="url" value="<%= valores.URL_GOOGLE_MEET %>" pattern="https://meet.google.com/.*" placeholder="https://meet.google.com/..." required />
+                </div>
 
-                    <section class="salvarr">
-                        <section>
-                            <label for="pub">Público-Alvo</label>
-                            <select name="publico" id="pub">
-                                <option value="Criança">Menor de idade</option>
-                                <option value="Adulto">Adulto</option>
-                                <option value="Idoso">Idoso</option>
-                            </select>
-                        </section>
-                        <section><input type="submit" class="submit" id="salve" value="Salvar"></section>
-                    </section>
-                </section>
-            </section>
+                <!-- Biografia -->
+                <div class="form-group biografia">
+                    <label for="biografiapsic">Biografia:</label>
+                    <textarea id="biografiapsic" name="biografiapsic"><%= valores.BIOGRAFIA_USUARIO %></textarea>
+                </div>
+    
+                <!-- Especialidade -->
+                <div class="form-group">
+                    <label for="especialidade">Especialidade:</label>
+                    <select id="especialidade" name="especialidade">
+                        <option value="Ansiedade" <% if (valores.ESPECIALIDADE_USUARIO === "Ansiedade") { %> selected <% } %>>Ansiedade</option>
+                        <option value="Depressão" <% if (valores.ESPECIALIDADE_USUARIO === "Depressão") { %> selected <% } %>>Depressão</option>
+                    </select>
+                </div>
+        
+                <!-- Senha Atual e Nova Senha -->
+                <div class="senha-wrapper">
+                    <div class="form-group senha-atual">
+                        <label for="senhaAtual">Senha Atual:</label>
+                        <input type="password" id="senhaAtual" name="senhaAtual" required />
+                    </div>
+                    <div class="form-group nova-senha">
+                        <label for="novaSenha">Nova Senha:</label>
+                        <input type="password" id="novaSenha" name="novaSenha" required />
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Botão Salvar -->
+            <div class="footer">
+                <button type="submit" class="btn-salvar">Salvar</button>
+            </div>
         </form>
-    </article>
+    </div>
+
+    <% console.log("Valores renderizados:", valores); %>
+    
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById('preview');
+                const picture = document.getElementById('picture');
+                if (!preview) {
+                    const img = document.createElement('img');
+                    img.id = 'preview';
+                    img.src = e.target.result;
+                    picture.innerHTML = '';
+                    picture.appendChild(img);
+                } else {
+                    preview.src = e.target.result;
+                }
+
+                const editIcon = document.createElement('div');
+                editIcon.className = 'edit-icon';
+                editIcon.innerHTML = `
+                    <label for="profile_pic">
+                        <i class="fas fa-pencil-alt"></i>
+                    </label>
+                    <input type="file" id="profile_pic" name="profile_pic" accept="image/*" onchange="previewImage(event)" />
+                `;
+                picture.appendChild(editIcon);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 </body>
 </html>
