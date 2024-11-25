@@ -1,68 +1,38 @@
-const pool = require("../../config/pool_de_conexao");
+const pool = require('../../config/pool_de_conexao');
 
 const editarPerfilModel = {
-    getProfileData: async (idUsuario) => {
+    getProfileData: async (idUsuario, tipoUsuario) => {
         try {
-            const [rows] = await pool.query(
-                `SELECT 
-                    u.EMAIL_USUARIO AS email_psic, 
-                    p.TEL_PSICOLOGO AS num_psic, 
-                    p.ESPECIALIDADE_PSICOLOGO AS especialidade_psic, 
-                    p.ABORDAGEM_ABRANGENTE_PSICOLOGO AS abordagem_psic, 
-                    p.BIOGRAFIA_PSICOLOGO AS bio_psic,
-                    p.PUBLICO_ALVO_PSICOLOGO AS publico_psic,
-                    u.IMAGEM_PERFIL AS imagem_perfil
-                FROM USUARIO u
-                LEFT JOIN PSICOLOGO p ON u.ID_USUARIO = p.ID_USUARIO
-                WHERE u.ID_USUARIO = ?`, 
-                [idUsuario]
-            );
-            return rows[0];
-        } catch (error) {
-            console.log("Erro ao obter dados do perfil:", error);
-            return null;
-        }
-    },
+            console.log("Consultando dados do perfil:", { idUsuario, tipoUsuario });
 
-    updateProfile: async (data) => {
-        try {
-            const { EMAIL_USUARIO, TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO, IMAGEM_PERFIL, idUsuario } = data;
+            if (tipoUsuario === 'Psicologo') {
+                const [rows] = await pool.query(`
+                    SELECT 
+                        u.NOME_USUARIO, u.EMAIL_USUARIO, u.TEL_USUARIO, u.IMAGEM_PERFIL, u.CRP_USUARIO,
+                        p.ABORDAGEM_ABRANGENTE_PSICOLOGO AS ABORDAGEM, p.ESPECIALIDADE_PSICOLOGO AS ESPECIALIDADE,
+                        p.BIOGRAFIA_PSICOLOGO AS BIOGRAFIA, p.VALOR_CONSULTA_PSICOLOGO AS VALOR_CONSULTA,
+                        p.PUBLICO_ALVO_PSICOLOGO AS PUBLICO_ALVO
+                    FROM USUARIO u
+                    JOIN PSICOLOGO p ON u.ID_USUARIO = p.ID_USUARIO
+                    WHERE u.ID_USUARIO = ?
+                `, [idUsuario]);
 
-            // Atualiza o e-mail e a imagem na tabela USUARIO
-            await pool.query(
-                `UPDATE USUARIO 
-                SET EMAIL_USUARIO = ?, IMAGEM_PERFIL = ? 
-                WHERE ID_USUARIO = ?`, 
-                [EMAIL_USUARIO, IMAGEM_PERFIL, idUsuario]
-            );
-
-            // Verifica se existe um registro na tabela PSICOLOGO
-            const [existingPsicologo] = await pool.query(
-                `SELECT ID_USUARIO FROM PSICOLOGO WHERE ID_USUARIO = ?`,
-                [idUsuario]
-            );
-
-            if (existingPsicologo.length === 0) {
-                // Insere os dados na tabela PSICOLOGO, se ainda não existir
-                await pool.query(
-                    `INSERT INTO PSICOLOGO (ID_USUARIO, TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO)
-                    VALUES (?, ?, ?, ?, ?, ?)`,
-                    [idUsuario, TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO]
-                );
+                console.log("Dados encontrados para psicólogo:", rows);
+                return rows[0];
             } else {
-                // Atualiza os dados na tabela PSICOLOGO, se já existir
-                await pool.query(
-                    `UPDATE PSICOLOGO 
-                    SET TEL_PSICOLOGO = ?, ABORDAGEM_ABRANGENTE_PSICOLOGO = ?, ESPECIALIDADE_PSICOLOGO = ?, BIOGRAFIA_PSICOLOGO = ?, PUBLICO_ALVO_PSICOLOGO = ?
-                    WHERE ID_USUARIO = ?`,
-                    [TEL_PSICOLOGO, ABORDAGEM_ABRANGENTE_PSICOLOGO, ESPECIALIDADE_PSICOLOGO, BIOGRAFIA_PSICOLOGO, PUBLICO_ALVO_PSICOLOGO, idUsuario]
-                );
-            }
+                const [rows] = await pool.query(`
+                    SELECT 
+                        NOME_USUARIO, EMAIL_USUARIO, TEL_USUARIO, IMAGEM_PERFIL, CRP_USUARIO
+                    FROM USUARIO
+                    WHERE ID_USUARIO = ?
+                `, [idUsuario]);
 
-            return true;
+                console.log("Dados encontrados para usuário comum:", rows);
+                return rows[0];
+            }
         } catch (error) {
-            console.log("Erro ao atualizar perfil:", error);
-            return false;
+            console.error("Erro ao buscar dados do perfil:", error);
+            throw error;
         }
     }
 };

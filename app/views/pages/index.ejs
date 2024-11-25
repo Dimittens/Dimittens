@@ -19,8 +19,8 @@
             <%- include("../partial/homelogged") %>
         <% } %>
     <% } else { %>
-        <%- include("../partial/" + pagina) %>
-    <% } %>    
-    </body>
+        <%- include("../partial/" + pagina, { valores: typeof valores !== 'undefined' ? valores : {} }) %>
+    <% } %>
+</body>
 
 </html>
