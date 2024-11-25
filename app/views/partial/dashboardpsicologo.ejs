@@ -51,53 +51,6 @@
   </div>  
 </div>
 
-<script>
-  // Lógica para integrar com a API do MercadoPago
-  const markAvailableBtn = document.querySelector(".mark-available-btn");
-  const consultationValueInput = document.getElementById("consultation-value");
-  const clientEmailInput = document.getElementById("client-email");
-
-  markAvailableBtn.addEventListener("click", async () => {
-    const consultationValue = parseFloat(consultationValueInput.value);
-    const clientEmail = clientEmailInput.value;
-
-    // Validações simples
-    if (!consultationValue || consultationValue <= 0) {
-      alert("Por favor, insira um valor válido para a consulta.");
-      return;
-    }
-
-    if (!clientEmail || !/^\S+@\S+\.\S+$/.test(clientEmail)) {
-      alert("Por favor, insira um e-mail válido.");
-      return;
-    }
-
-    try {
-      const response = await fetch('/pagar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          consultaId: activeDay, // Aqui pode ser ajustado para um ID real
-          valorConsulta: consultationValue,
-          email: clientEmail
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.linkPagamento) {
-        alert("Link de pagamento gerado com sucesso!");
-        window.open(data.linkPagamento, "_blank");
-      } else {
-        throw new Error("Erro ao gerar o link de pagamento.");
-      }
-    } catch (error) {
-      console.error("Erro ao processar pagamento:", error);
-      alert("Houve um erro ao tentar gerar o link de pagamento. Tente novamente.");
-    }
-  });
-</script>
-
 <script src="javascript/dashboardpsicologo.js"></script>
 </body>
 </html>

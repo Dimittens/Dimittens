@@ -210,11 +210,9 @@ main {
 }
 
 .msg-boasvindas {
-    border-right: 16px solid white;
-    width: fit-content;
     white-space: nowrap;
     overflow: hidden;
-    width: 26.5ch;
+    width: 36.5ch;
     animation: mark .5s step-end infinite, write 7s steps(22, end) 1;
 }
 

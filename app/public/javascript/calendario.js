@@ -115,42 +115,31 @@ function addListeners() {
       const target = e.target;
       const dayNumber = Number(target.innerHTML);
 
-      if (target.classList.contains("prev-date") || target.classList.contains("next-date")) {
-        alert("Selecione apenas dias do mês atual.");
-        return;
-      }
+      if (target.classList.contains("prev-date")) {
+        month = month === 0 ? 11 : month - 1;
+        year = month === 11 ? year - 1 : year;
+        activeDay = dayNumber;
+        renderCalendar(); // Re-renderiza o calendário
+      } else if (target.classList.contains("next-date")) {
+        month = month === 11 ? 0 : month + 1;
+        year = month === 0 ? year + 1 : year;
+        activeDay = dayNumber;
+        renderCalendar(); // Re-renderiza o calendário
+      } else {
+        // Atualiza activeDay com o número do dia clicado
+        activeDay = dayNumber;
 
-      activeDay = dayNumber;
-      days.forEach((d) => d.classList.remove("active"));
-      target.classList.add("active");
-      getActiveDay(activeDay);
+        // Chama getActiveDay para atualizar a div today-date e destacar o dia
+        getActiveDay(activeDay);
+        updateEvents(activeDay);
+
+        // Remove a classe "active" de todos os dias e adiciona ao dia atual
+        days.forEach((d) => d.classList.remove("active"));
+        target.classList.add("active");
+      }
     });
   });
 }
-
-async function confirmSingleDayRemoval(day) {
-  const activeMonth = month + 1;
-
-  try {
-    // Remove o único dia no backend
-    const response = await fetch('/dashboardpsicologo/remover-disponiveis', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ days: [day], month: activeMonth })
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      alert("Dia removido com sucesso!");
-      loadAvailableDays(); // Atualiza os dias disponíveis no calendário
-    } else {
-      throw new Error(data.message || "Erro ao remover o dia disponível.");
-    }
-  } catch (error) {
-    console.error("Erro ao remover o dia disponível:", error);
-  }
-}
-
 
 addEventBtn.addEventListener("click", () => {
   clearForm();

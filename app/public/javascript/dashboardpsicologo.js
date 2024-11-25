@@ -154,10 +154,12 @@ function handleCancelButtonClick() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log('DOM carregado com sucesso!');
   initCalendar();
   loadAvailableDays();
   initListeners(); // Configura os listeners uma vez
 });
+
 
 function initListeners() {
   if (isListenersInitialized) return;
